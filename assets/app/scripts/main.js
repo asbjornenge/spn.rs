@@ -28,16 +28,15 @@ function(
 
     radio('user.logged_in').subscribe(function(user) {
         if (user === null)            { Login.attach(dom('#container')[0]); return; }
-        if (typeof user === 'object') { Spnrs.attach(dom('#container')[0]); return; }
+        if (typeof user === 'object') { Spnrs.attach(dom('#container')[0], {user:user}, function() {
+            backend.setuser(user).listen();
+        }); return; }
     })
     radio('user.login').subscribe(function(provider) {
         backend.login(provider);
     })
     radio('user.logout').subscribe(function() {
         backend.logout();
-    })
-    radio('spnrs.add').subscribe(function(spnr) {
-        console.log('adding',spnr)
     })
 
     /* INITIALIZE */

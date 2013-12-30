@@ -13,8 +13,11 @@ function(
 
     var Spnrs = React.createClass({
         render : function() {
-            var addinput;
+            var addinput, spnrs;
             if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
+            spnrs = this.state[this.state.view].map(function(spnr) {
+                return <p>{spnr.spnr}</p>
+            })
             return (
                 <div id="spnrsWrapper">
                     <ul class="top">
@@ -23,18 +26,25 @@ function(
                     </ul>
                     <div class="spnrscroll">
                         {addinput}
+                        {spnrs}
                     </div>
                     <ul class="bottom">
                         <li>Global</li>
-                        <li>Feed</li>
                         <li>User</li>
                     </ul>
                 </div>
             )
         },
         getInitialState : function() {
+            radio('feeds.global').subscribe(function(spnr) {
+                var g = this.state.global;
+                g.unshift(spnr)
+                this.setState({global:g})
+            }.bind(this))
             return {
-                adding : false
+                adding : false,
+                view   : 'global',
+                global : []
             }
         },
         componentDidUpdate : function(prevProps, prevState) {
@@ -56,7 +66,9 @@ function(
         },
         handleAddInput : function(e) {
             if (e.which == 13) {
-                radio('spnrs.add').broadcast(this.refs.addInput.getDOMNode().value);
+                var node = this.refs.addInput.getDOMNode();
+                radio('spnrs.add').broadcast(node.value);
+                node.value = "";
             }
         }
     });

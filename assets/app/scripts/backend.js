@@ -30,6 +30,20 @@ define([
         this.auth.logout();
         return this;
     }
+    backend.prototype.setuser = function(user) {
+        this.user = user;
+        return this;
+    }
+    backend.prototype.listen = function() {
+        /* BACKEND */
+        this.root.child('spnrs').on('child_added', function(child) {
+            radio('feeds.global').broadcast(child.val())
+        })
+        /* FRONTEND */
+        radio('spnrs.add').subscribe(function(spnr) {
+            this.root.child('spnrs').push({user:this.user.id, spnr:spnr})
+        }.bind(this))
+    }
 
     return new backend();
 
