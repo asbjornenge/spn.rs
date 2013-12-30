@@ -37,11 +37,22 @@ function(
                 adding : false
             }
         },
+        componentDidUpdate : function(prevProps, prevState) {
+
+            /* ADDING */
+
+            if (!prevState.adding && this.state.adding) {
+                setTimeout(function() {
+                    this.refs.addInput.getDOMNode().focus();
+                }.bind(this),100)
+            }
+
+        },
         handleLogout : function() {
             radio('user.logout').broadcast()
         },
         handleAddClick : function() {
-            this.setState({adding:true})
+            this.setState({adding:!this.state.adding})
         },
         handleAddInput : function(e) {
             if (e.which == 13) {
