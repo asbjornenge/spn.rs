@@ -1,4 +1,8 @@
-define(['radio','fb/firebase','fb/firebase-simple-login'],function(radio) {
+define([
+    'radio',
+    'fb/firebase',
+    'fb/firebase-simple-login'
+], function(radio) {
 
     function backend() {
         this.auth = null;
@@ -6,7 +10,7 @@ define(['radio','fb/firebase','fb/firebase-simple-login'],function(radio) {
     }
     backend.prototype.init = function() {
         this.auth = new FirebaseSimpleLogin(this.root, function(error, user) {
-            radio('user.login').broadcast(error ? error : user ? user : null)
+            radio('user.logged_in').broadcast(error ? error : user ? user : null)
         });
         return this;
     }

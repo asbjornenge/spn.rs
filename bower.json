@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "dependencies": {
     "requirejs": "~2.1.8",
-    "chai": "~1.8.1",
-    "mocha": "~1.15.1",
-    "sinon": "~1.7.3",
     "firebase": "~1.0.1",
     "Radio": "~0.2.0",
-    "nanodom": "~0.0.1"
+    "nanodom": "~0.0.1",
+    "react": "~0.8.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "~1.8.1",
+    "mocha": "~1.15.1",
+    "sinon": "~1.7.3"
+  }
 }
