@@ -34,8 +34,10 @@ function(
         backend.login(provider);
     })
     radio('user.logout').subscribe(function() {
-        console.log("Logout called");
         backend.logout();
+    })
+    radio('spnrs.add').subscribe(function(spnr) {
+        console.log('adding',spnr)
     })
 
     /* INITIALIZE */
