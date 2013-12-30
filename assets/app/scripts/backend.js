@@ -27,7 +27,7 @@ define([
         return this;
     }
     backend.prototype.logout = function() {
-        auth.logout();
+        this.auth.logout();
         return this;
     }
 

@@ -14,23 +14,28 @@ require([
     'radio',
     'backend',
     'nanodom',
-    'comp/login'
+    'comp/login',
+    'comp/spnrs'
     ],
 function(
     radio,
     backend,
     dom,
-    Login)
+    Login,
+    Spnrs)
 {
     /* SETUP LISTENERS */
 
     radio('user.logged_in').subscribe(function(user) {
-        console.log(Login)
-        if (user === null) { Login.attach(dom('#container')[0]); return; }
-        if (typeof user === 'object') { console.log(user) }
+        if (user === null)            { Login.attach(dom('#container')[0]); return; }
+        if (typeof user === 'object') { Spnrs.attach(dom('#container')[0]); return; }
     })
     radio('user.login').subscribe(function(provider) {
         backend.login(provider);
+    })
+    radio('user.logout').subscribe(function() {
+        console.log("Logout called");
+        backend.logout();
     })
 
     /* INITIALIZE */
