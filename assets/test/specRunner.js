@@ -14,6 +14,7 @@ require.config({
 
 require([
     '../test/scripts/feed.test.js',
+    '../test/scripts/localdb.test.js',
 ],
 function() {
     mocha.run()
