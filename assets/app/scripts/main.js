@@ -14,6 +14,7 @@ require([
     'radio',
     'backend',
     'nanodom',
+    'localstore',
     'comp/login',
     'comp/spnrs'
     ],
@@ -21,6 +22,7 @@ function(
     radio,
     backend,
     dom,
+    localstore,
     Login,
     Spnrs)
 {
@@ -38,6 +40,7 @@ function(
     radio('user.logout').subscribe(function() {
         backend.logout();
     })
+    localstore.listen();
 
     /* INITIALIZE */
 

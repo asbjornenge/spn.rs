@@ -16,7 +16,7 @@ function(
             var addinput, spnrs;
             if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
             spnrs = this.state[this.state.view].map(function(spnr) {
-                return <p>{spnr.spnr}</p>
+                return <p>{spnr.data.spnr}</p>
             })
             return (
                 <div id="spnrsWrapper">
@@ -36,10 +36,13 @@ function(
             )
         },
         getInitialState : function() {
-            radio('feeds.global').subscribe(function(spnr) {
-                var g = this.state.global;
-                g.unshift(spnr)
-                this.setState({global:g})
+            radio('feeds.global.bulk').subscribe(function(spnrs) {
+                radio('feeds.global.new').subscribe(function(spnr) {
+                    var g = this.state.global;
+                    g.unshift(spnr)
+                    this.setState({global:g})
+                }.bind(this))
+                this.setState({global:spnrs})
             }.bind(this))
             return {
                 adding : false,
