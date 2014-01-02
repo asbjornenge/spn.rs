@@ -1,11 +1,11 @@
 define([], function() {
 
     function localdb(backend) {
-        this.backend = backend;
+        // this.backend = backend;
         // read local data
-        this.user     = this.get('spn.rs.user')
-        var gf = this.get('spn.rs.feed.global')
-        var uf = this.get('spn.rs.feed.user')
+        this.user = this.get('spn.rs.user')
+        var gf    = this.get('spn.rs.feed.global')
+        var uf    = this.get('spn.rs.feed.user')
         this.feeds    = {
             global : gf ? gf : [],
             user   : uf ? uf : []
@@ -14,19 +14,7 @@ define([], function() {
         this.listeners = {}
     }
 
-    localdb.prototype.init = function() {
-        this.backend.connect();
-        var gf = this.feeds.global;
-        var last_global = gf.length > 0 ? gf[gf.length-1] : null;
-        this.backend('global').from(last_global).on('added', function(spnr) {
-            this.added('global', spnr)
-        }.bind(this))
-        // backend.on('feed.user.'+user.id+'.new', function(spnr) {
-        // }.bind(this))
-
-        // intervall localStorage writes ?
-        return this
-    }
+    /** COMPOSEABLES **/
 
     localdb.prototype.on = function(feed, fn) {
         this.listeners.feed != undefined ? this.listeners[feed].push(fn) : this.listeners[feed] = [fn];
@@ -39,15 +27,19 @@ define([], function() {
             this.listeners['feed.'+feed+'.added'].map(function(fn) { fn(spnr) })
     }
 
-    // Add from the outside
-    localdb.prototype.add = function(spnr) {
-        this.feeds.global.unshift(spnr);
-        // this.feeds.user.unshift(spnr)
-        // add to unsynced
-    }
+    // // Add from the outside
+    // localdb.prototype.add = function(spnr) {
+    //     this.feeds.global.unshift(spnr);
+    //     // this.feeds.user.unshift(spnr)
+    //     // add to unsynced
+    // }
 
     /** QUERY **/
 
+    localdb.prototype.last_seen = function(feed) {
+        var f = this.feeds[feed];
+        return f.length > 0 ? f[f.length-1] : null;
+    }
 
     /** AUTH **/
 

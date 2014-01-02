@@ -42,8 +42,10 @@ function(
 
     /* INITIALIZE */
 
-    db.init();
-
+    // db.init();
+    db.remote.connect();
+    db.remote.start();
+    // db.login(function);
 
 });
 
