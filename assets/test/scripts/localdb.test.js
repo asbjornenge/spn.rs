@@ -3,7 +3,7 @@ define(['chai','scripts/localdb','scripts/remotedb','radio'], function(chai, loc
     describe('LOCALDB', function() {
 
         var assert  = chai.assert;
-        var rdb     = new remotedb();
+        var rdb     = remotedb();
         var ldb     = new localdb(rdb);
 
         // it('Should call the backend login function for login', function(done) {
