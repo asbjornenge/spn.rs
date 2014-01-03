@@ -1,4 +1,4 @@
-define(['chai','scripts/feed','radio'], function(chai, feed, radio) {
+define(['chai','feed','radio'], function(chai, feed, radio) {
 
     describe('FEED', function() {
 

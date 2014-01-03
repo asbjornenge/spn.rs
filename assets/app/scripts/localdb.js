@@ -2,9 +2,7 @@ define(['spnr'], function(Spnr) {
 
     function localdb(backend) {
         this.user   = JSON.parse(this.get('spn.rs.user'))
-        var gf      = JSON.parse(this.get('spn.rs.feed.global')).map(function(o) {
-            return new Spnr(o.spnr, o.user, o.uuid);
-        })
+        var gf      = JSON.parse(this.get('spn.rs.feed.global'))
         var uf      = JSON.parse(this.get('spn.rs.feed.user'))
         this.feeds  = {
             global : gf ? gf : [],
@@ -20,6 +18,12 @@ define(['spnr'], function(Spnr) {
         }
         this.unsynced = this.get('spn.rs.unsynced')
         this.listeners = {}
+
+        /* MAP FEED OBJ TO SPNR */
+
+        this.feeds.global = this.feeds.global.map(function(o) {
+            return new Spnr(o.spnr, o.user, o.uuid);
+        })
     }
 
     /** COMPOSEABLES **/
