@@ -1,8 +1,21 @@
 define([], function() {
 
+    var localStorageUpdateInterval;
+    function startLocalStorageUpdateInterval(localdb) {
+        if (localStorageUpdateInterval != undefined) return;
+        if (!localdb) return;
+        localStorageUpdateInterval = setInterval(function() {
+            localdb.set('spn.rs.user',        JSON.stringify(localdb.user))
+            // .set('spn.rs.feed.global', JSON.stringify(localdb.feeds.global))
+            // .set('spn.rs.feed.user',   JSON.stringify(localdb.feeds.user))
+            // .set('spn.rs.unsynced',    JSON.stringify(localdb.unsynced))
+        },5000)
+    }
+
+
     function localdb(backend) {
         // read local data
-        this.user = this.get('spn.rs.user')
+        this.user = JSON.parse(this.get('spn.rs.user'))
         var gf    = this.get('spn.rs.feed.global')
         var uf    = this.get('spn.rs.feed.user')
         this.feeds    = {
@@ -11,6 +24,7 @@ define([], function() {
         }
         this.unsynced = this.get('spn.rs.unsynced')
         this.listeners = {}
+        startLocalStorageUpdateInterval(this);
     }
 
     /** COMPOSEABLES **/
@@ -36,7 +50,6 @@ define([], function() {
                 break;
             case 'login':
                 if (navigator.onLine) this.user = item;
-                else item = this.user;
                 break;
         }
     }
@@ -47,17 +60,6 @@ define([], function() {
         var f = this.feeds[feed];
         return f.length > 0 ? f[f.length-1] : null;
     }
-
-    /** AUTH **/
-
-    // localdb.prototype.login = function(provider) {
-    //     this.backend.login(provider);
-    //     return this
-    // }
-    // localdb.prototype.logout = function() {
-    //     this.backend.logout();
-    //     return this
-    // }
 
     /** BASIC LOCALSTORAGE **/
 

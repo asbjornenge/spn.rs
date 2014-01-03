@@ -21,9 +21,7 @@ define([
         })
         .on('login', function(user) {
             // broadcast
-            // radio('user.logged_in').broadcast(navigator.onLine ? user : ldb.user)
-            radio('user.logged_in').broadcast(user);
-            console.log('login', user)
+            radio('user.logged_in').broadcast(navigator.onLine ? user : ldb.user);
         })
 
     /** REMOTE **/

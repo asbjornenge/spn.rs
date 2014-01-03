@@ -42,6 +42,9 @@ function(
 
     db.remote.connect();
     db.remote.start();
+    if (!navigator.onLine) {
+        db.local.trigger('login', null);
+    }
 
 });
 
