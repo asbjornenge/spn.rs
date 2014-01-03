@@ -50,6 +50,8 @@ define([
     radio('user.logout').subscribe(function() {
         rdb.logout()
         ldb.user = null
+        ldb.feeds.global = []
+        ldb.latest.global.loaded = null
         // TODO: Reset more?
         ldb.saveLocal();
     })
