@@ -1,7 +1,6 @@
 define([], function() {
 
     function localdb(backend) {
-        // read local data
         this.user   = JSON.parse(this.get('spn.rs.user'))
         var gf      = JSON.parse(this.get('spn.rs.feed.global'))
         var uf      = this.get('spn.rs.feed.user')
@@ -72,7 +71,7 @@ define([], function() {
         localStorageUpdateInterval = setInterval(function() {
             this
               .set('spn.rs.user',        JSON.stringify(this.user))
-              // .set('spn.rs.feed.global', JSON.stringify(localdb.feeds.global))
+              .set('spn.rs.feed.global', JSON.stringify(this.feeds.global))
             // .set('spn.rs.feed.user',   JSON.stringify(localdb.feeds.user))
             // .set('spn.rs.unsynced',    JSON.stringify(localdb.unsynced))
         }.bind(this),interval)
