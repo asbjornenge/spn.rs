@@ -1,4 +1,4 @@
-define(['chai','scripts/remotedb','radio'], function(chai, remotedb, radio) {
+define(['chai','scripts/remotedb'], function(chai, remotedb) {
 
     describe('REMOTEDB', function() {
 

@@ -16,6 +16,7 @@ require([
     '../test/scripts/feed.test.js',
     '../test/scripts/localdb.test.js',
     '../test/scripts/remotedb.test.js',
+    '../test/scripts/spnr.test.js',
 ],
 function() {
     mocha.run()

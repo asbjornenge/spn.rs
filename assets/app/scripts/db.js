@@ -1,8 +1,9 @@
 define([
     'radio',
     'remotedb',
-    'localdb'
-], function(radio, remotedb, localdb) {
+    'localdb',
+    'spnr'
+], function(radio, remotedb, localdb, Spnr) {
 
     /** VARIABLES **/
 
@@ -14,7 +15,8 @@ define([
     ldb
         .on('feed.global.added', function(spnr) {
             // broadcast
-            // console.log('feed.global.added', spnr)
+            console.log('feed.global.added', spnr)
+            console.log(JSON.stringify(spnr))
         })
         .on('feed.user.added', function(spnr) {
             // broadcast
@@ -28,9 +30,9 @@ define([
 
     rdb('spnrs')
         .from(ldb.last_seen('global'))
-        .on('added', function(spnr) {
-            // TODO: convert to spnr
-            ldb.trigger('feed.global.added', spnr);
+        .on('added', function(snap) {
+            var data = snap.val()
+            ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, snap.name()));
         })
         .on('login', function(user, error) {
             ldb.trigger('login', user)
@@ -45,6 +47,7 @@ define([
     radio('user.logout').subscribe(function() {
         rdb.logout()
         ldb.user = null
+        // TODO: Reset more?
     })
 
     /** RETURN **/

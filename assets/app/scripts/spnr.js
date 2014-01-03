@@ -1,12 +1,15 @@
 define([], function() {
 
-    function Spnr(ref) {
-        this.data = ref.val()
-        this.uuid = ref.name()
+    function Spnr(spnr, user, uuid) {
+        this.spnr = spnr;
+        this.user = user;
+        this.uuid = uuid;
     }
 
-    return {
-        Spnr : Spnr
-    }
+    Spnr.prototype.method_name = function(first_argument) {
+        // body...
+    };
+
+    return Spnr
 
 })

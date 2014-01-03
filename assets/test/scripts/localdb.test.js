@@ -1,4 +1,4 @@
-define(['chai','scripts/localdb','scripts/remotedb','radio'], function(chai, localdb, remotedb, radio) {
+define(['chai','scripts/localdb','scripts/remotedb'], function(chai, localdb, remotedb) {
 
     describe('LOCALDB', function() {
 
@@ -21,7 +21,7 @@ define(['chai','scripts/localdb','scripts/remotedb','radio'], function(chai, loc
             assert.equal(ldb.listeners['some.channel'].length, 1)
         })
 
-        it('Should trigger registered listeners when calling .added', function(done) {
+        it('Should trigger registered listeners when calling .trigger', function(done) {
             ldb.on('feed.global.added', function() { assert.ok(true); done() })
             ldb.trigger('feed.global.added', {})
         })
