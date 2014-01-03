@@ -2,12 +2,18 @@ define([], function() {
 
     function localdb(backend) {
         // read local data
-        this.user = JSON.parse(this.get('spn.rs.user'))
-        var gf    = JSON.parse(this.get('spn.rs.feed.global'))
-        var uf    = this.get('spn.rs.feed.user')
-        this.feeds    = {
+        this.user   = JSON.parse(this.get('spn.rs.user'))
+        var gf      = JSON.parse(this.get('spn.rs.feed.global'))
+        var uf      = this.get('spn.rs.feed.user')
+        this.feeds  = {
             global : gf ? gf : [],
             user   : uf ? uf : []
+        }
+        this.latest = {
+            global : {
+                loaded : null,
+                seen   : null
+            }
         }
         this.unsynced = this.get('spn.rs.unsynced')
         this.listeners = {}
@@ -42,13 +48,12 @@ define([], function() {
 
     /** QUERY **/
 
-    localdb.prototype.last_seen = function(feed) {
-        var f = this.feeds[feed];
-        return f.length > 0 ? f[f.length-1] : null;
-    }
-
     localdb.prototype.all = function(feed) {
         return this.feeds[feed];
+    }
+
+    localdb.prototype.last = function(feed, state) {
+        return this.latest[feed][state];
     }
 
     /** LOCALSTORAGE **/
