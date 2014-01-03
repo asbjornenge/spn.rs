@@ -56,7 +56,7 @@ define(['spnr'], function(Spnr) {
     /** QUERY **/
 
     localdb.prototype.all = function(feed) {
-        return this.feeds[feed];
+        return this.feeds[feed].map(function(spnr) { return spnr });
     }
 
     localdb.prototype.last = function(feed, state) {
@@ -74,20 +74,22 @@ define(['spnr'], function(Spnr) {
         return localStorage.getItem(key);
     }
     var localStorageUpdateInterval;
-    localdb.prototype.sync = function(interval) {
+    localdb.prototype.saveLocalTimer = function(interval) {
         if (localStorageUpdateInterval != undefined) return;
         if (interval < 3000) interval = 3000;
         localStorageUpdateInterval = setInterval(function() {
-            console.log(this.feeds.global)
-            console.log(this.latest.global.loaded)
-            this
-              .set('spn.rs.user',        JSON.stringify(this.user))
-              .set('spn.rs.feed.global', JSON.stringify(this.feeds.global))
-              .set('spn.rs.latest.global.loaded', this.latest.global.loaded)
-              .set('spn.rs.latest.global.seen', this.latest.global.seen)
-            // .set('spn.rs.feed.user',   JSON.stringify(localdb.feeds.user))
-            // .set('spn.rs.unsynced',    JSON.stringify(localdb.unsynced))
+            this.saveLocal();
         }.bind(this),interval)
+    }
+    localdb.prototype.saveLocal = function() {
+        console.log('Saving local')
+        this
+          .set('spn.rs.user',        JSON.stringify(this.user))
+          .set('spn.rs.feed.global', JSON.stringify(this.feeds.global))
+          .set('spn.rs.latest.global.loaded', this.latest.global.loaded)
+          .set('spn.rs.latest.global.seen', this.latest.global.seen)
+        // .set('spn.rs.feed.user',   JSON.stringify(localdb.feeds.user))
+        // .set('spn.rs.unsynced',    JSON.stringify(localdb.unsynced))
     }
     localdb.prototype.reset = function() {
         this.feeds.global = []

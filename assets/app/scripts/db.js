@@ -15,14 +15,12 @@ define([
 
     ldb
         .on('feed.global.added', function(spnr) {
-            // broadcast
-            console.log('added',spnr)
+            radio('feed.global.added').broadcast(spnr);
         })
         .on('feed.user.added', function(spnr) {
             // broadcast
         })
         .on('login', function(user) {
-            // broadcast
             radio('user.logged_in').broadcast(navigator.onLine ? user : ldb.user);
         })
 
@@ -33,13 +31,14 @@ define([
         .on('added', function(snap) {
             var data = snap.val()
             var uuid = snap.name()
-            // TODO: Should work without flatten
             if (_.contains(_.flatten(ldb.feeds.global,'uuid'), uuid)) { return }
             ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, uuid));
             ldb.latest.global.loaded = uuid;
+            ldb.saveLocal();
         })
         .on('login', function(user, error) {
             ldb.trigger('login', user)
+            ldb.saveLocal();
         })
 
     /** VIEWS **/
@@ -52,6 +51,12 @@ define([
         rdb.logout()
         ldb.user = null
         // TODO: Reset more?
+        ldb.saveLocal();
+    })
+
+    radio('spnrs.add').subscribe(function(s) {
+        ldb.trigger('feed.global.added', new Spnr(s, ldb.user.id));
+        ldb.saveLocal();
     })
 
     /** RETURN **/

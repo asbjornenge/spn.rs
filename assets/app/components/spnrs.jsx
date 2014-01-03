@@ -15,6 +15,7 @@ function(
 
     var Spnrs = React.createClass({
         render : function() {
+            console.log(this.state.global.length)
             var addinput, spnrs;
             if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
             spnrs = this.state[this.state.view].map(function(spnr) {
@@ -39,14 +40,10 @@ function(
             )
         },
         getInitialState : function() {
-            // radio('feeds.global.bulk').subscribe(function(spnrs) {
-            //     radio('feeds.global.new').subscribe(function(spnr) {
-            //         var g = this.state.global;
-            //         g.unshift(spnr)
-            //         this.setState({global:g})
-            //     }.bind(this))
-            //     this.setState({global:spnrs})
-            // }.bind(this))
+            radio('feed.global.added').subscribe(function(spnr) {
+                var g = [spnr].concat(this.state.global);
+                this.setState({global:g})
+            }.bind(this))
 
             /* INITIAL STATE */
 
@@ -55,6 +52,9 @@ function(
                 view   : 'global',
                 global : db.local.all('global')
             }
+        },
+        componentDidMount : function() {
+
         },
         componentDidUpdate : function(prevProps, prevState) {
 
