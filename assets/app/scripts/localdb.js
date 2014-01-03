@@ -1,9 +1,11 @@
-define([], function() {
+define(['spnr'], function(Spnr) {
 
     function localdb(backend) {
         this.user   = JSON.parse(this.get('spn.rs.user'))
-        var gf      = JSON.parse(this.get('spn.rs.feed.global'))
-        var uf      = this.get('spn.rs.feed.user')
+        var gf      = JSON.parse(this.get('spn.rs.feed.global')).map(function(o) {
+            return new Spnr(o.spnr, o.user, o.uuid);
+        })
+        var uf      = JSON.parse(this.get('spn.rs.feed.user'))
         this.feeds  = {
             global : gf ? gf : [],
             user   : uf ? uf : []

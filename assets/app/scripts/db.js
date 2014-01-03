@@ -16,8 +16,7 @@ define([
     ldb
         .on('feed.global.added', function(spnr) {
             // broadcast
-            // console.log('feed.global.added', spnr)
-            // console.log(JSON.stringify(spnr))
+            console.log('added',spnr)
         })
         .on('feed.user.added', function(spnr) {
             // broadcast
