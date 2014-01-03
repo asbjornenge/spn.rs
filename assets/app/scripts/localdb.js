@@ -47,6 +47,10 @@ define([], function() {
         return f.length > 0 ? f[f.length-1] : null;
     }
 
+    localdb.prototype.all = function(feed) {
+        return this.feeds[feed];
+    }
+
     /** LOCALSTORAGE **/
 
     localdb.prototype.set = function(key, value) {
