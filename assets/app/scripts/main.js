@@ -12,38 +12,39 @@ require.config({
 
 require([
     'radio',
-    'backend',
+    'db',
     'nanodom',
-    'localstore',
     'comp/login',
     'comp/spnrs'
     ],
 function(
     radio,
-    backend,
+    db,
     dom,
-    localstore,
     Login,
     Spnrs)
 {
+
+    /* FUNCTIONS */
+
+    function view_switcher(user) {
+        if (!user) { Login.attach(dom('#container')[0]); return; }
+        else       { Spnrs.attach(dom('#container')[0]); return; }
+    }
+
     /* SETUP LISTENERS */
 
     radio('user.logged_in').subscribe(function(user) {
-        if (user === null)            { Login.attach(dom('#container')[0]); return; }
-        if (typeof user === 'object') { Spnrs.attach(dom('#container')[0], {user:user}, function() {
-            backend.setuser(user).listen();
-        }); return; }
+        view_switcher(user);
     })
-    radio('user.login').subscribe(function(provider) {
-        backend.login(provider);
-    })
-    radio('user.logout').subscribe(function() {
-        backend.logout();
-    })
-    localstore.listen();
 
     /* INITIALIZE */
 
-    backend.init();
+    db.remote.connect();
+    db.remote.start();
+    if (!navigator.onLine) {
+        db.local.trigger('login', null);
+    }
+
 });
 

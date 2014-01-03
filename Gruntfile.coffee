@@ -12,6 +12,7 @@ module.exports = (grunt) ->
     config =
         app  : 'assets/app'
         dist : 'assets/dist'
+        test : 'assets/test'
 
     #### INITCONFIG ####
 
