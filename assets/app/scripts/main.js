@@ -3,6 +3,7 @@ require.config({
         fb      : '../bower_components/firebase/lib',
         radio   : '../bower_components/Radio/radio',
         react   : '../bower_components/react/react',
+        lodash  : '../bower_components/lodash/dist/lodash',
         nanodom : '../bower_components/nanodom/nanodom',
         comp    : '../components'
     }

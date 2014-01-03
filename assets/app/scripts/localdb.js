@@ -54,7 +54,8 @@ define([], function() {
     }
 
     localdb.prototype.last = function(feed, state) {
-        return this.latest[feed][state];
+        var id = this.latest[feed][state];
+        return id === 'null' ? null : id;
     }
 
     /** LOCALSTORAGE **/

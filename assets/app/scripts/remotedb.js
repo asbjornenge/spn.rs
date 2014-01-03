@@ -51,8 +51,6 @@ define([
         var feed = conn.root.child(this.feed), added;
         if (this.startAt) feed = feed.startAt(null, this.startAt)
 
-        console.log(this.startAt)
-
         feed.on('child_added', function(child) {
             this.added.forEach(function(fn) { fn(child) })
         }.bind(this))
