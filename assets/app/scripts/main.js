@@ -4,6 +4,7 @@ require.config({
         radio   : '../bower_components/Radio/radio',
         react   : '../bower_components/react/react',
         lodash  : '../bower_components/lodash/dist/lodash',
+        uuid    : '../bower_components/node-uuid/uuid',
         nanodom : '../bower_components/nanodom/nanodom',
         comp    : '../components'
     }

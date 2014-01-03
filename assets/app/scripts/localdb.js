@@ -1,4 +1,10 @@
-define(['spnr'], function(Spnr) {
+define([
+    'spnr',
+    'uuid'
+], function(
+    Spnr,
+    uuid
+) {
 
     function localdb(backend) {
         this.user   = JSON.parse(this.get('spn.rs.user'))
@@ -17,6 +23,7 @@ define(['spnr'], function(Spnr) {
             }
         }
         this.unsynced = this.get('spn.rs.unsynced')
+        this.unsynced = this.unsynced ? JSON.parse(this.unsynced) : []
         this.listeners = {}
 
         /* MAP FEED OBJ TO SPNR */
@@ -24,6 +31,12 @@ define(['spnr'], function(Spnr) {
         this.feeds.global = this.feeds.global.map(function(o) {
             return new Spnr(o.spnr, o.user, o.uuid);
         })
+        this.unsynced = this.unsynced.map(function(o) {
+            var s = new Spnr(o.spnr, o.user, o.uuid);
+            s.localuuid = o.localuuid;
+            return s;
+        })
+        console.log(this.unsynced)
     }
 
     /** COMPOSEABLES **/
@@ -50,6 +63,10 @@ define(['spnr'], function(Spnr) {
             case 'login':
                 if (navigator.onLine) this.user = item;
                 break;
+        }
+        if(item instanceof Spnr && !item.uuid) {
+            item.localuuid = uuid.v4().replace('-','')
+            this.unsynced.push(item);
         }
     }
 
@@ -88,12 +105,12 @@ define(['spnr'], function(Spnr) {
           .set('spn.rs.feed.global', JSON.stringify(this.feeds.global))
           .set('spn.rs.latest.global.loaded', this.latest.global.loaded)
           .set('spn.rs.latest.global.seen', this.latest.global.seen)
-        // .set('spn.rs.feed.user',   JSON.stringify(localdb.feeds.user))
-        // .set('spn.rs.unsynced',    JSON.stringify(localdb.unsynced))
+          .set('spn.rs.unsynced',    JSON.stringify(this.unsynced))
     }
     localdb.prototype.reset = function() {
         this.feeds.global = []
         this.latest.global.loaded = null
+        this.unsynced = []
     }
 
     return localdb;
