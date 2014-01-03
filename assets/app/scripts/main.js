@@ -40,6 +40,8 @@ function(
 
     /* INITIALIZE */
 
+    // db.local.reset()
+
     db.remote.connect();
     db.remote.start();
     db.local.sync(5000);

@@ -32,7 +32,9 @@ define([
         .from(ldb.last('global','loaded'))
         .on('added', function(snap) {
             var data = snap.val()
-            ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, snap.name()));
+            var uuid = snap.name()
+            ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, uuid));
+            ldb.latest.global.loaded = uuid;
         })
         .on('login', function(user, error) {
             ldb.trigger('login', user)
