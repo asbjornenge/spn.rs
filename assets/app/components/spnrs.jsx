@@ -32,7 +32,8 @@ function(
                     </div>
                     <ul class="bottom">
                         <li>Global</li>
-                        <li>Settings</li>
+                        <li>Favotites</li>
+                        <li>Me</li>
                     </ul>
                 </div>
             )

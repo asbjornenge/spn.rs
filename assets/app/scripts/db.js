@@ -1,9 +1,10 @@
 define([
     'radio',
+    'lodash',
     'remotedb',
     'localdb',
     'spnr'
-], function(radio, remotedb, localdb, Spnr) {
+], function(radio, _, remotedb, localdb, Spnr) {
 
     /** VARIABLES **/
 
@@ -32,7 +33,11 @@ define([
         .from(ldb.last('global','loaded'))
         .on('added', function(snap) {
             var data = snap.val()
-            ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, snap.name()));
+            var uuid = snap.name()
+            // TODO: Should work without flatten
+            if (_.contains(_.flatten(ldb.feeds.global,'uuid'), uuid)) { return }
+            ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, uuid));
+            ldb.latest.global.loaded = uuid;
         })
         .on('login', function(user, error) {
             ldb.trigger('login', user)
