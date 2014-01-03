@@ -1,7 +1,6 @@
 define([], function() {
 
     function localdb(backend) {
-        // this.backend = backend;
         // read local data
         this.user = this.get('spn.rs.user')
         var gf    = this.get('spn.rs.feed.global')
@@ -21,18 +20,26 @@ define([], function() {
         return this;
     }
 
-    localdb.prototype.added = function(feed, spnr) {
-        this.feeds[feed].unshift(spnr);
-        if (this.listeners['feed.'+feed+'.added'] != undefined)
-            this.listeners['feed.'+feed+'.added'].map(function(fn) { fn(spnr) })
+    localdb.prototype.trigger = function(feed, spnr) {
+        this.cache(feed, spnr)
+        if (this.listeners[feed] != undefined)
+            this.listeners[feed].map(function(fn) { fn(spnr) })
+        return this;
     }
 
-    // // Add from the outside
-    // localdb.prototype.add = function(spnr) {
-    //     this.feeds.global.unshift(spnr);
-    //     // this.feeds.user.unshift(spnr)
-    //     // add to unsynced
-    // }
+    /** CACHE **/
+
+    localdb.prototype.cache = function(feed, item) {
+        switch(feed) {
+            case 'feed.global.added':
+                this.feeds.global.unshift(item);
+                break;
+            case 'login':
+                if (navigator.onLine) this.user = item;
+                else item = this.user;
+                break;
+        }
+    }
 
     /** QUERY **/
 
@@ -43,14 +50,14 @@ define([], function() {
 
     /** AUTH **/
 
-    localdb.prototype.login = function(provider) {
-        this.backend.login(provider);
-        return this
-    }
-    localdb.prototype.logout = function() {
-        this.backend.logout();
-        return this
-    }
+    // localdb.prototype.login = function(provider) {
+    //     this.backend.login(provider);
+    //     return this
+    // }
+    // localdb.prototype.logout = function() {
+    //     this.backend.logout();
+    //     return this
+    // }
 
     /** BASIC LOCALSTORAGE **/
 

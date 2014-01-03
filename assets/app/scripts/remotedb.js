@@ -40,6 +40,7 @@ define([
     function remotedb(feed) {
         this.feed    = feed
         this.added   = []
+        this.login   = []
         this.startAt = null
     }
 
@@ -49,8 +50,14 @@ define([
     remotedb.prototype.start   = function() {
         var feed = conn.root.child(this.feed), added;
         if (this.startAt) feed = feed.startAt(null, this.startAt)
+
         feed.on('child_added', function(child) {
             this.added.forEach(function(fn) { fn(child) })
+        }.bind(this))
+
+        if (this.login.length == 0) return;
+        conn.auth = new FirebaseSimpleLogin(conn.root, function(error, user) {
+            this.login.forEach(function(fn) { fn(user, error) })
         }.bind(this))
     }
 
@@ -77,9 +84,6 @@ define([
     }
     rfunc.connect = function() {
         conn.root = new Firebase(conn.host);
-        conn.auth = new FirebaseSimpleLogin(conn.root, function(error, user) {
-            conn.auth.user = user;
-        })
     }
     rfunc.start = function() {
         this.feeds.forEach(function(f) { f.start() })

@@ -23,7 +23,7 @@ define(['chai','scripts/localdb','scripts/remotedb','radio'], function(chai, loc
 
         it('Should trigger registered listeners when calling .added', function(done) {
             ldb.on('feed.global.added', function() { assert.ok(true); done() })
-            ldb.added('global', {})
+            ldb.trigger('feed.global.added', {})
         })
 
     })
