@@ -15,10 +15,9 @@ function(
 
     var Spnrs = React.createClass({
         render : function() {
-            console.log(this.state.global.length)
             var addinput, spnrs;
-            if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
-            spnrs = this.state[this.state.view].map(function(spnr) {
+            if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
+            spnrs = this.props.state[this.props.state.view].map(function(spnr) {
                 return <p>{spnr.spnr}</p>
             })
             return (
@@ -39,28 +38,11 @@ function(
                 </div>
             )
         },
-        getInitialState : function() {
-            radio('feed.global.added').subscribe(function(spnr) {
-                var g = [spnr].concat(this.state.global);
-                this.setState({global:g})
-            }.bind(this))
-
-            /* INITIAL STATE */
-
-            return {
-                adding : false,
-                view   : 'global',
-                global : db.local.all('global')
-            }
-        },
-        componentDidMount : function() {
-
-        },
         componentDidUpdate : function(prevProps, prevState) {
 
             /* ADDING */
 
-            if (!prevState.adding && this.state.adding) {
+            if (!prevProps.state.adding && this.props.state.adding) {
                 setTimeout(function() {
                     this.refs.addInput.getDOMNode().focus();
                 }.bind(this),100)
@@ -71,7 +53,8 @@ function(
             radio('user.logout').broadcast()
         },
         handleAddClick : function() {
-            this.setState({adding:!this.state.adding})
+            this.props.state.adding = !this.props.state.adding;
+            radio('state.change').broadcast()
         },
         handleAddInput : function(e) {
             if (e.which == 13) {
@@ -81,8 +64,8 @@ function(
             }
         }
     });
-    Spnrs.attach = function(mountNode, settings, callback) {
-        React.renderComponent(<Spnrs settings={settings} />, mountNode, callback)
+    Spnrs.attach = function(mountNode, state, callback) {
+        React.renderComponent(<Spnrs state={state} />, mountNode, callback)
     };
 
     return Spnrs

@@ -29,15 +29,28 @@ function(
 
     /* FUNCTIONS */
 
-    function view_switcher(user) {
-        if (!user) { Login.attach(dom('#container')[0]); return; }
-        else       { Spnrs.attach(dom('#container')[0]); return; }
+    // Read from db.local
+    var state = {
+        adding : false,
+        view   : 'global',
+        global : db.local.all('global'),
+        user   : null
+    }
+
+    function view_switcher() {
+        if (!state.user) { Login.attach(dom('#container')[0]); return; }
+        else             { Spnrs.attach(dom('#container')[0], state); return;}
     }
 
     /* SETUP LISTENERS */
 
     radio('user.logged_in').subscribe(function(user) {
-        view_switcher(user);
+        state.user = user;
+        view_switcher();
+    })
+
+    radio('state.change').subscribe(function() {
+        view_switcher();
     })
 
     /* INITIALIZE */
