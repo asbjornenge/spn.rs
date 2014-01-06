@@ -14,6 +14,7 @@ require.config({
 
 require([
     'radio',
+    'lodash',
     'db',
     'nanodom',
     'comp/login',
@@ -21,6 +22,7 @@ require([
     ],
 function(
     radio,
+    _,
     db,
     dom,
     Login,
@@ -49,7 +51,8 @@ function(
         view_switcher();
     })
 
-    radio('state.change').subscribe(function() {
+    radio('state.change').subscribe(function(new_state) {
+        _.merge(state, new_state)
         view_switcher();
     })
 

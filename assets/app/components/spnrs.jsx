@@ -53,14 +53,14 @@ function(
             radio('user.logout').broadcast()
         },
         handleAddClick : function() {
-            this.props.state.adding = !this.props.state.adding;
-            radio('state.change').broadcast()
+            radio('state.change').broadcast({adding:!this.props.state.adding})
         },
         handleAddInput : function(e) {
             if (e.which == 13) {
                 var node = this.refs.addInput.getDOMNode();
-                radio('spnrs.add').broadcast(node.value);
+                var spnr = new Spnr(node.value, this.props.state.user.id)
                 node.value = "";
+                radio('spnrs.add').broadcast(spnr)
             }
         }
     });
