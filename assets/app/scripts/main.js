@@ -15,36 +15,67 @@ require.config({
 require([
     'radio',
     'lodash',
-    'db',
     'nanodom',
+    'remotedb',
     'comp/login',
     'comp/spnrs'
     ],
 function(
     radio,
     _,
-    db,
     dom,
+    remotedb,
     Login,
     Spnrs)
 {
 
-    /* FUNCTIONS */
+    /* STATE */
 
-    // Read from db.local
-    var state = {
+    var localState = localStorage.getItem('spn.rs');
+    // TODO: expose state globally?
+    var state = localState ? JSON.parse(localState) : {
         adding : false,
         view   : 'global',
-        global : db.local.all('global'),
-        user   : null
+        global : [],
+        user   : null,
+        latest : {
+            global : {
+                loaded : null,
+                seen   : null
+            }
+        }
     }
+
+    /** REMOTE **/
+
+    var rdb = new remotedb('https://spnrs.firebaseio.com/');
+
+    rdb('spnrs').from(state.latest.global.loaded)
+        .on('added', function(snap) {
+            var data = snap.val()
+            var uuid = snap.name()
+            console.log(data, uuid)
+            // if (_.contains(_.flatten(ldb.feeds.global,'uuid'), uuid)) { return }
+            // ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, uuid));
+            // ldb.latest.global.loaded = uuid;
+            // ldb.saveLocal();
+        })
+        .on('login', function(user, error) {
+            radio('state.change').broadcast({user:user})
+        })
+
+    /** FUNCTIONS **/
 
     function view_switcher() {
         if (!state.user) { Login.attach(dom('#container')[0]); return; }
         else             { Spnrs.attach(dom('#container')[0], state); return;}
     }
 
-    /* SETUP LISTENERS */
+    function snapshot() {
+        localStorage.setItem('spn.rs', JSON.stringify(state))
+    }
+
+    /** LISTENERS **/
 
     radio('user.logged_in').subscribe(function(user) {
         state.user = user;
@@ -56,15 +87,20 @@ function(
         view_switcher();
     })
 
-    /* INITIALIZE */
+    radio('ui.event.login').subscribe(function(provider) {
+        rdb.login(provider);
+    })
 
-    // db.local.reset()
+    radio('ui.event.logout').subscribe(function() {
+        rdb.logout();
+    })
 
-    db.remote.connect();
-    db.remote.start();
-    // db.local.saveLocalTimer(5000);
+    /** INITIALIZE **/
+
+    rdb.connect();
+    rdb.start();
     if (!navigator.onLine) {
-        db.local.trigger('login', null);
+        view_switcher();
     }
 
 });

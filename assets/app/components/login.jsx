@@ -21,7 +21,7 @@ function(
             )
         },
         loginGithub : function() {
-            radio('user.login').broadcast('github');
+            radio('ui.event.login').broadcast('github');
         }
     });
     Login.attach = function(mountNode, settings, callback) {

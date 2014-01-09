@@ -4,13 +4,11 @@
 
 define([
     'react',
-    'radio',
-    'db'
+    'radio'
 ],
 function(
     React,
-    radio,
-    db
+    radio
 ) {
 
     var Spnrs = React.createClass({
@@ -50,7 +48,7 @@ function(
 
         },
         handleLogout : function() {
-            radio('user.logout').broadcast()
+            radio('ui.event.logout').broadcast()
         },
         handleAddClick : function() {
             radio('state.change').broadcast({adding:!this.props.state.adding})
