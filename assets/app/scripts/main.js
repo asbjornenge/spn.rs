@@ -31,11 +31,10 @@ function(
     Spnrs)
 {
 
-    /* STATE */
+    /** STATE **/
 
-    var localState = localStorage.getItem('spn.rs');
-    // TODO: expose state globally?
-    state = localState ? JSON.parse(localState) : {
+    var localState   = localStorage.getItem('spn.rs');
+    var defaultState = {
         adding : false,
         view   : 'global',
         global : [],
@@ -47,17 +46,28 @@ function(
             }
         }
     }
+    state = localState ? JSON.parse(localState) : defaultState;
 
     /** REMOTE **/
 
     var rdb = new remotedb('https://spnrs.firebaseio.com/');
 
-    rdb('spnrs').from(state.latest.global.loaded)
+    rdb('global').from(state.latest.global.loaded)
         .on('added', function(snap) {
-            console.log('added')
-            var data = snap.val()
-            var uuid = snap.name()
-            if (_.contains(_.flatten(state.global,'uuid'), uuid)) { return }
+            var data  = snap.val()
+            var uuid  = snap.name()
+            var abort = false;
+            state.global.forEach(function(spnr) {
+                if (uuid === spnr.uuid) abort = true;
+                if (data.uuid === spnr.uuid) {
+                    // Cheat ?
+                    spnr.uuid = uuid;
+                    radio('state.change').broadcast({});
+                    abort = true;
+                }
+            })
+            if (abort) return;
+            console.log('got past map')
             var spnr = {
                 spnr : data.spnr,
                 user : data.user,
@@ -83,6 +93,16 @@ function(
         localStorage.setItem('spn.rs', JSON.stringify(state))
     }
 
+    function attempt_sync_with_server() {
+        state.global.map(function(spnr) {
+            if (spnr.uuid.length == 36) {
+                var ref = rdb('global').add(spnr)
+                console.log(ref.name())
+                // console.log(ref.val())
+            }
+        })
+    }
+
     /** LISTENERS **/
 
     radio('user.logged_in').subscribe(function(user) {
@@ -101,6 +121,8 @@ function(
     })
 
     radio('ui.event.logout').subscribe(function() {
+        state = defaultState;
+        snapshot();
         rdb.logout();
     })
 
@@ -113,7 +135,12 @@ function(
         radio('state.change').broadcast({
             global : [val].concat(state.global)
         })
+        if (navigator.onLine) attempt_sync_with_server();
     })
+
+    window.addEventListener('online', function(e) {
+        attempt_sync_with_server();
+    });
 
     /** INITIALIZE **/
 
@@ -121,6 +148,8 @@ function(
     rdb.start();
     if (!navigator.onLine) {
         view_switcher();
+    } else {
+        attempt_sync_with_server();
     }
 
 });

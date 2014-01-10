@@ -38,9 +38,7 @@ function(
         },
         componentDidUpdate : function(prevProps, prevState) {
 
-            /* ADDING */
-
-            if (!prevProps.state.adding && this.props.state.adding) {
+            if (this.props.state.adding) {
                 setTimeout(function() {
                     this.refs.addInput.getDOMNode().focus();
                 }.bind(this),100)
@@ -56,7 +54,7 @@ function(
         handleAddInput : function(e) {
             if (e.which == 13) {
                 var node = this.refs.addInput.getDOMNode();
-                radio('ui.event.add').broadcast(node.value);
+                if (node.value.length > 0) radio('ui.event.add').broadcast(node.value);
                 node.value = "";
             }
         }

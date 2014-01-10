@@ -3,31 +3,6 @@ define([
     'fb/firebase-simple-login'
 ], function() {
 
-    // backend.prototype.setuser = function(user) {
-    //     this.user = user;
-    //     return this;
-    // }
-    // backend.prototype.listen = function() {
-    //     /* BACKEND */
-    //     var global_last_read = localstore.get('feeds.global.lastread');
-    //     var global_bulk_ref  = this.root.child('spnrs').endAt(global_last_read).limit(10);
-
-    //     global_bulk_ref.once('value', function(data) {
-    //         // TODO: What about having that bulk data in localStorage?
-    //         var bulk = [];
-    //         data.forEach(function(snap) { bulk.push(new spnr.Spnr(snap)) })
-    //         var last = bulk.pop()
-    //         radio('feeds.global.bulk').broadcast(bulk.reverse());
-    //         this.root.child('spnrs').startAt(null, last.uuid).on('child_added', function(child) {
-    //             radio('feeds.global.new').broadcast(new spnr.Spnr(child))
-    //         })
-    //     }.bind(this))
-    //     /* FRONTEND */
-    //     radio('spnrs.add').subscribe(function(spnr) {
-    //         this.root.child('spnrs').push({user:this.user.id, spnr:spnr})
-    //     }.bind(this))
-    // }
-
     var conn = {
         host : null,
         root : null,
@@ -47,6 +22,9 @@ define([
     remotedb.prototype.from    = function(last_seen) { this.startAt = last_seen; return this }
     remotedb.prototype.on      = function(event, fn) { this[event].push(fn); return this }
     remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) */ return this }
+    remotedb.prototype.add     = function(spnr) {
+        return conn.root.child(this.feed).push(spnr);
+    }
     remotedb.prototype.start   = function() {
         var feed = conn.root.child(this.feed), added;
         if (this.startAt) feed = feed.startAt(null, this.startAt)
