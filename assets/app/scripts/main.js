@@ -4,6 +4,7 @@ require.config({
         radio   : '../bower_components/Radio/radio',
         react   : '../bower_components/react/react',
         lodash  : '../bower_components/lodash/dist/lodash',
+        uuid    : '../bower_components/node-uuid/uuid',
         nanodom : '../bower_components/nanodom/nanodom',
         comp    : '../components'
     }
@@ -12,42 +13,143 @@ require.config({
 // TODO : Have a html splash screen while checking login
 
 require([
+    'uuid',
     'radio',
-    'db',
+    'lodash',
     'nanodom',
+    'remotedb',
     'comp/login',
     'comp/spnrs'
     ],
 function(
+    uuid,
     radio,
-    db,
+    _,
     dom,
+    remotedb,
     Login,
     Spnrs)
 {
 
-    /* FUNCTIONS */
+    /** STATE **/
 
-    function view_switcher(user) {
-        if (!user) { Login.attach(dom('#container')[0]); return; }
-        else       { Spnrs.attach(dom('#container')[0]); return; }
+    var localState   = localStorage.getItem('spn.rs');
+    var defaultState = {
+        adding : false,
+        view   : 'global',
+        global : [],
+        user   : null,
+        latest : {
+            global : {
+                loaded : null,
+                seen   : null
+            }
+        }
+    }
+    state = localState ? JSON.parse(localState) : defaultState;
+
+    /** REMOTE **/
+
+    var rdb = new remotedb('https://spnrs.firebaseio.com/');
+
+    rdb('global').from(state.latest.global.loaded)
+        .on('added', function(snap) {
+            var data  = snap.val()
+            var uuid  = snap.name()
+            var abort = false;
+            state.global.forEach(function(spnr) {
+                if (uuid === spnr.uuid) abort = true;
+                if (data.uuid === spnr.uuid) {
+                    // Cheat ?
+                    spnr.uuid = uuid;
+                    radio('state.change').broadcast({});
+                    abort = true;
+                }
+            })
+            if (abort) return;
+            console.log('got past map')
+            var spnr = {
+                spnr : data.spnr,
+                user : data.user,
+                uuid : uuid
+            };
+            radio('state.change').broadcast({
+                global : [spnr].concat(state.global),
+                latest : { global : { loaded : uuid }}
+            })
+        })
+        .on('login', function(user, error) {
+            radio('state.change').broadcast({user:user})
+        })
+
+    /** FUNCTIONS **/
+
+    function view_switcher() {
+        if (!state.user) { Login.attach(dom('#container')[0]); return; }
+        else             { Spnrs.attach(dom('#container')[0], state); return;}
     }
 
-    /* SETUP LISTENERS */
+    function snapshot() {
+        localStorage.setItem('spn.rs', JSON.stringify(state))
+    }
+
+    function attempt_sync_with_server() {
+        state.global.map(function(spnr) {
+            if (spnr.uuid.length == 36) {
+                var ref = rdb('global').add(spnr)
+                console.log(ref.name())
+                // console.log(ref.val())
+            }
+        })
+    }
+
+    /** LISTENERS **/
 
     radio('user.logged_in').subscribe(function(user) {
-        view_switcher(user);
+        state.user = user;
+        view_switcher();
     })
 
-    /* INITIALIZE */
+    radio('state.change').subscribe(function(new_state) {
+        _.assign(state, new_state)
+        view_switcher();
+        snapshot();
+    })
 
-    // db.local.reset()
+    radio('ui.event.login').subscribe(function(provider) {
+        rdb.login(provider);
+    })
 
-    db.remote.connect();
-    db.remote.start();
-    // db.local.saveLocalTimer(5000);
+    radio('ui.event.logout').subscribe(function() {
+        state = defaultState;
+        snapshot();
+        rdb.logout();
+    })
+
+    radio('ui.event.add').subscribe(function(spnr) {
+        var val = {
+            spnr : spnr,
+            user : state.user.id,
+            uuid : uuid.v4()
+        }
+        radio('state.change').broadcast({
+            global : [val].concat(state.global)
+        })
+        if (navigator.onLine) attempt_sync_with_server();
+    })
+
+    window.addEventListener('online', function(e) {
+        attempt_sync_with_server();
+    });
+
+    /** INITIALIZE **/
+
+    rdb.connect();
+    rdb.start();
     if (!navigator.onLine) {
-        db.local.trigger('login', null);
+        view_switcher();
+    } else {
+        attempt_sync_with_server();
     }
 
 });
