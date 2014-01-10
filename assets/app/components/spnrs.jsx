@@ -56,9 +56,8 @@ function(
         handleAddInput : function(e) {
             if (e.which == 13) {
                 var node = this.refs.addInput.getDOMNode();
-                var spnr = new Spnr(node.value, this.props.state.user.id)
+                radio('ui.event.add').broadcast(node.value);
                 node.value = "";
-                radio('spnrs.add').broadcast(spnr)
             }
         }
     });

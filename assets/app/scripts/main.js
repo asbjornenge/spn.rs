@@ -13,6 +13,7 @@ require.config({
 // TODO : Have a html splash screen while checking login
 
 require([
+    'uuid',
     'radio',
     'lodash',
     'nanodom',
@@ -21,6 +22,7 @@ require([
     'comp/spnrs'
     ],
 function(
+    uuid,
     radio,
     _,
     dom,
@@ -33,7 +35,7 @@ function(
 
     var localState = localStorage.getItem('spn.rs');
     // TODO: expose state globally?
-    var state = localState ? JSON.parse(localState) : {
+    state = localState ? JSON.parse(localState) : {
         adding : false,
         view   : 'global',
         global : [],
@@ -52,13 +54,19 @@ function(
 
     rdb('spnrs').from(state.latest.global.loaded)
         .on('added', function(snap) {
+            console.log('added')
             var data = snap.val()
             var uuid = snap.name()
-            console.log(data, uuid)
-            // if (_.contains(_.flatten(ldb.feeds.global,'uuid'), uuid)) { return }
-            // ldb.trigger('feed.global.added', new Spnr(data.spnr, data.user, uuid));
-            // ldb.latest.global.loaded = uuid;
-            // ldb.saveLocal();
+            if (_.contains(_.flatten(state.global,'uuid'), uuid)) { return }
+            var spnr = {
+                spnr : data.spnr,
+                user : data.user,
+                uuid : uuid
+            };
+            radio('state.change').broadcast({
+                global : [spnr].concat(state.global),
+                latest : { global : { loaded : uuid }}
+            })
         })
         .on('login', function(user, error) {
             radio('state.change').broadcast({user:user})
@@ -83,8 +91,9 @@ function(
     })
 
     radio('state.change').subscribe(function(new_state) {
-        _.merge(state, new_state)
+        _.assign(state, new_state)
         view_switcher();
+        snapshot();
     })
 
     radio('ui.event.login').subscribe(function(provider) {
@@ -93,6 +102,17 @@ function(
 
     radio('ui.event.logout').subscribe(function() {
         rdb.logout();
+    })
+
+    radio('ui.event.add').subscribe(function(spnr) {
+        var val = {
+            spnr : spnr,
+            user : state.user.id,
+            uuid : uuid.v4()
+        }
+        radio('state.change').broadcast({
+            global : [val].concat(state.global)
+        })
     })
 
     /** INITIALIZE **/
