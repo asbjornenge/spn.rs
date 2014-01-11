@@ -15,6 +15,7 @@ define([
     function remotedb(feed) {
         this.feed    = feed
         this.added   = []
+        this.removed = []
         this.login   = []
         this.startAt = null
     }
@@ -25,12 +26,20 @@ define([
     remotedb.prototype.add     = function(spnr) {
         return conn.root.child(this.feed).push(spnr);
     }
+    remotedb.prototype.remove  = function(uuid, callback) {
+        conn.root.child(this.feed).child(uuid).remove(callback);
+        return this;
+    }
     remotedb.prototype.start   = function() {
         var feed = conn.root.child(this.feed), added;
         if (this.startAt) feed = feed.startAt(null, this.startAt)
 
         feed.on('child_added', function(child) {
             this.added.forEach(function(fn) { fn(child) })
+        }.bind(this))
+
+        feed.on('child_removed', function(child) {
+            this.removed.forEach(function(fn) { fn(child) })
         }.bind(this))
 
         if (this.login.length == 0) return;

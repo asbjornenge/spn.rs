@@ -67,7 +67,6 @@ function(
                 }
             })
             if (abort) return;
-            console.log('got past map')
             var spnr = {
                 spnr : data.spnr,
                 user : data.user,
@@ -76,6 +75,15 @@ function(
             radio('state.change').broadcast({
                 global : [spnr].concat(state.global),
                 latest : { global : { loaded : uuid }}
+            })
+        })
+        .on('removed', function(snap) {
+            var removed_uuid = snap.name()
+            // TODO: Reset latest
+            radio('state.change').broadcast({
+                global : state.global.reduce(function(a,b) {
+                    return b.uuid !== removed_uuid ? a.concat([b]) : a;
+                },[])
             })
         })
         .on('login', function(user, error) {
@@ -136,6 +144,24 @@ function(
             global : [val].concat(state.global)
         })
         if (navigator.onLine) attempt_sync_with_server();
+    })
+
+    radio('ui.event.remove').subscribe(function(spnr) {
+        /* Never synced */
+        if (!navigator.onLine && spnr.uuid.length == 36) {
+            radio('state.change').broadcast({
+                global : state.global.reduce(function(a,b) {
+                    return b.uuid !== spnr.uuid ? a.concat([b]) : a;
+                },[])
+            })
+            return;
+        }
+        /* Synced - but not online - can't delete */
+        if (!navigator.onLine && spnr.uuid.length < 36) return;
+        /* Delete */
+        rdb('global').remove(spnr.uuid, function(error) {
+            if (error) console.log('remove error', error)
+        })
     })
 
     window.addEventListener('online', function(e) {

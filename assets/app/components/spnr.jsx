@@ -14,10 +14,14 @@ function(
     var Spnr = React.createClass({
         render : function() {
 
+            var remove  = this.props.state.user.id == this.props.spnr.user ? (
+                <li onClick={this.handleRemoveClick}>Remove</li>
+            ) : undefined
+
             var details = this.state.details ? (
                  <div class="details">
                     <ul>
-                        <li>Remove</li>
+                        {remove}
                     </ul>
                 </div>
             ) : undefined;
@@ -34,6 +38,9 @@ function(
         },
         handleListSpnrClick : function() {
             this.setState({ details : !this.state.details })
+        },
+        handleRemoveClick : function() {
+            radio('ui.event.remove').broadcast(this.props.spnr)
         }
     });
     Spnr.attach = function(mountNode, spnr, callback) {
