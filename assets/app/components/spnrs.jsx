@@ -4,11 +4,13 @@
 
 define([
     'react',
-    'radio'
+    'radio',
+    'comp/spnr'
 ],
 function(
     React,
-    radio
+    radio,
+    Spnr
 ) {
 
     var Spnrs = React.createClass({
@@ -16,7 +18,7 @@ function(
             var addinput, spnrs;
             if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
             spnrs = this.props.state[this.props.state.view].map(function(spnr) {
-                return <p>{spnr.spnr}</p>
+                return <Spnr spnr={spnr} />
             })
             return (
                 <div id="spnrsWrapper">
