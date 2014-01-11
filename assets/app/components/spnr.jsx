@@ -15,7 +15,7 @@ function(
         render : function() {
 
             var details = this.state.details ? (
-                 <div class="listspnr-details">
+                 <div class="details">
                     <ul>
                         <li>Remove</li>
                     </ul>
@@ -24,7 +24,7 @@ function(
 
             return (
                 <div class="listspnr">
-                    <div class="listspnr-spnr" onClick={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
+                    <div class="spnr" onClick={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
                     {details}
                 </div>
             )

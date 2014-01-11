@@ -24,6 +24,7 @@ function(
                 <div id="spnrsWrapper">
                     <ul class="top">
                         <li onClick={this.handleLogout}>Logout</li>
+                        <li class="logo">LOGO</li>
                         <li onClick={this.handleAddClick}>Add</li>
                     </ul>
                     <div class="spnrscroll">
