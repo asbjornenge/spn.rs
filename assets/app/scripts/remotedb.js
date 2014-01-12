@@ -19,7 +19,7 @@ define([
 
     remotedb.prototype.from    = function(last_seen) { this.startAt = last_seen; return this }
     remotedb.prototype.on      = function(event, fn) { !this[event] ? this[event] = [fn] : this[event].push(fn); return this }
-    remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) */ return this }
+    remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) once */ return this }
     remotedb.prototype.ref     = function() {
         return conn.root.child(this.feed);
     }
