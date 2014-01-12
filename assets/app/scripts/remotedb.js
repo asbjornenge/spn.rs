@@ -14,15 +14,15 @@ define([
 
     function remotedb(feed) {
         this.feed    = feed
-        this.added   = []
-        this.removed = []
-        this.login   = []
         this.startAt = null
     }
 
     remotedb.prototype.from    = function(last_seen) { this.startAt = last_seen; return this }
-    remotedb.prototype.on      = function(event, fn) { this[event].push(fn); return this }
-    remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) */ return this }
+    remotedb.prototype.on      = function(event, fn) { !this[event] ? this[event] = [fn] : this[event].push(fn); return this }
+    remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) once */ return this }
+    remotedb.prototype.ref     = function() {
+        return conn.root.child(this.feed);
+    }
     remotedb.prototype.add     = function(spnr) {
         return conn.root.child(this.feed).push(spnr);
     }
@@ -35,10 +35,11 @@ define([
         if (this.startAt) feed = feed.startAt(null, this.startAt)
 
         feed.on('child_added', function(child) {
-            this.added.forEach(function(fn) { fn(child) })
+            if (this['child_added'] != undefined) this['child_added'].forEach(function(fn) { fn(child) })
         }.bind(this))
 
         feed.on('child_removed', function(child) {
+            if (this['child_removed'] != undefined) this['child_removed'].forEach(function(fn) { fn(child) })
             this.removed.forEach(function(fn) { fn(child) })
         }.bind(this))
 
@@ -61,6 +62,9 @@ define([
         switch(provider) {
             case 'github':
                 options = { rememberMe : true, scope : 'user'}
+                break;
+            case 'facebook':
+                options = { rememberMe: true, scope: 'email' }
                 break;
         }
         conn.auth.login(provider, options);

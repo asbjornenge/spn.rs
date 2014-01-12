@@ -28,6 +28,7 @@ function(
 
             return (
                 <div class="listspnr">
+                    <img src={this.props.spnr.user.avatar_url} />
                     <div class="spnr" onClick={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
                     {details}
                 </div>

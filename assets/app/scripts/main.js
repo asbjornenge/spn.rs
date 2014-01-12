@@ -53,7 +53,7 @@ function(
     var rdb = new remotedb('https://spnrs.firebaseio.com/');
 
     rdb('global').from(state.latest.global.loaded)
-        .on('added', function(snap) {
+        .on('child_added', function(snap) {
             var data  = snap.val()
             var uuid  = snap.name()
             var abort = false;
@@ -77,7 +77,7 @@ function(
                 latest : { global : { loaded : uuid }}
             })
         })
-        .on('removed', function(snap) {
+        .on('child_removed', function(snap) {
             var removed_uuid = snap.name()
             // TODO: Reset latest
             radio('state.change').broadcast({
@@ -87,7 +87,11 @@ function(
             })
         })
         .on('login', function(user, error) {
+            if (user) rdb('users').ref().child(user.id).set(user);
             radio('state.change').broadcast({user:user})
+        })
+        .on('logout', function() {
+            console.log("Firebase logged out");
         })
 
     /** FUNCTIONS **/
@@ -112,11 +116,6 @@ function(
     }
 
     /** LISTENERS **/
-
-    radio('user.logged_in').subscribe(function(user) {
-        state.user = user;
-        view_switcher();
-    })
 
     radio('state.change').subscribe(function(new_state) {
         _.assign(state, new_state)
