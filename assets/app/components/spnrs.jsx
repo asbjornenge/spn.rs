@@ -32,9 +32,9 @@ function(
                         {spnrs}
                     </div>
                     <ul class="bottom">
-                        <li>Global</li>
-                        <li>Favotites</li>
-                        <li>Me</li>
+                        <li onClick={this.handleChangeViewClick} class="global">Global</li>
+                        <li onClick={this.handleChangeViewClick} class="favorites">Favorites</li>
+                        <li onClick={this.handleChangeViewClick} class="mine">Mine</li>
                     </ul>
                 </div>
             )
@@ -60,6 +60,9 @@ function(
                 if (node.value.length > 0) radio('ui.event.add').broadcast(node.value);
                 node.value = "";
             }
+        },
+        handleChangeViewClick : function(e) {
+            radio('state.change').broadcast({view:e.target.className})
         }
     });
     Spnrs.attach = function(mountNode, state, callback) {

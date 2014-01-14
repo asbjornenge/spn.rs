@@ -12,25 +12,26 @@ define([
 
     /** REMOTE DB **/
 
-    function remotedb(feed) {
+    function feedwrestler(feed) {
+        if (feed == 'mine') feed = 'users/'+state.user.id+'/spnrs'
         this.feed    = feed
         this.startAt = null
     }
 
-    remotedb.prototype.from    = function(last_seen) { this.startAt = last_seen; return this }
-    remotedb.prototype.on      = function(event, fn) { !this[event] ? this[event] = [fn] : this[event].push(fn); return this }
-    remotedb.prototype.take    = function(num) { /* 'value' + .limit(?) once */ return this }
-    remotedb.prototype.ref     = function() {
+    feedwrestler.prototype.from    = function(last_seen) { this.startAt = last_seen; return this }
+    feedwrestler.prototype.on      = function(event, fn) { !this[event] ? this[event] = [fn] : this[event].push(fn); return this }
+    feedwrestler.prototype.take    = function(num) { /* 'value' + .limit(?) once */ return this }
+    feedwrestler.prototype.ref     = function() {
         return conn.root.child(this.feed);
     }
-    remotedb.prototype.add     = function(spnr) {
+    feedwrestler.prototype.add     = function(spnr) {
         return conn.root.child(this.feed).push(spnr);
     }
-    remotedb.prototype.remove  = function(uuid, callback) {
+    feedwrestler.prototype.remove  = function(uuid, callback) {
         conn.root.child(this.feed).child(uuid).remove(callback);
         return this;
     }
-    remotedb.prototype.start   = function() {
+    feedwrestler.prototype.listen = function() {
         var feed = conn.root.child(this.feed), added;
         if (this.startAt) feed = feed.startAt(null, this.startAt)
 
@@ -42,21 +43,24 @@ define([
             if (this['child_removed'] != undefined) this['child_removed'].forEach(function(fn) { fn(child) })
             this.removed.forEach(function(fn) { fn(child) })
         }.bind(this))
-
-        if (this.login.length == 0) return;
-        conn.auth = new FirebaseSimpleLogin(conn.root, function(error, user) {
-            this.login.forEach(function(fn) { fn(user, error) })
-        }.bind(this))
     }
 
     /** RETURN FUNC **/
 
-    function rfunc(feed) {
-        var f = new remotedb(feed);
-        rfunc.feeds.push(f);
+    function remotedb(feed) {
+        var f = new feedwrestler(feed);
+        remotedb.feeds.push(f);
         return f
     }
-    rfunc.login = function(provider)
+    remotedb.listeners = {};
+    remotedb.on = function(event, fn) {
+        !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn);
+        return this;
+    }
+    remotedb.dropFeeds = function() {
+        remotedb.feeds = [];
+    }
+    remotedb.login = function(provider)
     {
         var options = {}
         switch(provider) {
@@ -69,18 +73,26 @@ define([
         }
         conn.auth.login(provider, options);
     }
-    rfunc.logout = function()
+    remotedb.logout = function()
     {
         conn.auth.logout();
+        if (!this.listeners.logout) return;
+        this.listeners['logout'].forEach(function(fn) { fn() })
     }
-    rfunc.connect = function() {
+    remotedb.connect = function() {
         conn.root = new Firebase(conn.host);
     }
-    rfunc.start = function() {
-        this.feeds.forEach(function(f) { f.start() })
+    remotedb.listenLogin = function() {
+        if (!this.listeners.login) return;
+        conn.auth = new FirebaseSimpleLogin(conn.root, function(error, user) {
+            this.listeners['login'].forEach(function(fn) { fn(user, error) })
+        }.bind(this))
     }
-    rfunc.feeds = []
+    remotedb.listen = function() {
+        this.feeds.forEach(function(f) { f.listen() })
+    }
+    remotedb.feeds = []
 
-    return function(host) { conn.host = host; return rfunc}
+    return function(host) { conn.host = host; return remotedb}
 
 })

@@ -13,20 +13,22 @@ require.config({
 // TODO : Have a html splash screen while checking login
 
 require([
-    'uuid',
     'radio',
     'lodash',
     'nanodom',
     'remotedb',
+    'mutator',
+    'transformator',
     'comp/login',
     'comp/spnrs'
     ],
 function(
-    uuid,
     radio,
     _,
     dom,
     remotedb,
+    mutator,
+    trans,
     Login,
     Spnrs)
 {
@@ -35,11 +37,13 @@ function(
 
     var localState   = localStorage.getItem('spn.rs');
     var defaultState = {
-        adding : false,
-        view   : 'global',
-        global : [],
-        user   : null,
-        latest : {
+        adding    : false,
+        view      : 'global',
+        global    : [],
+        mine      : [],
+        favorites : [],
+        user      : null,
+        latest    : {
             global : {
                 loaded : null,
                 seen   : null
@@ -52,47 +56,42 @@ function(
 
     var rdb = new remotedb('https://spnrs.firebaseio.com/');
 
-    rdb('global').from(state.latest.global.loaded)
-        .on('child_added', function(snap) {
-            var data  = snap.val()
-            var uuid  = snap.name()
-            var abort = false;
-            state.global.forEach(function(spnr) {
-                if (uuid === spnr.uuid) abort = true;
-                if (data.uuid === spnr.uuid) {
-                    // Cheat ?
-                    spnr.uuid = uuid;
-                    radio('state.change').broadcast({});
-                    abort = true;
-                }
+    rdb
+    .on('login', function(user, error) {
+        radio('state.change').broadcast({user:user})
+        if (!user) return;
+
+        // UPDATE USER DATA
+
+        rdb('users').ref().child(user.id+'/meta').set(user);
+
+        // LISTEN TO ADD EVENTS
+
+        rdb('global').from(state.latest.global.loaded)
+            .on('child_added', function(snap) {
+                var diff = mutator(state).add('global', trans.snap2spnr(snap)).diff();
+                radio('state.change').broadcast(diff);
             })
-            if (abort) return;
-            var spnr = {
-                spnr : data.spnr,
-                user : data.user,
-                uuid : uuid
-            };
-            radio('state.change').broadcast({
-                global : [spnr].concat(state.global),
-                latest : { global : { loaded : uuid }}
+            .on('child_removed', function(snap) {
+                console.log('removed')
             })
-        })
-        .on('child_removed', function(snap) {
-            var removed_uuid = snap.name()
-            // TODO: Reset latest
-            radio('state.change').broadcast({
-                global : state.global.reduce(function(a,b) {
-                    return b.uuid !== removed_uuid ? a.concat([b]) : a;
-                },[])
+
+        rdb('mine').from(state.latest.global.loaded)
+            .on('child_added', function(snap) {
+                var diff = mutator(state).add('mine', trans.snap2spnr(snap)).diff();
+                radio('state.change').broadcast(diff);
             })
-        })
-        .on('login', function(user, error) {
-            if (user) rdb('users').ref().child(user.id).set(user);
-            radio('state.change').broadcast({user:user})
-        })
-        .on('logout', function() {
-            console.log("Firebase logged out");
-        })
+            .on('child_removed', function(snap) {
+                console.log('removed')
+            })
+
+        // START LISTENING/PULLING DATA
+
+        rdb.listen();
+    })
+    .on('logout', function() {
+        rdb.dropFeeds();
+    })
 
     /** FUNCTIONS **/
 
@@ -106,18 +105,13 @@ function(
     }
 
     function attempt_sync_with_server() {
-        state.global.map(function(spnr) {
-            if (spnr.uuid.length == 36) {
-                var ref = rdb('global').add(spnr)
-                console.log(ref.name())
-                // console.log(ref.val())
-            }
-        })
+        mutator(state).sync(rdb);
     }
 
     /** LISTENERS **/
 
     radio('state.change').subscribe(function(new_state) {
+        if (Object.keys(new_state).length === 0) return;
         _.assign(state, new_state)
         view_switcher();
         snapshot();
@@ -133,15 +127,9 @@ function(
         rdb.logout();
     })
 
-    radio('ui.event.add').subscribe(function(spnr) {
-        var val = {
-            spnr : spnr,
-            user : state.user.id,
-            uuid : uuid.v4()
-        }
-        radio('state.change').broadcast({
-            global : [val].concat(state.global)
-        })
+    radio('ui.event.add').subscribe(function(snap) {
+        var diff = mutator(state).add('mine', trans.val2spnr(snap)).diff();
+        radio('state.change').broadcast(diff);
         if (navigator.onLine) attempt_sync_with_server();
     })
 
@@ -170,7 +158,7 @@ function(
     /** INITIALIZE **/
 
     rdb.connect();
-    rdb.start();
+    rdb.listenLogin();
     if (!navigator.onLine) {
         view_switcher();
     } else {
