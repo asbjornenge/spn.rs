@@ -10,7 +10,7 @@ define([
         this.new   = {}
     }
 
-    stateMutatur.prototype.add = function(spnr) {
+    stateMutatur.prototype.add = function(feed, spnr) {
 
         console.log('add',spnr)
 
@@ -18,7 +18,7 @@ define([
 
         var found = synced = local = false;
         var index = 0;
-        this.state.global.forEach(function(s,i) {
+        this.state[feed].forEach(function(s,i) {
             if (s.uuid === spnr.uuid) {
                 synced = s.synced == spnr.synced;
                 found  = true;
@@ -30,24 +30,24 @@ define([
 
         if (!found && !spnr.synced) {
             console.log('new local')
-            this.new.global = this.state.global;
-            this.state.global.unshift(spnr);
+            this.new[feed] = this.state[feed];
+            this.state[feed].unshift(spnr);
         }
 
         /** REMOTE **/
 
         if (!found && spnr.synced) {
             console.log('new global')
-            this.new.global = this.state.global;
-            this.state.global.unshift(spnr);
+            this.new[feed] = this.state[feed];
+            this.state[feed].unshift(spnr);
         }
 
         /** INCONSISTENT **/
 
         if (found && !synced) {
             console.log('fixing inconsistent');
-            this.new.global = this.state.global;
-            this.state.global[index].synced = true;
+            this.new[feed] = this.state[feed];
+            this.state[feed][index].synced = true;
         }
 
         if (found && synced) {
@@ -63,11 +63,11 @@ define([
     }
 
     stateMutatur.prototype.sync = function(rdb) {
-        this.state.global.forEach(function(s) {
+        this.state.mine.forEach(function(s) {
             if (!s.synced) {
                 console.log('syncing')
                 s.synced = true;
-                rdb('global').ref().child(s.uuid).set(s);
+                rdb('mine').ref().child(s.uuid).set(s);
             }
         })
         return this;

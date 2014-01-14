@@ -16,7 +16,6 @@ function(
 
     function snap2spnr(snap) {
         var s  = snap.val()
-        // s.synced = true ??
         return s
     }
 

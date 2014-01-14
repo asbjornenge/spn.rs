@@ -37,11 +37,13 @@ function(
 
     var localState   = localStorage.getItem('spn.rs');
     var defaultState = {
-        adding : false,
-        view   : 'global',
-        global : [],
-        user   : null,
-        latest : {
+        adding    : false,
+        view      : 'global',
+        global    : [],
+        mine      : [],
+        favorites : [],
+        user      : null,
+        latest    : {
             global : {
                 loaded : null,
                 seen   : null
@@ -67,7 +69,16 @@ function(
 
         rdb('global').from(state.latest.global.loaded)
             .on('child_added', function(snap) {
-                var diff = mutator(state).add(trans.snap2spnr(snap)).diff();
+                var diff = mutator(state).add('global', trans.snap2spnr(snap)).diff();
+                radio('state.change').broadcast(diff);
+            })
+            .on('child_removed', function(snap) {
+                console.log('removed')
+            })
+
+        rdb('mine').from(state.latest.global.loaded)
+            .on('child_added', function(snap) {
+                var diff = mutator(state).add('mine', trans.snap2spnr(snap)).diff();
                 radio('state.change').broadcast(diff);
             })
             .on('child_removed', function(snap) {
@@ -117,7 +128,7 @@ function(
     })
 
     radio('ui.event.add').subscribe(function(snap) {
-        var diff = mutator(state).add(trans.val2spnr(snap)).diff();
+        var diff = mutator(state).add('mine', trans.val2spnr(snap)).diff();
         radio('state.change').broadcast(diff);
         if (navigator.onLine) attempt_sync_with_server();
     })

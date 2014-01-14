@@ -13,6 +13,7 @@ define([
     /** REMOTE DB **/
 
     function feedwrestler(feed) {
+        if (feed == 'mine') feed = 'users/'+state.user.id+'/spnrs'
         this.feed    = feed
         this.startAt = null
     }
