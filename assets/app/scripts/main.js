@@ -63,7 +63,7 @@ function(
 
         // UPDATE USER DATA
 
-        rdb('users').ref().child(user.id).set(user);
+        rdb('users').ref().child(user.id+'/meta').set(user);
 
         // LISTEN TO ADD EVENTS
 
