@@ -33,7 +33,8 @@ define([
     }
     feedwrestler.prototype.listen = function() {
         var feed = conn.root.child(this.feed), added;
-        if (this.startAt) feed = feed.startAt(null, this.startAt)
+        if (this.startAt && typeof this.startAt == 'string') feed = feed.startAt(null, this.startAt)
+        if (this.startAt && typeof this.startAt == 'number') feed = feed.startAt(this.startAt)
 
         feed.on('child_added', function(child) {
             if (this['child_added'] != undefined) this['child_added'].forEach(function(fn) { fn(child) })

@@ -1,9 +1,13 @@
 define([
-    'uuid',
-    ],
+    'uuid'
+],
 function(
     uuid
 ) {
+
+    // function uuid() {
+    //     return new Date().getTime().toString().split('').map(function(c) { return String.fromCharCode(97+parseInt(c)); }).join('')
+    // }
 
     function val2spnr(value) {
         return {

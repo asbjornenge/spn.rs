@@ -12,8 +12,6 @@ define([
 
     stateMutatur.prototype.add = function(feed, spnr) {
 
-        console.log('add',spnr)
-
         /** Already got it? **/
 
         var found = synced = local = false;
@@ -29,7 +27,7 @@ define([
         /** LOCAL STATES **/
 
         if (!found && !spnr.synced) {
-            console.log('new local')
+            console.log('new local', feed)
             this.new[feed] = this.state[feed];
             this.state[feed].unshift(spnr);
         }
@@ -37,9 +35,8 @@ define([
         /** REMOTE **/
 
         if (!found && spnr.synced) {
-            console.log('new global')
             this.new[feed] = this.state[feed];
-            this.state[feed].unshift(spnr);
+            this.new[feed].unshift(spnr);
         }
 
         /** INCONSISTENT **/
@@ -51,7 +48,8 @@ define([
         }
 
         if (found && synced) {
-            console.log('all good - already got it');
+            console.log('all good - already got it', feed);
+            // console.log(spnr)
         }
 
         return this;

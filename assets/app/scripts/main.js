@@ -47,6 +47,9 @@ function(
             global : {
                 loaded : null,
                 seen   : null
+            },
+            mine : {
+                loaded : null
             }
         }
     }
@@ -70,16 +73,19 @@ function(
         rdb('global').from(state.latest.global.loaded)
             .on('child_added', function(snap) {
                 var diff = mutator(state).add('global', trans.snap2spnr(snap)).diff();
-                diff.latest = { global : { loaded : snap.name() } }
+                diff.latest = _.clone(state.latest, true);
+                diff.latest.global.loaded = snap.name();
                 radio('state.change').broadcast(diff);
             })
             .on('child_removed', function(snap) {
                 console.log('removed')
             })
 
-        rdb('mine').from(state.latest.global.loaded)
+        rdb('mine').from(state.latest.mine.loaded)
             .on('child_added', function(snap) {
                 var diff = mutator(state).add('mine', trans.snap2spnr(snap)).diff();
+                diff.latest = _.clone(state.latest, true);
+                diff.latest.mine.loaded = parseInt(snap.getPriority());
                 radio('state.change').broadcast(diff);
             })
             .on('child_removed', function(snap) {
