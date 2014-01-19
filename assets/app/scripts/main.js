@@ -70,6 +70,7 @@ function(
         rdb('global').from(state.latest.global.loaded)
             .on('child_added', function(snap) {
                 var diff = mutator(state).add('global', trans.snap2spnr(snap)).diff();
+                diff.latest = { global : { loaded : snap.name() } }
                 radio('state.change').broadcast(diff);
             })
             .on('child_removed', function(snap) {
