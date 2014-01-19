@@ -12,7 +12,7 @@ function(
     function val2spnr(value) {
         return {
             spnr   : value,
-            user   : state.user.id,
+            user   : state.user.uid,
             uuid   : uuid.v4(),
             synced : false
         }

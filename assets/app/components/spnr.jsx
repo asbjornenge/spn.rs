@@ -14,7 +14,7 @@ function(
     var Spnr = React.createClass({
         render : function() {
 
-            var remove  = this.props.state.user.id == this.props.spnr.user ? (
+            var remove  = this.props.state.user.uid == this.props.spnr.user ? (
                 <li onClick={this.handleRemoveClick}>Remove</li>
             ) : undefined
 
