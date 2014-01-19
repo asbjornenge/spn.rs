@@ -28,6 +28,7 @@ root.child('users').on('child_added', function(user) {
         var ref = root.child('global').push(spnr);
         spnr_snap.ref().child('global').set(ref.name());
         spnr_snap.ref().setPriority(1);
+        console.log('synced', spnr)
 
     })
 })
