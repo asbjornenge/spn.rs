@@ -67,7 +67,7 @@ define([
             if (!s.synced) {
                 console.log('syncing')
                 s.synced = true;
-                rdb('mine').ref().child(s.uuid).set(s);
+                rdb('mine').ref().child(s.uuid).setWithPriority(s,0);
             }
         })
         return this;

@@ -32,9 +32,9 @@ function(
                         {spnrs}
                     </div>
                     <ul class="bottom">
-                        <li onClick={this.handleChangeViewClick} class="global">Global</li>
-                        <li onClick={this.handleChangeViewClick} class="favorites">Favorites</li>
-                        <li onClick={this.handleChangeViewClick} class="mine">Mine</li>
+                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'global'    ? 'global selected'    : 'global'}>Global</li>
+                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}>Favorites</li>
+                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}>Mine</li>
                     </ul>
                 </div>
             )
