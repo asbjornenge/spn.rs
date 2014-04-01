@@ -36,4 +36,3 @@ root.child('users').on('child_added', function(user) {
 // function listen_add(latest_global) {
 
 // }
-
