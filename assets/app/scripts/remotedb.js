@@ -13,7 +13,7 @@ define([
     /** REMOTE DB **/
 
     function feedwrestler(feed) {
-        if (feed == 'mine') feed = 'users/'+state.user.id+'/spnrs'
+        if (feed == 'mine') feed = 'users/'+state.user.uid+'/spnrs'
         this.feed    = feed
         this.startAt = null
     }
@@ -93,6 +93,7 @@ define([
         this.feeds.forEach(function(f) { f.listen() })
     }
     remotedb.feeds = []
+    remotedb.conn  = conn
 
     return function(host) { conn.host = host; return remotedb}
 

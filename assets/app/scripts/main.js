@@ -6,6 +6,7 @@ require.config({
         lodash  : '../bower_components/lodash/dist/lodash',
         uuid    : '../bower_components/node-uuid/uuid',
         nanodom : '../bower_components/nanodom/nanodom',
+        moment  : '../bower_components/momentjs/moment',
         comp    : '../components'
     }
 });
@@ -16,8 +17,10 @@ require([
     'radio',
     'lodash',
     'nanodom',
+    'moment',
     'remotedb',
     'mutator',
+    'utils',
     'transformator',
     'comp/login',
     'comp/spnrs'
@@ -26,8 +29,10 @@ function(
     radio,
     _,
     dom,
+    moment,
     remotedb,
     mutator,
+    utils,
     trans,
     Login,
     Spnrs)
@@ -43,6 +48,7 @@ function(
         mine      : [],
         favorites : [],
         user      : null,
+        avatars   : {},
         latest    : {
             global : {
                 loaded : null,
@@ -66,7 +72,7 @@ function(
 
         // UPDATE USER DATA
 
-        rdb('users').ref().child(user.id+'/meta').set(user);
+        rdb('users').ref().child(user.uid+'/meta').set(user);
 
         // LISTEN TO ADD EVENTS
 
@@ -117,7 +123,8 @@ function(
 
     /** LISTENERS **/
 
-    radio('state.change').subscribe(function(new_state) {
+    radio('state.change').subscribe(function(new_state, force) {
+        if (force) { view_switcher(); snapshot(); }
         if (Object.keys(new_state).length === 0) return;
         _.assign(state, new_state)
         view_switcher();
@@ -156,6 +163,25 @@ function(
         rdb('global').remove(spnr.uuid, function(error) {
             if (error) console.log('remove error', error)
         })
+    })
+
+    radio('ui.avatar.check').subscribe(function(user) {
+        if (state.avatars[user]) {
+            var diff = moment().diff(moment(state.avatars[user].updated), 'days')
+            if (diff < 30) return
+        }
+        var url;
+        if (user.indexOf('github') === 0) {
+            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
+        }
+        if (user.indexOf('facebook') === 0) {
+            url = 'http://graph.facebook.com/'+user.split(':')[1]+'/picture?type=small'
+        }
+        if (!url) return
+        utils.convertImgToBase64(url, function(base64Img){
+            state.avatars[user] = { url : base64Img, updated : new Date().getTime() }
+            radio('state.change').broadcast({}, true)
+        });
     })
 
     window.addEventListener('online', function(e) {

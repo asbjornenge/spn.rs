@@ -12,9 +12,16 @@ function(
 ) {
 
     var Spnr = React.createClass({
+
         render : function() {
 
-            var remove  = this.props.state.user.id == this.props.spnr.user ? (
+            var state = this.props.state;
+            var spnr  = this.props.spnr;
+
+            var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "images/avatar.gif"
+            radio('ui.avatar.check').broadcast(spnr.user)
+
+            var remove  = this.props.state.user.uid == this.props.spnr.user ? (
                 <li onClick={this.handleRemoveClick}>Remove</li>
             ) : undefined
 
@@ -28,7 +35,7 @@ function(
 
             return (
                 <div class="listspnr">
-                    <img src={this.props.spnr.user.avatar_url} />
+                    <img src={avatar} />
                     <div class="spnr" onClick={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
                     {details}
                 </div>
