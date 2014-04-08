@@ -15,9 +15,10 @@ function(
         render : function() {
             return (
                 <div id="loginWrapper">
-                    <p>To use spn.rs you need to creat an account using one of the following:</p>
-                    <div onClick={this.loginGithub}>Github</div>
-                    <div onClick={this.loginFacebook}>Facebook</div>
+                    <img class="logo" src="images/logo.png" />
+                    <p>Select login service</p>
+                    <div class="loginbutton github" onClick={this.loginGithub}></div>
+                    <div class="loginbutton facebook" onClick={this.loginFacebook}></div>
                 </div>
             )
         },

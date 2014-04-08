@@ -1,0 +1,71 @@
+@import variables
+
+#spnrsWrapper
+    position relative
+    width 320px
+    margin auto
+    height 100%
+
+    .top
+        position absolute
+        top 0
+        left 0
+        right 0
+        height top-margin
+
+        li
+            float left
+            height top-margin
+            width  50px
+            text-align center
+
+            &.logo
+                width 220px
+
+    .spnrscroll
+        position absolute
+        top top-margin
+        left 0
+        right 0
+        bottom bottom-margin
+        overflow scroll
+
+        .listspnr
+            border-bottom 1px solid #ccc
+
+            img
+                height 30px
+                float left
+
+            .spnr
+                height 50px
+                widht 100%
+
+            .details
+                height 25px
+                background-color #ccc
+
+                ul
+                    li
+                        float left
+
+    &:after
+        clear both
+
+    .bottom
+        position absolute
+        left 0
+        right 0
+        bottom 0
+        height bottom-margin
+        border-top 1px solid red
+
+        li
+            float left
+            height bottom-margin
+            width  50px
+            text-align center
+            margin-left 50px
+
+            &.selected
+                color : red
