@@ -93,6 +93,7 @@ define([
         this.feeds.forEach(function(f) { f.listen() })
     }
     remotedb.feeds = []
+    remotedb.conn  = conn
 
     return function(host) { conn.host = host; return remotedb}
 
