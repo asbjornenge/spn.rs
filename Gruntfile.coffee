@@ -64,6 +64,10 @@ module.exports = (grunt) ->
                     optimize       : 'uglify'
                     almond         : true
                     findNestedDependencies: true
+                    preserveLicenseComments: false
+                    paths:
+                        'comp' : '../../../.tmp/app/components'
+
 
         ## USEMIN PREPARE
         #
@@ -142,16 +146,16 @@ module.exports = (grunt) ->
             dist:
                 files: [
                     {
-                        src: 'dist/main.min.js'
-                        dest: 'dist/<%= pkg.version %>/main.min.js'
+                        src: '<%= yeoman.dist %>/main.min.js'
+                        dest: '<%= yeoman.dist %>/<%= pkg.version %>/main.min.js'
                     }
                     {
-                        src: 'dist/main.min.css'
-                        dest: 'dist/<%= pkg.version %>/main.min.css'
+                        src: '<%= yeoman.dist %>/main.min.css'
+                        dest: '<%= yeoman.dist %>/<%= pkg.version %>/main.min.css'
                     }
                     {
-                        src: 'dist/index.html'
-                        dest: 'dist/<%= pkg.version %>/index.html'
+                        src: '<%= yeoman.dist %>/index.html'
+                        dest: '<%= yeoman.dist %>/<%= pkg.version %>/index.html'
                     }
                 ]
 

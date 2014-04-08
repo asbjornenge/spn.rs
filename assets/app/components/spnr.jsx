@@ -18,7 +18,7 @@ function(
             var state = this.props.state;
             var spnr  = this.props.spnr;
 
-            var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "images/avatar.gif"
+            var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "/images/avatar.gif"
             radio('ui.avatar.check').broadcast(spnr.user)
 
             var remove  = this.props.state.user.uid == this.props.spnr.user ? (

@@ -15,7 +15,7 @@ function(
         render : function() {
             return (
                 <div id="loginWrapper">
-                    <img class="logo" src="images/logo.png" />
+                    <img class="logo" src="/images/logo.png" />
                     <p>Select login service</p>
                     <div class="loginbutton github" onClick={this.loginGithub}></div>
                     <div class="loginbutton facebook" onClick={this.loginFacebook}></div>

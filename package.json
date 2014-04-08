@@ -29,7 +29,7 @@
     "time-grunt": "~0.1.1",
     "coffee-script": "~1.6.3",
     "grunt-contrib-stylus": "~0.8.0",
-    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-requirejs": "~0.4.0",
     "grunt-htmlrefs": "~0.4.2",
     "grunt-react": "~0.4.0"
   },
