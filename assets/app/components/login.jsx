@@ -30,6 +30,7 @@ function(
         }
     });
     Login.attach = function(mountNode, settings, callback) {
+        React.initializeTouchEvents(true)
         React.renderComponent(<Login settings={settings} />, mountNode, callback)
     };
 
