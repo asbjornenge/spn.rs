@@ -15,6 +15,9 @@
 require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 
+var emitter   = require('nanoemitter')
+var fireposer = require('./modules/fireposer')
+
 /** STATE **/
 
 var localState   = localStorage.getItem('spn.rs');
@@ -37,8 +40,41 @@ var defaultState = {
     }
 }
 state = localState ? JSON.parse(localState) : defaultState;
+function snapshot() {
+    localStorage.setItem('spn.rs', JSON.stringify(state))
+}
+
+/** FIREBASE **/
 
 var root  = new Firebase('https://spnrs.firebaseio.com/')
+
+// fireposer(root)
+//     .path('/global')
+//     .on('child_added', function(child) {
+//         console.log(child)
+//     }).listen()
+
+// firefeed(root, state)
+//     .feed('global')
+//     .on('added', function(spnr) {
+//         console.log('added')
+//     })
+//     .on('removed', function(spnr) {
+//         console.log('removed')
+//     })
+
+// firefeed(root, state)
+//     .feed('mine')
+//     .on('added', function(spnr) {
+//         console.log('added')
+//     })
+//     .on('removed', function(spnr) {
+//         console.log('removed')
+//     })
+
+/** INITIALIZE **/
+
+// The login callback will trigger the initial pageload
 var login = new FirebaseSimpleLogin(root, function(error, user) {
     console.log('login', error, user)
 })

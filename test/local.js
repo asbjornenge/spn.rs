@@ -3,4 +3,5 @@ document       = jsdom('');
 window         = document.createWindow();
 navigator      = window.navigator;
 
-// require('./spec.feed.js')
+require('./spec.fireposer.js')
+require('./spec.firefeed.js')
