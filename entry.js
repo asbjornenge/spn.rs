@@ -15,8 +15,8 @@
 require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 
-var emitter   = require('nanoemitter')
-var fireposer = require('./modules/fireposer')
+var emitter  = require('nanoemitter')()
+var firefeed = require('./modules/firefeed')
 
 /** STATE **/
 
@@ -48,29 +48,28 @@ function snapshot() {
 
 var root  = new Firebase('https://spnrs.firebaseio.com/')
 
-// fireposer(root)
-//     .path('/global')
-//     .on('child_added', function(child) {
-//         console.log(child)
-//     }).listen()
+emitter.on('logged_in', function() {
 
-// firefeed(root, state)
-//     .feed('global')
-//     .on('added', function(spnr) {
-//         console.log('added')
-//     })
-//     .on('removed', function(spnr) {
-//         console.log('removed')
-//     })
+    firefeed(root, state)
+        .feed('global')
+        .on('child_added', function(spnr) {
+            console.log(spnr)
+        })
+        .on('child_removed', function(spnr) {
+            console.log('removed')
+        }).listen()
 
-// firefeed(root, state)
-//     .feed('mine')
-//     .on('added', function(spnr) {
-//         console.log('added')
-//     })
-//     .on('removed', function(spnr) {
-//         console.log('removed')
-//     })
+    firefeed(root, state)
+        .feed('mine')
+        .on('added', function(spnr) {
+            console.log('added')
+        })
+        .on('removed', function(spnr) {
+            console.log('removed')
+        })
+
+})
+
 
 /** INITIALIZE **/
 
