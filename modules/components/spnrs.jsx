@@ -1,74 +1,61 @@
-/**
- * @jsx React.DOM
- */
+/** @jsx React.DOM */
 
-define([
-    'react',
-    'radio',
-    'comp/spnr'
-],
-function(
-    React,
-    radio,
-    Spnr
-) {
+var React = require('react')
+var Spnr  = require('./spnr.jsx')
 
-    var Spnrs = React.createClass({
-        render : function() {
-            var addinput, spnrs;
-            if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
-            spnrs = this.props.state[this.props.state.view].map(function(spnr) {
-                return <Spnr spnr={spnr} state={this.props.state} />
-            }.bind(this))
-            return (
-                <div id="spnrsWrapper">
-                    <ul class="top">
-                        <li onClick={this.handleLogout}>Logout</li>
-                        <li class="logo">LOGO</li>
-                        <li onClick={this.handleAddClick}>Add</li>
-                    </ul>
-                    <div class="spnrscroll">
-                        {addinput}
-                        {spnrs}
-                    </div>
-                    <ul class="bottom">
-                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'global'    ? 'global selected'    : 'global'}>Global</li>
-                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}>Favorites</li>
-                        <li onClick={this.handleChangeViewClick} class={this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}>Mine</li>
-                    </ul>
+var Spnrs = React.createClass({
+    render : function() {
+        var addinput, spnrs;
+        if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
+        spnrs = this.props.state[this.props.state.view].map(function(spnr) {
+            return <Spnr spnr={spnr} state={this.props.state} />
+        }.bind(this))
+        return (
+            <div id="spnrsWrapper">
+                <ul className="top">
+                    <li onClick={this.handleLogout}>Logout</li>
+                    <li className="logo">LOGO</li>
+                    <li onClick={this.handleAddClick}>Add</li>
+                </ul>
+                <div className="spnrscroll">
+                    {addinput}
+                    {spnrs}
                 </div>
-            )
-        },
-        componentDidUpdate : function(prevProps, prevState) {
-
-            if (this.props.state.adding) {
-                setTimeout(function() {
-                    this.refs.addInput.getDOMNode().focus();
-                }.bind(this),100)
-            }
-
-        },
-        handleLogout : function() {
-            radio('ui.event.logout').broadcast()
-        },
-        handleAddClick : function() {
-            radio('state.change').broadcast({adding:!this.props.state.adding})
-        },
-        handleAddInput : function(e) {
-            if (e.which == 13) {
-                var node = this.refs.addInput.getDOMNode();
-                if (node.value.length > 0) radio('ui.event.add').broadcast(node.value);
-                node.value = "";
-            }
-        },
-        handleChangeViewClick : function(e) {
-            radio('state.change').broadcast({view:e.target.className})
+                <ul className="bottom">
+                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'global'    ? 'global selected'    : 'global'}>Global</li>
+                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}>Favorites</li>
+                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}>Mine</li>
+                </ul>
+            </div>
+        )
+    },
+    componentDidUpdate : function(prevProps, prevState) {
+        if (this.props.state.adding) {
+            setTimeout(function() {
+                this.refs.addInput.getDOMNode().focus();
+            }.bind(this),100)
         }
-    });
-    Spnrs.attach = function(mountNode, state, callback) {
-        React.renderComponent(<Spnrs state={state} />, mountNode, callback)
-    };
+    },
+    handleLogout : function() {
+        this.props.emitter.trigger('logout')
+    },
+    handleAddClick : function() {
+        // todo - move to internal state?
+        // this.props.emitter.trigger('adding')
+    },
+    handleAddInput : function(e) {
+        if (e.which == 13) {
+            var node = this.refs.addInput.getDOMNode();
+            if (node.value.length > 0) this.props.emitter.trigger('add').broadcast(node.value);
+            node.value = "";
+        }
+    },
+    handleChangeViewClick : function(e) {
+        this.props.state.view = e.target.className
+        this.props.emitter.trigger('render')
+        // radio('state.change').broadcast({view:e.target.className})
+    }
+});
 
-    return Spnrs
+module.exports = Spnrs
 
-})

@@ -1,39 +1,24 @@
-/**
- * @jsx React.DOM
- */
+/** @jsx React.DOM */
 
-define([
-    'react',
-    'radio'
-],
-function(
-    React,
-    radio
-) {
+var React = require('react')
 
-    var Login = React.createClass({
-        render : function() {
-            return (
-                <div id="loginWrapper">
-                    <img class="logo" src="/images/logo.png" />
-                    <p>Select login service</p>
-                    <div class="loginbutton github" onClick={this.loginGithub}></div>
-                    <div class="loginbutton facebook" onClick={this.loginFacebook}></div>
-                </div>
-            )
-        },
-        loginGithub : function() {
-            radio('ui.event.login').broadcast('github');
-        },
-        loginFacebook : function() {
-            radio('ui.event.login').broadcast('facebook');
-        }
-    });
-    Login.attach = function(mountNode, settings, callback) {
-        React.initializeTouchEvents(true)
-        React.renderComponent(<Login settings={settings} />, mountNode, callback)
-    };
-
-    return Login
-
+var Login = React.createClass({
+    render : function() {
+        return (
+            <div id="loginWrapper">
+                <img className="logo" src="/images/logo.png" />
+                <p>Select login service</p>
+                <div className="loginbutton github"   onClick={this.loginGithub}></div>
+                <div className="loginbutton facebook" onClick={this.loginFacebook}></div>
+            </div>
+        )
+    },
+    loginGithub : function() {
+        this.props.emitter.trigger('login','github')
+    },
+    loginFacebook : function() {
+        this.props.emitter.trigger('login','facebook')
+    }
 })
+
+module.exports = Login

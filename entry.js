@@ -1,22 +1,15 @@
+/** SPNRS ENTRYPOINT **/
 
-// function(
-//     radio,
-//     _,
-//     dom,
-//     moment,
-//     remotedb,
-//     mutator,
-//     utils,
-//     trans,
-//     Login,
-//     Spnrs)
-// {
-
+require('./styles/main.styl')
 require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 
+var React    = require('react')
+var Login    = require('./modules/components/login.jsx')
+var Spnrs    = require('./modules/components/spnrs.jsx')
 var emitter  = require('nanoemitter')()
 var firefeed = require('./modules/firefeed')
+var dom      = require('nanodom')
 
 /** STATE **/
 
@@ -47,13 +40,13 @@ function snapshot() {
 /** FIREBASE **/
 
 var root  = new Firebase('https://spnrs.firebaseio.com/')
-
 emitter.on('logged_in', function() {
 
     firefeed(root, state)
         .feed('global')
         .on('child_added', function(spnr) {
-            console.log(spnr)
+            state.global.unshift(spnr)
+            emitter.trigger('render')
         })
         .on('child_removed', function(spnr) {
             console.log('removed')
@@ -61,24 +54,57 @@ emitter.on('logged_in', function() {
 
     firefeed(root, state)
         .feed('mine')
-        .on('added', function(spnr) {
-            console.log('added')
+        .on('child_added', function(spnr) {
+            state.mine.unshift(spnr)
+            emitter.trigger('render')
         })
-        .on('removed', function(spnr) {
+        .on('child_removed', function(spnr) {
             console.log('removed')
-        })
+        }).listen()
+
+    // TODO: Halt these on logout
 
 })
 
+/** VIEWS **/
+
+React.initializeTouchEvents(true)
+// Render a waiting view - or have it set by css default.
+emitter.on('render', function() {
+    console.log('rendering')
+    var mountnode = dom('#container')[0];
+    if (!state.user) {
+        React.renderComponent(Login({state:state, emitter:emitter}), mountnode)
+    } else {
+        React.renderComponent(Spnrs({state:state, emitter:emitter}), mountnode)
+    }
+})
+
+/** LOGIN / LOGOUT **/
+
+emitter.on('login', function(service) {
+    var options = {}
+    switch(service) {
+        case 'github':
+            options = { rememberMe : true, scope : 'user'}
+            break;
+        case 'facebook':
+            options = { rememberMe: true, scope: 'email' }
+            break;
+    }
+    simplelogin.login(service, options);
+})
+emitter.on('logout', function() {
+    simplelogin.logout()
+})
 
 /** INITIALIZE **/
 
-// The login callback will trigger the initial pageload
-var login = new FirebaseSimpleLogin(root, function(error, user) {
-    console.log('login', error, user)
+var simplelogin = new FirebaseSimpleLogin(root, function(error, user) {
+    state.user = user
+    if (user) emitter.trigger('logged_in')
+    emitter.trigger('render')
 })
-
-document.write('EPLE')
 
 // /** REMOTE **/
 
