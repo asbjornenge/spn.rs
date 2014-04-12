@@ -37,12 +37,13 @@ function snapshot() {
     localStorage.setItem('spn.rs', JSON.stringify(state))
 }
 
-/** FIREBASE **/
+/** FEEDS **/
 
 var root  = new Firebase('https://spnrs.firebaseio.com/')
+var feeds = {}
 emitter.on('logged_in', function() {
 
-    firefeed(root, state)
+    this.global = firefeed(root, state)
         .feed('global')
         .on('child_added', function(spnr) {
             state.global.unshift(spnr)
@@ -52,7 +53,7 @@ emitter.on('logged_in', function() {
             console.log('removed')
         }).listen()
 
-    firefeed(root, state)
+    this.mine = firefeed(root, state)
         .feed('mine')
         .on('child_added', function(spnr) {
             state.mine.unshift(spnr)
@@ -62,9 +63,13 @@ emitter.on('logged_in', function() {
             console.log('removed')
         }).listen()
 
-    // TODO: Halt these on logout
+}.bind(feeds))
+emitter.on('logged_out', function() {
 
-})
+    this.global.pause()
+    this.mine.pause()
+
+}.bind(feeds))
 
 /** VIEWS **/
 
@@ -96,6 +101,7 @@ emitter.on('login', function(service) {
 })
 emitter.on('logout', function() {
     simplelogin.logout()
+    emitter.trigger('logged_out')
 })
 
 /** INITIALIZE **/

@@ -3,7 +3,7 @@ var fireposer = require('./fireposer')
 function firefeed(root, state) {
     this.root      = root
     this.state     = state
-    this.poser     = fireposer(root).from()
+    this.poser     = fireposer(root)
     this.listeners = {}
 }
 firefeed.prototype.feed = function(feed) {
@@ -19,8 +19,12 @@ firefeed.prototype.on = function(event, fn) {
     this.poser.on(event, eventWrapper(event, fn, this))
     return this
 }
+firefeed.prototype.pause = function() {
+    this.poser.root.off()
+}
 firefeed.prototype.listen = function() {
     this.poser.listen()
+    return this
 }
 
 function eventWrapper(event, fn, ff) {
