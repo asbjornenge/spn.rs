@@ -10,7 +10,7 @@ var Spnr = React.createClass({
         var spnr  = this.props.spnr;
 
         var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "/images/avatar.gif"
-        // radio('ui.avatar.check').broadcast(spnr.user)
+        this.props.emitter.trigger('check_avatar', spnr.user)
 
         var remove  = this.props.state.user.uid == this.props.spnr.user ? (
             <li onClick={this.handleRemoveClick}>Remove</li>

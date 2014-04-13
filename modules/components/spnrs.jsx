@@ -8,7 +8,7 @@ var Spnrs = React.createClass({
         var addinput, spnrs;
         if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
         spnrs = this.props.state[this.props.state.view].map(function(spnr) {
-            return <Spnr spnr={spnr} state={this.props.state} />
+            return <Spnr spnr={spnr} state={this.props.state} emitter={this.props.emitter} />
         }.bind(this))
         return (
             <div id="spnrsWrapper">

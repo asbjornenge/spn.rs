@@ -104,6 +104,13 @@ emitter.on('logout', function() {
     emitter.trigger('logged_out')
 })
 
+/** AVATARS **/
+
+emitter.on('check_avatar', function(user_id) {
+    console.log('checking',user_id)
+    // avatars.check(user_id, state)
+})
+
 /** INITIALIZE **/
 
 var simplelogin = new FirebaseSimpleLogin(root, function(error, user) {
