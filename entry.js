@@ -10,6 +10,7 @@ var Spnrs    = require('./modules/components/spnrs.jsx')
 var emitter  = require('nanoemitter')()
 var firefeed = require('./modules/firefeed')
 var dom      = require('nanodom')
+var avatar   = require('./modules/avatar')
 
 /** STATE **/
 
@@ -107,8 +108,9 @@ emitter.on('logout', function() {
 /** AVATARS **/
 
 emitter.on('check_avatar', function(user_id) {
-    console.log('checking',user_id)
-    // avatars.check(user_id, state)
+    avatar.check(user_id, state, 30, function(render) {
+        if (render) emitter.trigger('render')
+    })
 })
 
 /** INITIALIZE **/

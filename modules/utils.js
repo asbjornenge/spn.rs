@@ -1,7 +1,6 @@
-define([], function() {
-
-    function convertImgToBase64(url, callback, outputFormat){
-        var canvas = document.createElement('CANVAS'),
+var utils = {
+    convertImgToBase64 : function(url, callback, outputFormat) {
+        var canvas = document.createElement('canvas'),
             ctx = canvas.getContext('2d'),
             img = new Image;
         img.crossOrigin = 'Anonymous';
@@ -15,9 +14,6 @@ define([], function() {
         };
         img.src = url;
     }
+}
 
-    return {
-        convertImgToBase64 : convertImgToBase64
-    }
-
-})
+module.exports = utils

@@ -5,3 +5,4 @@ navigator      = window.navigator;
 
 require('./spec.fireposer.js')
 require('./spec.firefeed.js')
+require('./spec.avatar.js')
