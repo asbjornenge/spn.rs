@@ -75,7 +75,7 @@ emitter.on('logged_out', function() {
 /** VIEWS **/
 
 React.initializeTouchEvents(true)
-// Render a waiting view - or have it set by css default.
+// Render a "loading" view - or have it set by css default.
 emitter.on('render', function() {
     console.log('rendering')
     var mountnode = dom('#container')[0];

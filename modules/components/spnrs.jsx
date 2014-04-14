@@ -6,7 +6,7 @@ var Spnr  = require('./spnr.jsx')
 var Spnrs = React.createClass({
     render : function() {
         var addinput, spnrs;
-        if (this.props.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
+        if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
         spnrs = this.props.state[this.props.state.view].map(function(spnr) {
             return <Spnr spnr={spnr} state={this.props.state} emitter={this.props.emitter} />
         }.bind(this))
@@ -29,6 +29,9 @@ var Spnrs = React.createClass({
             </div>
         )
     },
+    getInitialState : function() {
+        return { adding : false }
+    },
     componentDidUpdate : function(prevProps, prevState) {
         if (this.props.state.adding) {
             setTimeout(function() {
@@ -40,20 +43,18 @@ var Spnrs = React.createClass({
         this.props.emitter.trigger('logout')
     },
     handleAddClick : function() {
-        // todo - move to internal state?
-        // this.props.emitter.trigger('adding')
+        this.setState({adding:!this.state.adding})
     },
     handleAddInput : function(e) {
         if (e.which == 13) {
             var node = this.refs.addInput.getDOMNode();
-            if (node.value.length > 0) this.props.emitter.trigger('add').broadcast(node.value);
+            if (node.value.length > 0) this.props.emitter.trigger('add', node.value);
             node.value = "";
         }
     },
     handleChangeViewClick : function(e) {
         this.props.state.view = e.target.className
         this.props.emitter.trigger('render')
-        // radio('state.change').broadcast({view:e.target.className})
     }
 });
 
