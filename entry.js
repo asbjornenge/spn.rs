@@ -113,6 +113,18 @@ emitter.on('check_avatar', function(user_id) {
     })
 })
 
+/** ADD **/
+
+emitter.on('add', function(spnr) {
+    state.mine.unshift({
+        spnr   : spnr,
+        user   : state.user.uid,
+        synced : false
+    })
+    emitter.trigger('render')
+    emitter.trigger('sync')
+})
+
 /** INITIALIZE **/
 
 var simplelogin = new FirebaseSimpleLogin(root, function(error, user) {

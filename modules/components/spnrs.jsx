@@ -34,9 +34,6 @@ var Spnrs = React.createClass({
     },
     componentDidUpdate : function(prevProps, prevState) {
         if (this.props.state.adding) {
-            setTimeout(function() {
-                this.refs.addInput.getDOMNode().focus();
-            }.bind(this),100)
         }
     },
     handleLogout : function() {
@@ -44,6 +41,10 @@ var Spnrs = React.createClass({
     },
     handleAddClick : function() {
         this.setState({adding:!this.state.adding})
+        if (this.state.adding) return
+        setTimeout(function() {
+            this.refs.addInput.getDOMNode().focus();
+        }.bind(this),100)
     },
     handleAddInput : function(e) {
         if (e.which == 13) {
