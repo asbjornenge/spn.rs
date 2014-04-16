@@ -1,3 +1,9 @@
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+}
+
 var utils = {
     convertImgToBase64 : function(url, callback, outputFormat) {
         var canvas = document.createElement('canvas'),
@@ -13,6 +19,11 @@ var utils = {
             canvas = null;
         };
         img.src = url;
+    },
+    uid : function(len) {
+        var uid = ""
+        while(uid.length < len) { uid = uid+s4() }
+        return uid.slice(0,len)
     }
 }
 
