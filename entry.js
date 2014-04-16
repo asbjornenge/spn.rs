@@ -82,6 +82,7 @@ emitter.on('logged_in', function() {
 emitter.on('logged_out', function() {
 
     state = _.clone(defaultState, true)
+    snapshot()
     this.global.pause()
     this.mine.pause()
     window.removeEventListener('online', syncListener)
