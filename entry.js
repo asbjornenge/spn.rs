@@ -36,15 +36,16 @@ var defaultState = {
         }
     }
 }
-state = localState ? JSON.parse(localState) : defaultState;
+state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
 function snapshot() {
     localStorage.setItem('spn.rs', JSON.stringify(state))
 }
 
 /** FEEDS **/
 
-var root  = new Firebase('https://spnrs.firebaseio.com/')
-var feeds = {}
+var root         = new Firebase('https://spnrs.firebaseio.com/')
+var feeds        = {}
+var syncListener = function() { emitter.trigger('sync') }
 emitter.on('logged_in', function() {
 
     this.global = firefeed(root, state)
@@ -75,15 +76,31 @@ emitter.on('logged_in', function() {
             console.log('removed')
         }).listen()
 
+    window.addEventListener('online', syncListener)
+
 }.bind(feeds))
 emitter.on('logged_out', function() {
 
+    state = _.clone(defaultState, true)
     this.global.pause()
     this.mine.pause()
+    window.removeEventListener('online', syncListener)
 
 }.bind(feeds))
 
-/** VIEWS **/
+/** SYNC **/
+
+emitter.on('sync', function() {
+    if (!navigator.onLine) return
+    if (!state.user) return
+    sync.mine(state.mine, root.child('users/'+state.user.uid+'/spnrs'), function(synced) {
+        // Dersom vi plutselig har flere som har blitt synced, render...
+        // TODO: Kanskje ikke her? tenke paa dette
+        if (synced.length > 1) emitter.trigger('render')
+    })
+})
+
+/** RENDER **/
 
 React.initializeTouchEvents(true)
 // Render a "loading" view - or have it set by css default.
@@ -133,11 +150,7 @@ emitter.on('add', function(spnr) {
         synced : false
     })
     emitter.trigger('render')
-    sync.mine(state.mine, root.child('users/'+state.user.uid+'/spnrs'), function(synced) {
-        // Dersom vi plutselig har flere som har blitt synced, render...
-        // TODO: Kanskje ikke her? tenke paa dette
-        if (synced.length > 1) emitter.trigger('render')
-    })
+    emitter.trigger('sync')
 })
 
 /** INITIALIZE **/
