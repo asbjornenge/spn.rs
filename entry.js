@@ -11,6 +11,9 @@ var emitter  = require('nanoemitter')()
 var firefeed = require('./modules/firefeed')
 var dom      = require('nanodom')
 var avatar   = require('./modules/avatar')
+var sync     = require('./modules/sync')
+var _        = require('lodash')
+
 
 /** STATE **/
 
@@ -59,6 +62,14 @@ emitter.on('logged_in', function() {
         .on('child_added', function(spnr) {
             state.mine.unshift(spnr)
             emitter.trigger('render')
+        })
+        .on('child_changed', function(spnr) {
+            state.mine.forEach(function(s) {
+                if (s.uuid == spnr.uuid) {
+                    _.merge(s, spnr)
+                    // spanshot
+                }
+            })
         })
         .on('child_removed', function(spnr) {
             console.log('removed')
@@ -122,7 +133,11 @@ emitter.on('add', function(spnr) {
         synced : false
     })
     emitter.trigger('render')
-    emitter.trigger('sync')
+    sync.mine(state.mine, root.child('users/'+state.user.uid+'/spnrs'), function(synced) {
+        // Dersom vi plutselig har flere som har blitt synced, render...
+        // TODO: Kanskje ikke her? tenke paa dette
+        if (synced.length > 1) emitter.trigger('render')
+    })
 })
 
 /** INITIALIZE **/
