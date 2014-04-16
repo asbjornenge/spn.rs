@@ -30,6 +30,8 @@ firefeed.prototype.listen = function() {
 function eventWrapper(event, fn, ff) {
     if (event == 'child_added') {
         return function(child) {
+            var filtered = ff.state[ff._feed].filter(function(s) { return s.uuid == child.uuid })
+            if (filtered.length > 0) return
             ff.state.latest[ff._feed].loaded = child.fid
             fn(child)
         }
