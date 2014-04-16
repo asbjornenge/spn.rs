@@ -54,6 +54,7 @@ var Spnrs = React.createClass({
         }
     },
     handleChangeViewClick : function(e) {
+        if (e.target.className.indexOf(this.props.state.view) >= 0) return
         this.props.state.view = e.target.className
         this.props.emitter.trigger('render')
     }
