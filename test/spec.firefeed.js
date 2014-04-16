@@ -2,7 +2,10 @@ var assert    = require('assert')
 var fireposer = require('../modules/fireposer')
 var firefeed  = require('../modules/firefeed')
 
+var fakeuid   = 'abc12345'
 var fakestate = {
+    global : [],
+    mine   : [{ uuid : fakeuid }],
     latest : {
         global : {},
         mine   : {}
@@ -38,6 +41,17 @@ describe('FEED', function() {
     it('Should transform the mine feed', function() {
         var ff = firefeed(fakeroot,fakestate).feed('mine')
         assert(ff.poser._path == 'users/'+fakestate.user.uid+'/spnrs')
+    })
+
+    it('Should NOT call the child_added callback if child exists for the feed', function(done) {
+        var cb = function(child) { assert(child.uuid != fakeuid); done() }
+
+        var ff = firefeed(fakeroot,fakestate)
+                    .feed('mine')
+                    .on('child_added', cb)
+
+        ff.poser.listeners.child_added[0]({ uuid : fakeuid })
+        ff.poser.listeners.child_added[0]({ uuid : 'anotheruid' })
     })
 
 })
