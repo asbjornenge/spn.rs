@@ -14,6 +14,7 @@ var avatar   = require('./modules/avatar')
 var sync     = require('./modules/sync')
 var _        = require('lodash')
 
+React.initializeTouchEvents(true)
 
 /** STATE **/
 
@@ -103,7 +104,6 @@ emitter.on('sync', function() {
 
 /** RENDER **/
 
-React.initializeTouchEvents(true)
 // Render a "loading" view - or have it set by css default.
 emitter.on('render', function() {
     console.log('rendering')
