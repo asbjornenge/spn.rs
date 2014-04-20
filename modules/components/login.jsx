@@ -8,8 +8,8 @@ var Login = React.createClass({
             <div id="loginWrapper">
                 <img className="logo" src="/images/logo.png" />
                 <p>Select login service</p>
-                <div className="loginbutton github"   onClick={this.loginGithub}></div>
-                <div className="loginbutton facebook" onClick={this.loginFacebook}></div>
+                <div className="loginbutton github"   onTouchEnd={this.loginGithub}></div>
+                <div className="loginbutton facebook" onTouchEnd={this.loginFacebook}></div>
             </div>
         )
     },
