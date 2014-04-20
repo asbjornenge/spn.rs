@@ -13,7 +13,7 @@ var Spnr = React.createClass({
         this.props.emitter.trigger('check_avatar', spnr.user)
 
         var remove  = this.props.state.user.uid == this.props.spnr.user ? (
-            <li onClick={this.handleRemoveClick}>Remove</li>
+            <li onTouchEnd={this.handleRemoveClick}>Remove</li>
         ) : undefined
 
         var details = this.state.details ? (
@@ -27,7 +27,7 @@ var Spnr = React.createClass({
         return (
             <div className="listspnr">
                 <img src={avatar} />
-                <div className="spnr" onClick={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
+                <div className="spnr" onTouchEnd={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
                 {details}
             </div>
         )

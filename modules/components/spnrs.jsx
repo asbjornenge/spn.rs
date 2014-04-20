@@ -13,18 +13,18 @@ var Spnrs = React.createClass({
         return (
             <div id="spnrsWrapper">
                 <ul className="top">
-                    <li onClick={this.handleLogout}>Logout</li>
+                    <li onTouchEnd={this.handleLogout}>Logout</li>
                     <li className="logo">LOGO</li>
-                    <li onClick={this.handleAddClick}>Add</li>
+                    <li onTouchEnd={this.handleAddClick}>Add</li>
                 </ul>
                 <div className="spnrscroll">
                     {addinput}
                     {spnrs}
                 </div>
                 <ul className="bottom">
-                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'global'    ? 'global selected'    : 'global'}>Global</li>
-                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}>Favorites</li>
-                    <li onClick={this.handleChangeViewClick} className={this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}>Mine</li>
+                    <li onTouchEnd={this.handleChangeViewClick} className={this.props.state.view == 'global'    ? 'global selected'    : 'global'}>Global</li>
+                    <li onTouchEnd={this.handleChangeViewClick} className={this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}>Favorites</li>
+                    <li onTouchEnd={this.handleChangeViewClick} className={this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}>Mine</li>
                 </ul>
             </div>
         )
