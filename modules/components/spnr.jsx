@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
-var React = require('react')
+var React  = require('react')
+var moment = require('moment')
 
 var Spnr = React.createClass({
 
@@ -27,7 +28,12 @@ var Spnr = React.createClass({
         return (
             <div className="listspnr">
                 <img src={avatar} />
-                <div className="spnr" onTouchEnd={this.handleListSpnrClick}>{this.props.spnr.spnr}</div>
+                <div className   = "spnr"
+                    onTouchStart = {this.handleTouchStart}
+                    onTouchMove  = {this.handleTouchMove}
+                    onTouchEnd   = {this.handleTouchEnd}>
+                        {this.props.spnr.spnr}
+                </div>
                 {details}
             </div>
         )
@@ -35,8 +41,31 @@ var Spnr = React.createClass({
     getInitialState: function() {
         return { details : false }
     },
-    handleListSpnrClick : function() {
-        this.setState({ details : !this.state.details })
+    handleTouchStart : function(e) {
+        console.log(e.touches)
+        this.touch_start = {
+            time    : moment(),
+            touches : e.touches
+        }
+        this.touch_end = {
+            touches : [{ pageX:e.touches[0].pageX, pageY:e.touches[0].pageY}]
+        }
+    },
+    handleTouchMove : function(e) {
+        this.touch_end = {
+            touches : e.touches
+        }
+    },
+    handleTouchEnd : function(e) {
+        var time_diff = moment().diff(this.touch_start.time, 'milliseconds')
+        var x_dist    = this.touch_end.touches[0].pageX - this.touch_start.touches[0].pageX
+        var y_dist    = this.touch_end.touches[0].pageY - this.touch_start.touches[0].pageY
+        console.log(x_dist, y_dist)
+        if (time_diff < 120 && Math.abs(y_dist) < 30) {
+            // TAP
+            // TODO - also measure distance
+            this.setState({ details : !this.state.details })
+        }
     },
     handleRemoveClick : function() {
         // radio('ui.event.remove').broadcast(this.props.spnr)
