@@ -10713,7 +10713,7 @@
 	        return { details : false }
 	    },
 	    handleTouchStart : function(e) {
-	        console.log(e.touches)
+	        console.log(e.touches[0].pageY)
 	        this.touch_start = {
 	            time    : moment(),
 	            touches : e.touches
@@ -10723,6 +10723,7 @@
 	        }
 	    },
 	    handleTouchMove : function(e) {
+	        console.log(e.touches[0].pageY)
 	        this.touch_end = {
 	            touches : e.touches
 	        }
