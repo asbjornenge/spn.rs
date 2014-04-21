@@ -61,7 +61,7 @@ var Spnr = React.createClass({
         var x_dist    = this.touch_end.touches[0].pageX - this.touch_start.touches[0].pageX
         var y_dist    = this.touch_end.touches[0].pageY - this.touch_start.touches[0].pageY
         console.log(x_dist, y_dist)
-        if (time_diff < 120 && Math.abs(y_dist) < 30) {
+        if (time_diff < 120 && Math.abs(y_dist) < 5) {
             // TAP
             // TODO - also measure distance
             this.setState({ details : !this.state.details })
