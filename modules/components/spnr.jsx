@@ -26,7 +26,7 @@ var Spnr = React.createClass({
         ) : undefined;
 
         return (
-            <div className="listspnr">
+            <div className="listspnr scrollable">
                 <img src={avatar} />
                 <div className   = "spnr"
                     onTouchStart = {this.handleTouchStart}

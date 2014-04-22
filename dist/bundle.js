@@ -208,6 +208,12 @@
 	    emitter.trigger('render')
 	})
 
+	/** MONKEYBUSINESS **/
+
+	document.addEventListener('touchmove', function(event) {
+	   if (event.target.parentNode.className.indexOf('scrollable') < 0) event.preventDefault()
+	}, false);
+
 
 
 /***/ },
@@ -18593,7 +18599,7 @@
 	        ) : undefined;
 
 	        return (
-	            React.DOM.div( {className:"listspnr"}, 
+	            React.DOM.div( {className:"listspnr scrollable"}, 
 	                React.DOM.img( {src:avatar} ),
 	                React.DOM.div( {className:    "spnr",
 	                    onTouchStart:  this.handleTouchStart,

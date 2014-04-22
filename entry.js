@@ -161,3 +161,9 @@ var simplelogin = new FirebaseSimpleLogin(root, function(error, user) {
     emitter.trigger('render')
 })
 
+/** MONKEYBUSINESS **/
+
+document.addEventListener('touchmove', function(event) {
+   if (event.target.parentNode.className.indexOf('scrollable') < 0) event.preventDefault()
+}, false);
+
