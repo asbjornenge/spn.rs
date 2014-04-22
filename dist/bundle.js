@@ -56,10 +56,10 @@
 	var Spnrs    = __webpack_require__(143)
 	var emitter  = __webpack_require__(147)()
 	var firefeed = __webpack_require__(148)
-	var dom      = __webpack_require__(149)
-	var avatar   = __webpack_require__(150)
-	var sync     = __webpack_require__(152)
-	var _        = __webpack_require__(153)
+	var dom      = __webpack_require__(150)
+	var avatar   = __webpack_require__(151)
+	var sync     = __webpack_require__(153)
+	var _        = __webpack_require__(154)
 
 	React.initializeTouchEvents(true)
 
@@ -67,7 +67,6 @@
 
 	var localState   = localStorage.getItem('spn.rs');
 	var defaultState = {
-	    adding    : false,
 	    view      : 'global',
 	    global    : [],
 	    mine      : [],
@@ -21110,7 +21109,7 @@
 /* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var fireposer = __webpack_require__(154)
+	var fireposer = __webpack_require__(149)
 
 	function firefeed(root, state) {
 	    this.root      = root
@@ -21160,6 +21159,97 @@
 /* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
+	function getRootRef(fp) {
+	    var root = fp.root
+	    if (fp._path) root = root.child(fp._path)
+	    if (fp._take) root = root.limit(fp._take)
+	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
+	    return root
+	}
+
+	function transformSnapshot(snapshot) {
+	    var s = snapshot.val()
+	    s.fid = snapshot.name()
+	    return s
+	}
+
+	var fireposer = function(root) {
+	    this.root      = root
+	    this.listeners = {}
+	}
+	fireposer.prototype.from    = function(last_seen) { this._from = last_seen; return this }
+	fireposer.prototype.take    = function(limit)     { this._take = limit; return this }
+	fireposer.prototype.path    = function(path)      { this._path = path; return this }
+	fireposer.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
+	fireposer.prototype.off     = function(event, fn) {
+	    if (!this.listeners[event]) return this
+	    var index;
+	    for (var i in this.listeners[event]) {
+	        if (this.listeners[event][i] === fn) index = i;
+	    }
+	    if (index != undefined) { this.listeners[event].splice(index,1) }
+	    return this
+	}
+	fireposer.prototype.push    = function(data, cb)  {
+	    var ref  = getRootRef(this).push(data)
+	    if (typeof cb === 'function') cb(ref.name())
+	    return this
+	}
+	fireposer.prototype.remove  = function(id, callback) {
+	    getRootRef(this).remove(id, callback)
+	    return this
+	}
+	fireposer.prototype.once = function(callback) {
+	    getRootRef(this).once('value', function(snapshot) {
+	        var values = snapshot.val()
+	        var data   = Object.keys(values).map(function(id) {
+	            values[id].fid = id
+	            return values[id]
+	        }).reverse()
+	        if (typeof callback === 'function') callback(data)
+	    })
+	    return this
+	}
+	fireposer.prototype.listen = function() {
+	    var root = getRootRef(this)
+
+	    if (this.listeners.child_added) {
+	        root.on('child_added', function(child, prev) {
+	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_changed) {
+	        root.on('child_changed', function(child) {
+	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_removed) {
+	        root.on('child_removed', function(child) {
+	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_moved) {
+	        root.on('child_moved', function(child, prev) {
+	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.value) {
+	        root.on('value', function(data) {
+	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
+	        }.bind(this))
+	    }
+	}
+	module.exports = function(root) { return new fireposer(root) }
+
+
+/***/ },
+/* 150 */
+/***/ function(module, exports, __webpack_require__) {
+
 	function dom() {}
 	dom.prototype             = new Array;
 	dom.prototype.append      = function(element)   { element.forEach(function(e) { this[0].appendChild(e) }.bind(this)); return this }
@@ -21181,11 +21271,11 @@
 
 
 /***/ },
-/* 150 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// var tob64  = require('to-base64')
-	var utils  = __webpack_require__(151)
+	var utils  = __webpack_require__(152)
 	var moment = __webpack_require__(145)
 
 	var avatar = {
@@ -21214,7 +21304,7 @@
 
 
 /***/ },
-/* 151 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	function s4() {
@@ -21250,11 +21340,11 @@
 
 
 /***/ },
-/* 152 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(151)
-	var _     = __webpack_require__(153)
+	var utils = __webpack_require__(152)
+	var _     = __webpack_require__(154)
 
 	var sync = {
 
@@ -21286,7 +21376,7 @@
 
 
 /***/ },
-/* 153 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -28448,97 +28538,6 @@
 	}.call(this));
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(146)(module), (function() { return this; }())))
-
-/***/ },
-/* 154 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function getRootRef(fp) {
-	    var root = fp.root
-	    if (fp._path) root = root.child(fp._path)
-	    if (fp._take) root = root.limit(fp._take)
-	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
-	    return root
-	}
-
-	function transformSnapshot(snapshot) {
-	    var s = snapshot.val()
-	    s.fid = snapshot.name()
-	    return s
-	}
-
-	var fireposer = function(root) {
-	    this.root      = root
-	    this.listeners = {}
-	}
-	fireposer.prototype.from    = function(last_seen) { this._from = last_seen; return this }
-	fireposer.prototype.take    = function(limit)     { this._take = limit; return this }
-	fireposer.prototype.path    = function(path)      { this._path = path; return this }
-	fireposer.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
-	fireposer.prototype.off     = function(event, fn) {
-	    if (!this.listeners[event]) return this
-	    var index;
-	    for (var i in this.listeners[event]) {
-	        if (this.listeners[event][i] === fn) index = i;
-	    }
-	    if (index != undefined) { this.listeners[event].splice(index,1) }
-	    return this
-	}
-	fireposer.prototype.push    = function(data, cb)  {
-	    var ref  = getRootRef(this).push(data)
-	    if (typeof cb === 'function') cb(ref.name())
-	    return this
-	}
-	fireposer.prototype.remove  = function(id, callback) {
-	    getRootRef(this).remove(id, callback)
-	    return this
-	}
-	fireposer.prototype.once = function(callback) {
-	    getRootRef(this).once('value', function(snapshot) {
-	        var values = snapshot.val()
-	        var data   = Object.keys(values).map(function(id) {
-	            values[id].fid = id
-	            return values[id]
-	        }).reverse()
-	        if (typeof callback === 'function') callback(data)
-	    })
-	    return this
-	}
-	fireposer.prototype.listen = function() {
-	    var root = getRootRef(this)
-
-	    if (this.listeners.child_added) {
-	        root.on('child_added', function(child, prev) {
-	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_changed) {
-	        root.on('child_changed', function(child) {
-	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_removed) {
-	        root.on('child_removed', function(child) {
-	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_moved) {
-	        root.on('child_moved', function(child, prev) {
-	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.value) {
-	        root.on('value', function(data) {
-	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
-	        }.bind(this))
-	    }
-	}
-	module.exports = function(root) { return new fireposer(root) }
-
 
 /***/ }
 /******/ ])

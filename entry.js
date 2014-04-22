@@ -20,7 +20,6 @@ React.initializeTouchEvents(true)
 
 var localState   = localStorage.getItem('spn.rs');
 var defaultState = {
-    adding    : false,
     view      : 'global',
     global    : [],
     mine      : [],
