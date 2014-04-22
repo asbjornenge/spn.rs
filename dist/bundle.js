@@ -18570,8 +18570,6 @@
 	var React  = __webpack_require__(6)
 	var moment = __webpack_require__(145)
 
-	var touches = {}
-
 	var Spnr = React.createClass({displayName: 'Spnr',
 
 	    render : function() {
@@ -18611,27 +18609,28 @@
 	        return { details : false }
 	    },
 	    handleTouchStart : function(e) {
-	        console.log(e.touches[0].pageY)
-	        touches.touch_start = {
-	            time    : moment(),
-	            touches : e.touches
+	        console.log('START', e.touches[0].pageY)
+	        this.touch_start = {
+	            t : moment(),
+	            x : e.touches[0].pageX,
+	            y : e.touches[0].pageY
 	        }
-	        touches.touch_end = {
-	            touches : e.touches
+	        this.touch_end = {
+	            x : e.touches[0].pageX,
+	            y : e.touches[0].pageY
 	        }
 	    },
 	    handleTouchMove : function(e) {
-	        console.log('Y',e.touches[0].pageY)
-	        touches.touch_end.touches = e.touches
+	        console.log('MOVE',e.touches[0].pageY)
+	        this.touch_end.x = e.touches[0].pageX
+	        this.touch_end.y = e.touches[0].pageY
 	    },
 	    handleTouchEnd : function(e) {
-	        var time_diff = moment().diff(touches.touch_start.time, 'milliseconds')
-	        var x_dist    = touches.touch_end.touches[0].pageX - touches.touch_start.touches[0].pageX
-	        var y_dist    = touches.touch_end.touches[0].pageY - touches.touch_start.touches[0].pageY
-	        console.log(touches)
+	        var time_diff = moment().diff(this.touch_start.t, 'milliseconds')
+	        var x_dist    = this.touch_end.x - this.touch_start.x
+	        var y_dist    = this.touch_end.y - this.touch_start.y
 	        if (time_diff < 120 && Math.abs(y_dist) < 5) {
 	            // TAP
-	            // TODO - also measure distance
 	            this.setState({ details : !this.state.details })
 	        }
 	    },
