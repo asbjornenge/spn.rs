@@ -13,6 +13,8 @@ gulp.task('webpack', function(callback) {
         gutil.log("[webpack]", stats.toString({
             colors: true
         }))
-        callback()
+        if (typeof callback == 'function') callback()
     })
 })
+
+module.exports = gulp

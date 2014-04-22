@@ -8,9 +8,12 @@
     "localtest": "mocha -R nyan --check-leaks -w test/local"
   },
   "devDependencies": {
+    "body-parser": "^1.0.2",
     "css-loader": "^0.6.12",
     "envify": "^1.2.1",
+    "express": "^4.0.0",
     "file-loader": "^0.5.1",
+    "gaze": "^0.5.1",
     "gulp": "^3.6.1",
     "gulp-util": "^2.2.14",
     "jsdom": "^0.10.5",
@@ -24,6 +27,7 @@
     "react": "^0.10.0",
     "style-loader": "^0.6.3",
     "stylus-loader": "^0.2.0",
+    "tiny-lr-fork": "0.0.5",
     "url-loader": "^0.5.5",
     "webpack": "^1.1.8"
   },

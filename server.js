@@ -1,8 +1,8 @@
-var gulp       = require('./gulpfile')
-var express    = require('express')
-var gaze       = require('gaze')
-var bodyParser = require('body-parser')
-var tinylr     = require('tiny-lr-fork')()
+var gulp    = require('./gulpfile')
+var express = require('express')
+var gaze    = require('gaze')
+var path    = require('path')
+var tinylr  = require('tiny-lr-fork')()
 
 var conf = {
     src  : 'src',
@@ -10,17 +10,22 @@ var conf = {
     port : 4000
 }
 
+/** Livereload */
+
 tinylr.listen(35729)
+var livereload = function (evt, filepath) {
+    tinylr.changed({
+        body: {
+            files: path.relative(__dirname+'/dist', filepath)
+        }
+    })
+}
 
-/**
- * App.
- */
-
-// gulp.tasks.default.dep.forEach(function(task) {
-//     gulp.tasks[task].fn()
-// })
+/** Initial webpack */
 
 gulp.tasks.webpack.fn()
+
+/** Server */
 
 var app = express()
     .use(express.static(__dirname + '/' + conf.dist))
@@ -28,9 +33,7 @@ var app = express()
         console.log('Server running at http://localhost:'+conf.port)
     })
 
-// livereload = require('livereload');
-// server = livereload.createServer();
-// server.watch(__dirname + '/' + conf.dist);
+/** Gaze */
 
 gaze(['entry.js','modules/*.js'], function(err, watcher) {
     this.on('all', function(event, filepath) {
@@ -38,13 +41,9 @@ gaze(['entry.js','modules/*.js'], function(err, watcher) {
     })
 })
 
-// gaze(['src/sass/*.scss'], function(err, watcher) {
-//     this.on('all', function(event, filepath) {
-//         gulp.tasks.sass.fn()
-//     })
-// })
-// gaze(['src/js/*.js'], function(err, watcher) {
-//     this.on('all', function(event, filepath) {
-//         gulp.tasks.browserify.fn()
-//     })
-// })
+gaze('dist/bundle.js', function(err, watcher) {
+    watcher.on('all', function(event, filepath) {
+        livereload(event, filepath)
+    })
+})
+
