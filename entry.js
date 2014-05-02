@@ -1,6 +1,8 @@
 /** SPNRS ENTRYPOINT **/
 
 require('./styles/main.styl')
+require('./styles/spnrs.styl')
+require('./styles/login.styl')
 require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 

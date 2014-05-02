@@ -1,7 +1,8 @@
 /** @jsx React.DOM */
 
-var React  = require('react')
-var moment = require('moment')
+var React       = require('react')
+var moment      = require('moment')
+var SpnrDetails = require('./spnrDetails.jsx')
 
 var Spnr = React.createClass({
 
@@ -13,21 +14,19 @@ var Spnr = React.createClass({
         var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "/images/avatar.gif"
         this.props.emitter.trigger('check_avatar', spnr.user)
 
-        var remove  = this.props.state.user.uid == this.props.spnr.user ? (
-            <li onTouchEnd={this.handleRemoveClick}>Remove</li>
-        ) : undefined
-
         var details = this.state.details ? (
-             <div className="details">
-                <ul>
-                    {remove}
-                </ul>
-            </div>
+             <SpnrDetails spnr={this.props.spnr} />
         ) : undefined;
+
+        var avatarStyle = {
+            'background-image' : 'url('+avatar+')'
+        }
 
         return (
             <div className="listspnr scrollable">
-                <img src={avatar} />
+                <div className="avatarBox">
+                    <div className="avatar" style={avatarStyle}></div>
+                </div>
                 <div className   = "spnr"
                     onTouchStart = {this.handleTouchStart}
                     onTouchMove  = {this.handleTouchMove}
@@ -73,7 +72,3 @@ var Spnr = React.createClass({
 });
 
 module.exports = Spnr
-// Spnr.attach = function(mountNode, spnr, callback) {
-//     React.renderComponent(<Spnr spnr={spnr} />, mountNode, callback)
-// };
-

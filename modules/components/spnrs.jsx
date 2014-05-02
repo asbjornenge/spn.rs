@@ -6,7 +6,7 @@ var Spnr  = require('./spnr.jsx')
 var Spnrs = React.createClass({
     render : function() {
         var addinput, spnrs;
-        if (this.state.adding) addinput = <input type="text" ref="addInput" onKeyPress={this.handleAddInput} />
+        if (this.state.adding) addinput = <input type="text" ref="addInput" placeholder="Whats up?" onKeyPress={this.handleAddInput} />
         spnrs = this.props.state[this.props.state.view].map(function(spnr) {
             return <Spnr spnr={spnr} state={this.props.state} emitter={this.props.emitter} />
         }.bind(this))
