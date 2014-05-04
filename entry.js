@@ -7,8 +7,8 @@ require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 
 var React    = require('react')
-var Login    = require('./modules/components/login.jsx')
-var Spnrs    = require('./modules/components/spnrs.jsx')
+var Login    = require('./modules/components/Login.jsx')
+var SpnrList = require('./modules/components/SpnrList.jsx')
 var emitter  = require('nanoemitter')()
 var firefeed = require('./modules/firefeed')
 var dom      = require('nanodom')
@@ -112,7 +112,7 @@ emitter.on('render', function() {
     if (!state.user) {
         React.renderComponent(Login({state:state, emitter:emitter}), mountnode)
     } else {
-        React.renderComponent(Spnrs({state:state, emitter:emitter}), mountnode)
+        React.renderComponent(SpnrList({state:state, emitter:emitter}), mountnode)
     }
 })
 

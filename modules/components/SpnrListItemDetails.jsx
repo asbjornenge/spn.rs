@@ -2,7 +2,7 @@
 
 var React = require('react')
 
-var SpnrDetails = React.createClass({
+var SpnrListItemDetails = React.createClass({
     render : function() {
         return (
              <div className="spnrDetails">
@@ -14,4 +14,4 @@ var SpnrDetails = React.createClass({
     }
 })
 
-module.exports = SpnrDetails
+module.exports = SpnrListItemDetails

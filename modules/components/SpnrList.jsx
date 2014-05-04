@@ -1,14 +1,14 @@
 /** @jsx React.DOM */
 
-var React = require('react')
-var Spnr  = require('./spnr.jsx')
+var React        = require('react')
+var SpnrListItem = require('./SpnrListItem.jsx')
 
-var Spnrs = React.createClass({
+var SpnrList = React.createClass({
     render : function() {
         var addinput, spnrs;
         if (this.state.adding) addinput = <input type="text" ref="addInput" placeholder="Whats up?" onKeyPress={this.handleAddInput} />
         spnrs = this.props.state[this.props.state.view].map(function(spnr) {
-            return <Spnr spnr={spnr} state={this.props.state} emitter={this.props.emitter} />
+            return <SpnrListItem spnr={spnr} state={this.props.state} emitter={this.props.emitter} />
         }.bind(this))
         return (
             <div id="spnrsWrapper">
@@ -60,5 +60,5 @@ var Spnrs = React.createClass({
     }
 });
 
-module.exports = Spnrs
+module.exports = SpnrList
 

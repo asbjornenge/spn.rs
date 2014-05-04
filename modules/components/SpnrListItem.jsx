@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 
-var React       = require('react')
-var moment      = require('moment')
-var SpnrDetails = require('./spnrDetails.jsx')
+var React               = require('react')
+var moment              = require('moment')
+var SpnrListItemDetails = require('./SpnrListItemDetails.jsx')
 
-var Spnr = React.createClass({
+var SpnrListItem = React.createClass({
 
     render : function() {
 
@@ -15,7 +15,7 @@ var Spnr = React.createClass({
         this.props.emitter.trigger('check_avatar', spnr.user)
 
         var details = this.state.details ? (
-             <SpnrDetails spnr={this.props.spnr} />
+             <SpnrListItemDetails spnr={this.props.spnr} />
         ) : undefined;
 
         var avatarStyle = {
@@ -71,4 +71,4 @@ var Spnr = React.createClass({
     }
 });
 
-module.exports = Spnr
+module.exports = SpnrListItem
