@@ -34,6 +34,7 @@ var SpnrListItem = React.createClass({
                         {this.props.spnr.spnr}
                 </div>
                 {details}
+                <div style={{clear:'both'}}></div>
             </div>
         )
     },
@@ -53,9 +54,13 @@ var SpnrListItem = React.createClass({
         }
     },
     handleTouchMove : function(e) {
-        console.log('MOVE',e.touches[0].pageY)
+        // console.log('MOVE',e.touches[0].pageY)
         this.touch_end.x = e.touches[0].pageX
         this.touch_end.y = e.touches[0].pageY
+        var x_dist = this.touch_end.x - this.touch_start.x
+        this.getDOMNode().style.transform = 'translateX('+x_dist+'px)'
+        // if (Math.abs(x_dist) > 10) {  }
+        // console.log(x_dist)
     },
     handleTouchEnd : function(e) {
         var time_diff = moment().diff(this.touch_start.t, 'milliseconds')
@@ -68,7 +73,12 @@ var SpnrListItem = React.createClass({
     },
     handleRemoveClick : function() {
         // radio('ui.event.remove').broadcast(this.props.spnr)
-    }
+    },
+    // componentDidMount : function() {
+    //     this.getDOMNode().addEventListener('touchmove', function(e) {
+    //         console.log('moving')
+    //     })
+    // }
 });
 
 module.exports = SpnrListItem
