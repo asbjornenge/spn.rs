@@ -23,7 +23,7 @@ var SpnrListItem = React.createClass({
         }
 
         return (
-            <div className="listspnr scrollable">
+            <div className="SpnrListItem scrollable">
                 <div className="avatarBox">
                     <div className="avatar" style={avatarStyle}></div>
                 </div>
