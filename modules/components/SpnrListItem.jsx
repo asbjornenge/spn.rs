@@ -55,6 +55,7 @@ var SpnrListItem = React.createClass({
     },
     handleTouchMove : function(e) {
         // console.log('MOVE',e.touches[0].pageY)
+        e.preventDefault()
         this.touch_end.x = e.touches[0].pageX
         this.touch_end.y = e.touches[0].pageY
         var x_dist = this.touch_end.x - this.touch_start.x
