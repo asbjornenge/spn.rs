@@ -39,7 +39,10 @@ var SpnrListItem = React.createClass({
         )
     },
     getInitialState: function() {
-        return { details : false }
+        return { 
+            details   : false,
+            returning : false
+        }
     },
     handleTouchStart : function(e) {
         // console.log('START', e.touches[0].pageY)
@@ -70,6 +73,7 @@ var SpnrListItem = React.createClass({
         var time_diff = moment().diff(this.touch_start.t, 'milliseconds')
         var x_dist    = this.touch_end.x - this.touch_start.x
         var y_dist    = this.touch_end.y - this.touch_start.y
+        var returning = false
         if (time_diff < 120 && Math.abs(y_dist) < 5) {
             // TAP
             this.setState({ details : !this.state.details })
@@ -78,7 +82,12 @@ var SpnrListItem = React.createClass({
             // EDGE
             if (x_dist > 0) console.log('favorite')
             else console.log('details')
+            returning = true
         }
+        this.getDOMNode().classList.add('returning')
+        setTimeout(function() {
+            this.getDOMNode().classList.remove('returning')
+        }.bind(this),200)
         this.getDOMNode().style['-webkit-transform'] = ''
         document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
     },
