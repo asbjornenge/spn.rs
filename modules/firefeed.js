@@ -1,29 +1,29 @@
-var fireposer = require('./fireposer')
+var firecracker = require('firecracker')
 
 function firefeed(root, state) {
     this.root      = root
     this.state     = state
-    this.poser     = fireposer(root)
+    this.cracker   = firecracker(root)
     this.listeners = {}
 }
 firefeed.prototype.feed = function(feed) {
     var path = feed
     if (feed == 'mine') path = 'users/'+this.state.user.uid+'/spnrs'
     this._feed = feed
-    this.poser
+    this.cracker
         .path(path)
         .from(this.state.latest[feed].loaded)
     return this
 }
 firefeed.prototype.on = function(event, fn) {
-    this.poser.on(event, eventWrapper(event, fn, this))
+    this.cracker.on(event, eventWrapper(event, fn, this))
     return this
 }
 firefeed.prototype.pause = function() {
-    this.poser.root.off()
+    this.cracker.root.off()
 }
 firefeed.prototype.listen = function() {
-    this.poser.listen()
+    this.cracker.listen()
     return this
 }
 

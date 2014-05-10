@@ -1,5 +1,4 @@
 var assert    = require('assert')
-var fireposer = require('../modules/fireposer')
 var firefeed  = require('../modules/firefeed')
 
 var fakeuid   = 'abc12345'
@@ -28,19 +27,19 @@ describe('FEED', function() {
     it('Should remember its feed', function() {
         var ff = firefeed(fakeroot,fakestate).feed('global')
         assert(ff._feed == 'global')
-        assert(ff.poser._path == 'global')
+        assert(ff.cracker._path == 'global')
     })
 
     it('Should bind listeners with .on', function() {
         var ff = firefeed(fakeroot,fakestate)
                     .feed('global')
                     .on('child_added', function(child) {})
-        assert(ff.poser.listeners.child_added.length === 1)
+        assert(ff.cracker.listeners.child_added.length === 1)
     })
 
     it('Should transform the mine feed', function() {
         var ff = firefeed(fakeroot,fakestate).feed('mine')
-        assert(ff.poser._path == 'users/'+fakestate.user.uid+'/spnrs')
+        assert(ff.cracker._path == 'users/'+fakestate.user.uid+'/spnrs')
     })
 
     it('Should NOT call the child_added callback if child exists for the feed', function(done) {
@@ -50,8 +49,8 @@ describe('FEED', function() {
                     .feed('mine')
                     .on('child_added', cb)
 
-        ff.poser.listeners.child_added[0]({ uuid : fakeuid })
-        ff.poser.listeners.child_added[0]({ uuid : 'anotheruid' })
+        ff.cracker.listeners.child_added[0]({ uuid : fakeuid })
+        ff.cracker.listeners.child_added[0]({ uuid : 'anotheruid' })
     })
 
 })

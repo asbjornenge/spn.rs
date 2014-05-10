@@ -13,6 +13,7 @@
     "envify": "^1.2.1",
     "express": "^4.0.0",
     "file-loader": "^0.5.1",
+    "firecracker": "0.0.1",
     "gaze": "^0.5.1",
     "gulp": "^3.6.1",
     "gulp-rename": "^1.2.0",
