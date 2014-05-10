@@ -59,9 +59,9 @@
 	var _        = __webpack_require__(148)
 	var Login    = __webpack_require__(150)
 	var SpnrList = __webpack_require__(151)
-	var firefeed = __webpack_require__(155)
-	var avatar   = __webpack_require__(157)
-	var sync     = __webpack_require__(159)
+	var firefeed = __webpack_require__(153)
+	var avatar   = __webpack_require__(155)
+	var sync     = __webpack_require__(158)
 
 	React.initializeTouchEvents(true)
 
@@ -25855,8 +25855,8 @@
 	/** @jsx React.DOM */
 
 	var React               = __webpack_require__(10)
-	var moment              = __webpack_require__(153)
-	var SpnrListItemDetails = __webpack_require__(154)
+	var moment              = __webpack_require__(157)
+	var SpnrListItemDetails = __webpack_require__(159)
 
 	var SpnrListItem = React.createClass({displayName: 'SpnrListItem',
 
@@ -25909,8 +25909,6 @@
 	            x : e.touches[0].pageX,
 	            y : e.touches[0].pageY
 	        }
-	        // this.scrolling = document.querySelectorAll('.spnrscroll')[0].classList
-	        // console.log(this.scrolling)
 	    },
 	    handleTouchMove : function(e) {
 	        // console.log('MOVE',e.touches[0].pageY)
@@ -25938,11 +25936,13 @@
 	            else console.log('details')
 	            returning = true
 	        }
-	        this.getDOMNode().classList.add('returning')
+	        var reset = function() {
+	            this.classList.add('returning')
+	            this.style['-webkit-transform'] = ''
+	        }.bind(this.getDOMNode())()
 	        setTimeout(function() {
 	            this.getDOMNode().classList.remove('returning')
 	        }.bind(this),200)
-	        this.getDOMNode().style['-webkit-transform'] = ''
 	        document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
 	    },
 	    handleRemoveClick : function() {
@@ -25955,6 +25955,216 @@
 
 /***/ },
 /* 153 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var firecracker = __webpack_require__(154)
+
+	function firefeed(root, state) {
+	    this.root      = root
+	    this.state     = state
+	    this.cracker   = firecracker(root)
+	    this.listeners = {}
+	}
+	firefeed.prototype.feed = function(feed) {
+	    var path = feed
+	    if (feed == 'mine') path = 'users/'+this.state.user.uid+'/spnrs'
+	    this._feed = feed
+	    this.cracker
+	        .path(path)
+	        .from(this.state.latest[feed].loaded)
+	    return this
+	}
+	firefeed.prototype.on = function(event, fn) {
+	    this.cracker.on(event, eventWrapper(event, fn, this))
+	    return this
+	}
+	firefeed.prototype.pause = function() {
+	    this.cracker.root.off()
+	}
+	firefeed.prototype.listen = function() {
+	    this.cracker.listen()
+	    return this
+	}
+
+	function eventWrapper(event, fn, ff) {
+	    if (event == 'child_added') {
+	        return function(child) {
+	            var filtered = ff.state[ff._feed].filter(function(s) { return s.uuid == child.uuid })
+	            if (filtered.length > 0) return
+	            ff.state.latest[ff._feed].loaded = child.fid
+	            fn(child)
+	        }
+	    }
+	    return fn
+	}
+
+	module.exports = function(root, state) {
+	    return new firefeed(root, state)
+	}
+
+
+/***/ },
+/* 154 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function getRootRef(fp) {
+	    var root = fp.root
+	    if (fp._path) root = root.child(fp._path)
+	    if (fp._take) root = root.limit(fp._take)
+	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
+	    return root
+	}
+
+	function transformSnapshot(snapshot) {
+	    var s = snapshot.val()
+	    s.fid = snapshot.name()
+	    return s
+	}
+
+	var firecracker = function(root) {
+	    this.root      = root
+	    this.listeners = {}
+	}
+	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
+	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
+	firecracker.prototype.path    = function(path)      { this._path = path; return this }
+	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
+	firecracker.prototype.off     = function(event, fn) {
+	    if (!this.listeners[event]) return this
+	    var index;
+	    for (var i in this.listeners[event]) {
+	        if (this.listeners[event][i] === fn) index = i;
+	    }
+	    if (index != undefined) { this.listeners[event].splice(index,1) }
+	    return this
+	}
+	firecracker.prototype.push    = function(data, cb)  {
+	    var ref  = getRootRef(this).push(data)
+	    if (typeof cb === 'function') cb(ref.name())
+	    return this
+	}
+	firecracker.prototype.remove  = function(id, callback) {
+	    getRootRef(this).remove(id, callback)
+	    return this
+	}
+	firecracker.prototype.once = function(callback) {
+	    getRootRef(this).once('value', function(snapshot) {
+	        var values = snapshot.val()
+	        var data   = Object.keys(values).map(function(id) {
+	            values[id].fid = id
+	            return values[id]
+	        }).reverse()
+	        if (typeof callback === 'function') callback(data)
+	    })
+	    return this
+	}
+	firecracker.prototype.listen = function() {
+	    var root = getRootRef(this)
+
+	    if (this.listeners.child_added) {
+	        root.on('child_added', function(child, prev) {
+	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_changed) {
+	        root.on('child_changed', function(child) {
+	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_removed) {
+	        root.on('child_removed', function(child) {
+	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_moved) {
+	        root.on('child_moved', function(child, prev) {
+	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.value) {
+	        root.on('value', function(data) {
+	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
+	        }.bind(this))
+	    }
+	}
+	module.exports = function(root) { return new firecracker(root) }
+
+
+/***/ },
+/* 155 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// var tob64  = require('to-base64')
+	var utils  = __webpack_require__(156)
+	var moment = __webpack_require__(157)
+
+	var avatar = {
+	    check : function(user, state, days, callback) {
+	        if (state.avatars[user]) {
+	            var diff = moment().diff(moment(state.avatars[user].updated), 'days')
+	            if (diff < days) { callback(false); return }
+	        }
+	        var url;
+	        if (user.indexOf('github') === 0) {
+	            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
+	        }
+	        if (user.indexOf('facebook') === 0) {
+	            url = 'http://graph.facebook.com/'+user.split(':')[1]+'/picture?type=small'
+	        }
+	        if (!url) {callback(false); return }
+	        state.avatars[user] = { url : '', update : new Date().getTime() }
+	        utils.convertImgToBase64(url, function(result) {
+	            state.avatars[user] = { url : result, updated : new Date().getTime() }
+	            callback(true)
+	        })
+	    }
+	}
+
+	module.exports = avatar
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	               .toString(16)
+	               .substring(1);
+	}
+
+	var utils = {
+	    convertImgToBase64 : function(url, callback, outputFormat) {
+	        var canvas = document.createElement('canvas'),
+	            ctx = canvas.getContext('2d'),
+	            img = new Image;
+	        img.crossOrigin = 'Anonymous';
+	        img.onload = function(){
+	            canvas.height = img.height;
+	            canvas.width = img.width;
+	            ctx.drawImage(img,0,0);
+	            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+	            callback.call(this, dataURL);
+	            canvas = null;
+	        };
+	        img.src = url;
+	    },
+	    uid : function(len) {
+	        var uid = ""
+	        while(uid.length < len) { uid = uid+s4() }
+	        return uid.slice(0,len)
+	    }
+	}
+
+	module.exports = utils
+
+
+/***/ },
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -28361,242 +28571,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(149)(module)))
 
 /***/ },
-/* 154 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM */
-
-	var React = __webpack_require__(10)
-
-	var SpnrListItemDetails = React.createClass({displayName: 'SpnrListItemDetails',
-	    render : function() {
-	        return (
-	             React.DOM.div( {className:"spnrDetails"}, 
-	                React.DOM.ul(null, 
-	                    React.DOM.li(null, "Remove")
-	                )
-	            )
-	        )
-	    }
-	})
-
-	module.exports = SpnrListItemDetails
-
-/***/ },
-/* 155 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var firecracker = __webpack_require__(156)
-
-	function firefeed(root, state) {
-	    this.root      = root
-	    this.state     = state
-	    this.cracker   = firecracker(root)
-	    this.listeners = {}
-	}
-	firefeed.prototype.feed = function(feed) {
-	    var path = feed
-	    if (feed == 'mine') path = 'users/'+this.state.user.uid+'/spnrs'
-	    this._feed = feed
-	    this.cracker
-	        .path(path)
-	        .from(this.state.latest[feed].loaded)
-	    return this
-	}
-	firefeed.prototype.on = function(event, fn) {
-	    this.cracker.on(event, eventWrapper(event, fn, this))
-	    return this
-	}
-	firefeed.prototype.pause = function() {
-	    this.cracker.root.off()
-	}
-	firefeed.prototype.listen = function() {
-	    this.cracker.listen()
-	    return this
-	}
-
-	function eventWrapper(event, fn, ff) {
-	    if (event == 'child_added') {
-	        return function(child) {
-	            var filtered = ff.state[ff._feed].filter(function(s) { return s.uuid == child.uuid })
-	            if (filtered.length > 0) return
-	            ff.state.latest[ff._feed].loaded = child.fid
-	            fn(child)
-	        }
-	    }
-	    return fn
-	}
-
-	module.exports = function(root, state) {
-	    return new firefeed(root, state)
-	}
-
-
-/***/ },
-/* 156 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function getRootRef(fp) {
-	    var root = fp.root
-	    if (fp._path) root = root.child(fp._path)
-	    if (fp._take) root = root.limit(fp._take)
-	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
-	    return root
-	}
-
-	function transformSnapshot(snapshot) {
-	    var s = snapshot.val()
-	    s.fid = snapshot.name()
-	    return s
-	}
-
-	var firecracker = function(root) {
-	    this.root      = root
-	    this.listeners = {}
-	}
-	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
-	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
-	firecracker.prototype.path    = function(path)      { this._path = path; return this }
-	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
-	firecracker.prototype.off     = function(event, fn) {
-	    if (!this.listeners[event]) return this
-	    var index;
-	    for (var i in this.listeners[event]) {
-	        if (this.listeners[event][i] === fn) index = i;
-	    }
-	    if (index != undefined) { this.listeners[event].splice(index,1) }
-	    return this
-	}
-	firecracker.prototype.push    = function(data, cb)  {
-	    var ref  = getRootRef(this).push(data)
-	    if (typeof cb === 'function') cb(ref.name())
-	    return this
-	}
-	firecracker.prototype.remove  = function(id, callback) {
-	    getRootRef(this).remove(id, callback)
-	    return this
-	}
-	firecracker.prototype.once = function(callback) {
-	    getRootRef(this).once('value', function(snapshot) {
-	        var values = snapshot.val()
-	        var data   = Object.keys(values).map(function(id) {
-	            values[id].fid = id
-	            return values[id]
-	        }).reverse()
-	        if (typeof callback === 'function') callback(data)
-	    })
-	    return this
-	}
-	firecracker.prototype.listen = function() {
-	    var root = getRootRef(this)
-
-	    if (this.listeners.child_added) {
-	        root.on('child_added', function(child, prev) {
-	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_changed) {
-	        root.on('child_changed', function(child) {
-	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_removed) {
-	        root.on('child_removed', function(child) {
-	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_moved) {
-	        root.on('child_moved', function(child, prev) {
-	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.value) {
-	        root.on('value', function(data) {
-	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
-	        }.bind(this))
-	    }
-	}
-	module.exports = function(root) { return new firecracker(root) }
-
-
-/***/ },
-/* 157 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// var tob64  = require('to-base64')
-	var utils  = __webpack_require__(158)
-	var moment = __webpack_require__(153)
-
-	var avatar = {
-	    check : function(user, state, days, callback) {
-	        if (state.avatars[user]) {
-	            var diff = moment().diff(moment(state.avatars[user].updated), 'days')
-	            if (diff < days) { callback(false); return }
-	        }
-	        var url;
-	        if (user.indexOf('github') === 0) {
-	            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
-	        }
-	        if (user.indexOf('facebook') === 0) {
-	            url = 'http://graph.facebook.com/'+user.split(':')[1]+'/picture?type=small'
-	        }
-	        if (!url) {callback(false); return }
-	        state.avatars[user] = { url : '', update : new Date().getTime() }
-	        utils.convertImgToBase64(url, function(result) {
-	            state.avatars[user] = { url : result, updated : new Date().getTime() }
-	            callback(true)
-	        })
-	    }
-	}
-
-	module.exports = avatar
-
-
-/***/ },
 /* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	function s4() {
-	    return Math.floor((1 + Math.random()) * 0x10000)
-	               .toString(16)
-	               .substring(1);
-	}
-
-	var utils = {
-	    convertImgToBase64 : function(url, callback, outputFormat) {
-	        var canvas = document.createElement('canvas'),
-	            ctx = canvas.getContext('2d'),
-	            img = new Image;
-	        img.crossOrigin = 'Anonymous';
-	        img.onload = function(){
-	            canvas.height = img.height;
-	            canvas.width = img.width;
-	            ctx.drawImage(img,0,0);
-	            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
-	            callback.call(this, dataURL);
-	            canvas = null;
-	        };
-	        img.src = url;
-	    },
-	    uid : function(len) {
-	        var uid = ""
-	        while(uid.length < len) { uid = uid+s4() }
-	        return uid.slice(0,len)
-	    }
-	}
-
-	module.exports = utils
-
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var utils = __webpack_require__(158)
+	var utils = __webpack_require__(156)
 	var _     = __webpack_require__(148)
 
 	var sync = {
@@ -28627,6 +28605,28 @@
 
 	module.exports = sync
 
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM */
+
+	var React = __webpack_require__(10)
+
+	var SpnrListItemDetails = React.createClass({displayName: 'SpnrListItemDetails',
+	    render : function() {
+	        return (
+	             React.DOM.div( {className:"spnrDetails"}, 
+	                React.DOM.ul(null, 
+	                    React.DOM.li(null, "Remove")
+	                )
+	            )
+	        )
+	    }
+	})
+
+	module.exports = SpnrListItemDetails
 
 /***/ }
 /******/ ])

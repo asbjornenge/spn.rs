@@ -55,8 +55,6 @@ var SpnrListItem = React.createClass({
             x : e.touches[0].pageX,
             y : e.touches[0].pageY
         }
-        // this.scrolling = document.querySelectorAll('.spnrscroll')[0].classList
-        // console.log(this.scrolling)
     },
     handleTouchMove : function(e) {
         // console.log('MOVE',e.touches[0].pageY)
@@ -84,11 +82,13 @@ var SpnrListItem = React.createClass({
             else console.log('details')
             returning = true
         }
-        this.getDOMNode().classList.add('returning')
+        var reset = function() {
+            this.classList.add('returning')
+            this.style['-webkit-transform'] = ''
+        }.bind(this.getDOMNode())()
         setTimeout(function() {
             this.getDOMNode().classList.remove('returning')
         }.bind(this),200)
-        this.getDOMNode().style['-webkit-transform'] = ''
         document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
     },
     handleRemoveClick : function() {
