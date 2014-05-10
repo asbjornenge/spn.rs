@@ -11,7 +11,7 @@ var dom      = require('nanodom')
 var emitter  = require('nanoemitter')()
 var _        = require('lodash')
 var Login    = require('./modules/components/Login.jsx')
-var SpnrList = require('./modules/components/SpnrList.jsx')
+var SpnrApp  = require('./modules/components/SpnrApp')
 var firefeed = require('./modules/firefeed')
 var avatar   = require('./modules/avatar')
 var sync     = require('./modules/sync')
@@ -105,6 +105,12 @@ emitter.on('sync', function() {
 
 /** RENDER **/
 
+emitter.on('change_view', function(new_view) {
+    state.view = new_view
+    snapshot()
+    emitter.trigger('render')
+})
+
 // Render a "loading" view - or have it set by css default.
 emitter.on('render', function() {
     console.log('rendering')
@@ -112,7 +118,7 @@ emitter.on('render', function() {
     if (!state.user) {
         React.renderComponent(Login({state:state, emitter:emitter}), mountnode)
     } else {
-        React.renderComponent(SpnrList({state:state, emitter:emitter}), mountnode)
+        React.renderComponent(SpnrApp({state:state, emitter:emitter}), mountnode)
     }
 })
 

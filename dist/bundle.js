@@ -58,10 +58,10 @@
 	var emitter  = __webpack_require__(147)()
 	var _        = __webpack_require__(148)
 	var Login    = __webpack_require__(150)
-	var SpnrList = __webpack_require__(151)
-	var firefeed = __webpack_require__(153)
-	var avatar   = __webpack_require__(155)
-	var sync     = __webpack_require__(158)
+	var SpnrApp  = __webpack_require__(151)
+	var firefeed = __webpack_require__(158)
+	var avatar   = __webpack_require__(160)
+	var sync     = __webpack_require__(163)
 
 	React.initializeTouchEvents(true)
 
@@ -152,6 +152,12 @@
 
 	/** RENDER **/
 
+	emitter.on('change_view', function(new_view) {
+	    state.view = new_view
+	    snapshot()
+	    emitter.trigger('render')
+	})
+
 	// Render a "loading" view - or have it set by css default.
 	emitter.on('render', function() {
 	    console.log('rendering')
@@ -159,7 +165,7 @@
 	    if (!state.user) {
 	        React.renderComponent(Login({state:state, emitter:emitter}), mountnode)
 	    } else {
-	        React.renderComponent(SpnrList({state:state, emitter:emitter}), mountnode)
+	        React.renderComponent(SpnrApp({state:state, emitter:emitter}), mountnode)
 	    }
 	})
 
@@ -282,7 +288,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#spnrsWrapper {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#spnrsWrapper .top {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#spnrsWrapper .top li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#spnrsWrapper .top li.logo {\n  width: 220px;\n}\n#spnrsWrapper .spnrscroll {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#spnrsWrapper .spnrscroll input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem .avatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem .avatarBox .avatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem .spnr {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem .spnrDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#spnrsWrapper .spnrscroll .SpnrListItem .spnrDetails ul li {\n  float: left;\n}\n#spnrsWrapper:after {\n  clear: both;\n}\n#spnrsWrapper .bottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#spnrsWrapper .bottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#spnrsWrapper .bottom li.selected {\n  color: #f00;\n}\n";
+		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .avatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .avatarBox .avatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnr {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnrDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnrDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
 
 /***/ },
 /* 6 */
@@ -25782,53 +25788,144 @@
 /* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */
+	var React             = __webpack_require__(10)
+	var _                 = __webpack_require__(148)
+	var Top               = __webpack_require__(152)
+	var Bottom            = __webpack_require__(153)
+	var SpnrDetails       = __webpack_require__(154)
+	var SpnrListContainer = __webpack_require__(155)
 
-	var React        = __webpack_require__(10)
-	var SpnrListItem = __webpack_require__(152)
-
-	var SpnrList = React.createClass({displayName: 'SpnrList',
+	var SpnrApp = React.createClass({
 	    render : function() {
-	        var addinput, spnrs;
-	        if (this.state.adding) addinput = React.DOM.input( {type:"text", ref:"addInput", placeholder:"Whats up?", onKeyPress:this.handleAddInput} )
-	        spnrs = this.props.state[this.props.state.view].map(function(spnr) {
-	            return SpnrListItem( {spnr:spnr, state:this.props.state, emitter:this.props.emitter} )
-	        }.bind(this))
+	        var MainView, view = this.props.state.view;
+
+	        if (view === 'details') MainView = SpnrDetails({ state : this.props.state, emitter : this.props.emitter })
+	        else                    MainView = SpnrListContainer({ state : this.props.state, emitter : this.props.emitter })
+
 	        return (
-	            React.DOM.div( {id:"spnrsWrapper"}, 
-	                React.DOM.ul( {className:"top"}, 
-	                    React.DOM.li( {onTouchEnd:this.handleLogout}, "Logout"),
-	                    React.DOM.li( {className:"logo"}, "LOGO"),
-	                    React.DOM.li( {onTouchEnd:this.handleAddClick}, "Add")
-	                ),
-	                React.DOM.div( {className:"spnrscroll"}, 
-	                    addinput,
-	                    spnrs
-	                ),
-	                React.DOM.ul( {className:"bottom"}, 
-	                    React.DOM.li( {onTouchEnd:this.handleChangeViewClick, className:this.props.state.view == 'global'    ? 'global selected'    : 'global'}, "Global"),
-	                    React.DOM.li( {onTouchEnd:this.handleChangeViewClick, className:this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites'}, "Favorites"),
-	                    React.DOM.li( {onTouchEnd:this.handleChangeViewClick, className:this.props.state.view == 'mine'      ? 'mine selected'      : 'mine'}, "Mine")
-	                )
-	            )
+	            React.DOM.div({
+	                id : 'SpnrApp'
+	            }, [
+	                Top({}),
+	                MainView,
+	                Bottom({ state : this.props.state, emitter : this.props.emitter })
+	            ])
 	        )
-	    },
-	    getInitialState : function() {
-	        return { adding : false }
-	    },
-	    componentDidUpdate : function(prevProps, prevState) {
-	        if (this.props.state.adding) {
-	        }
+	    }
+	})
+
+	module.exports = SpnrApp
+
+/***/ },
+/* 152 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(10)
+
+	var SpnrAppTop = React.createClass({
+	    render : function() {
+	        return (
+	            React.DOM.ul({
+	                className : 'SpnrAppTop'
+	            },[
+	                React.DOM.li({ onTouchEnd : this.handleLogout }, 'Logout'),
+	                React.DOM.li({ className : 'logo' }),
+	                React.DOM.li({ onTouchEnd : this.handleAddClick }, 'Add')
+	            ])
+	        )
 	    },
 	    handleLogout : function() {
 	        this.props.emitter.trigger('logout')
 	    },
 	    handleAddClick : function() {
-	        this.setState({adding:!this.state.adding})
-	        if (this.state.adding) return
-	        setTimeout(function() {
-	            this.refs.addInput.getDOMNode().focus();
-	        }.bind(this),100)
+	        this.props.emitter.trigger('add_click')
+	    },
+	})
+
+	module.exports = SpnrAppTop
+
+/***/ },
+/* 153 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(10)
+
+	var SpnrAppBottom = React.createClass({
+	    render : function() {
+	        return (
+	            React.DOM.ul({
+	                className : 'SpnrAppBottom'
+	            },[
+	                React.DOM.li({ 
+	                    className  : this.props.state.view == 'global' ? 'global selected' : 'global',
+	                    onTouchEnd : this.handleChangeViewClick
+	                }, 'Global'),
+	                React.DOM.li({ 
+	                    className  : this.props.state.view == 'favorites' ? 'favorites selected' : 'favorites',
+	                    onTouchEnd : this.handleChangeViewClick 
+	                }, 'Favorites'),
+	                React.DOM.li({ 
+	                    className  : this.props.state.view == 'mine' ? 'mine selected' : 'mine',
+	                    onTouchEnd : this.handleChangeViewClick 
+	                }, 'Mine')
+	            ])
+	        )
+	    },
+	    handleChangeViewClick : function(e) {
+	        if (e.target.className.indexOf(this.props.state.view) >= 0) return
+	        this.props.emitter.trigger('change_view', e.target.className)
+	    }
+	})
+
+	module.exports = SpnrAppBottom
+
+/***/ },
+/* 154 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(10)
+
+	var SpnrDetails = React.createClass({
+	    render : function() {
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrDetails'
+	            },[
+
+	            ])
+	        )
+	    }
+	})
+
+	module.exports = SpnrDetails
+
+/***/ },
+/* 155 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React    = __webpack_require__(10)
+	var SpnrList = __webpack_require__(156)
+
+	var SpnrListContainer = React.createClass({
+	    render : function() {
+	        var AddInput;
+	        if (this.state.adding) AddInput = React.DOM.input({
+	            type        : 'text',
+	            ref         : 'addInput',
+	            placeholder : 'Whats up?',
+	            onKeyPress  : this.handleAddInput
+	        })
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrListContainer'
+	            },[
+	                AddInput,
+	                SpnrList({ state : this.props.state, emitter : this.props.emitter })
+	            ])
+	        )
+	    },
+	    getInitialState : function() {
+	        return { adding : false }
 	    },
 	    handleAddInput : function(e) {
 	        if (e.which == 13) {
@@ -25836,27 +25933,47 @@
 	            if (node.value.length > 0) this.props.emitter.trigger('add', node.value);
 	            node.value = "";
 	        }
-	    },
-	    handleChangeViewClick : function(e) {
-	        if (e.target.className.indexOf(this.props.state.view) >= 0) return
-	        this.props.state.view = e.target.className
-	        this.props.emitter.trigger('render')
+	    }
+	});
+
+	module.exports = SpnrListContainer
+
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React        = __webpack_require__(10)
+	var SpnrListItem = __webpack_require__(157)
+
+	var SpnrList = React.createClass({
+	    render : function() {
+	        SpnrListItems = this.props.state[this.props.state.view].map(function(spnr) {
+	            return SpnrListItem({spnr : spnr, state : this.props.state, emitter : this.props.emitter})
+	        }.bind(this))
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrList'
+	            },[
+	                SpnrListItems
+	            ])
+	        )
 	    }
 	});
 
 	module.exports = SpnrList
 
 
-
 /***/ },
-/* 152 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
 
 	var React               = __webpack_require__(10)
-	var moment              = __webpack_require__(157)
-	var SpnrListItemDetails = __webpack_require__(159)
+	var moment              = __webpack_require__(162)
+	var SpnrListItemDetails = __webpack_require__(164)
 
 	var SpnrListItem = React.createClass({displayName: 'SpnrListItem',
 
@@ -25915,10 +26032,10 @@
 	        this.touch_end.x = e.touches[0].pageX
 	        this.touch_end.y = e.touches[0].pageY
 	        var x_dist = this.touch_end.x - this.touch_start.x
-	        var y_dist    = this.touch_end.y - this.touch_start.y
+	        var y_dist = this.touch_end.y - this.touch_start.y
 	        if (Math.abs(y_dist) < 10 && Math.abs(x_dist) > 20 && Math.abs(x_dist) < 70) {
 	            this.getDOMNode().style['-webkit-transform'] = 'translateX('+x_dist+'px)'
-	            document.querySelectorAll('.spnrscroll')[0].style.overflow = 'hidden'
+	            document.querySelectorAll('.SpnrList')[0].style.overflow = 'hidden'
 	        }
 	    },
 	    handleTouchEnd : function(e) {
@@ -25933,7 +26050,7 @@
 	        if (Math.abs(x_dist) > 55) {
 	            // EDGE
 	            if (x_dist > 0) console.log('favorite')
-	            else console.log('details')
+	            else this.props.emitter.trigger('change_view','details')
 	            returning = true
 	        }
 	        var reset = function() {
@@ -25943,7 +26060,7 @@
 	                this.classList.remove('returning')
 	            }.bind(this),200)
 	        }.bind(this.getDOMNode())()
-	        document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
+	        document.querySelectorAll('.SpnrList')[0].style.overflow = 'scroll'
 	    },
 	    handleRemoveClick : function() {
 	        // radio('ui.event.remove').broadcast(this.props.spnr)
@@ -25954,10 +26071,10 @@
 
 
 /***/ },
-/* 153 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var firecracker = __webpack_require__(154)
+	var firecracker = __webpack_require__(159)
 
 	function firefeed(root, state) {
 	    this.root      = root
@@ -26004,7 +26121,7 @@
 
 
 /***/ },
-/* 154 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	function getRootRef(fp) {
@@ -26095,12 +26212,12 @@
 
 
 /***/ },
-/* 155 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// var tob64  = require('to-base64')
-	var utils  = __webpack_require__(156)
-	var moment = __webpack_require__(157)
+	var utils  = __webpack_require__(161)
+	var moment = __webpack_require__(162)
 
 	var avatar = {
 	    check : function(user, state, days, callback) {
@@ -26128,7 +26245,7 @@
 
 
 /***/ },
-/* 156 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	function s4() {
@@ -26164,7 +26281,7 @@
 
 
 /***/ },
-/* 157 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -28571,10 +28688,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(149)(module)))
 
 /***/ },
-/* 158 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(156)
+	var utils = __webpack_require__(161)
 	var _     = __webpack_require__(148)
 
 	var sync = {
@@ -28607,7 +28724,7 @@
 
 
 /***/ },
-/* 159 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
@@ -28618,8 +28735,7 @@
 	    render : function() {
 	        return (
 	             React.DOM.div( {className:"spnrDetails"}, 
-	                React.DOM.ul(null, 
-	                    React.DOM.li(null, "Remove")
+	                React.DOM.ul(null
 	                )
 	            )
 	        )

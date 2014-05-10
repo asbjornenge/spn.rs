@@ -35,7 +35,7 @@ var app = express()
 
 /** Gaze */
 
-gaze(['entry.js','modules/*.js','modules/components/*.jsx','styles/*.styl'], function(err, watcher) {
+gaze(['entry.js','modules/*.js','modules/components/*.jsx','modules/components/*.js','styles/*.styl'], function(err, watcher) {
     this.on('all', function(event, filepath) {
         gulp.tasks.webpack.fn()
     })

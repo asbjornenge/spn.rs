@@ -61,10 +61,10 @@ var SpnrListItem = React.createClass({
         this.touch_end.x = e.touches[0].pageX
         this.touch_end.y = e.touches[0].pageY
         var x_dist = this.touch_end.x - this.touch_start.x
-        var y_dist    = this.touch_end.y - this.touch_start.y
+        var y_dist = this.touch_end.y - this.touch_start.y
         if (Math.abs(y_dist) < 10 && Math.abs(x_dist) > 20 && Math.abs(x_dist) < 70) {
             this.getDOMNode().style['-webkit-transform'] = 'translateX('+x_dist+'px)'
-            document.querySelectorAll('.spnrscroll')[0].style.overflow = 'hidden'
+            document.querySelectorAll('.SpnrList')[0].style.overflow = 'hidden'
         }
     },
     handleTouchEnd : function(e) {
@@ -79,7 +79,7 @@ var SpnrListItem = React.createClass({
         if (Math.abs(x_dist) > 55) {
             // EDGE
             if (x_dist > 0) console.log('favorite')
-            else console.log('details')
+            else this.props.emitter.trigger('change_view','details')
             returning = true
         }
         var reset = function() {
@@ -89,7 +89,7 @@ var SpnrListItem = React.createClass({
                 this.classList.remove('returning')
             }.bind(this),200)
         }.bind(this.getDOMNode())()
-        document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
+        document.querySelectorAll('.SpnrList')[0].style.overflow = 'scroll'
     },
     handleRemoveClick : function() {
         // radio('ui.event.remove').broadcast(this.props.spnr)

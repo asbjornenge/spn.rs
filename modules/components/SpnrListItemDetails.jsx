@@ -7,7 +7,6 @@ var SpnrListItemDetails = React.createClass({
         return (
              <div className="spnrDetails">
                 <ul>
-                    <li>Remove</li>
                 </ul>
             </div>
         )
