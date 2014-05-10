@@ -6,9 +6,9 @@ var SpnrAppTop = React.createClass({
             React.DOM.ul({
                 className : 'SpnrAppTop'
             },[
-                React.DOM.li({ onTouchEnd : this.handleLogout }, 'Logout'),
+                React.DOM.li({ className : 'logout', onTouchEnd : this.handleLogout }, 'Logout'),
                 React.DOM.li({ className : 'logo' }),
-                React.DOM.li({ onTouchEnd : this.handleAddClick }, 'Add')
+                React.DOM.li({ className : 'add', onTouchEnd : this.handleAddClick }, 'Add')
             ])
         )
     },
