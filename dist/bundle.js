@@ -25939,10 +25939,10 @@
 	        var reset = function() {
 	            this.classList.add('returning')
 	            this.style['-webkit-transform'] = ''
+	            setTimeout(function() {
+	                this.classList.remove('returning')
+	            }.bind(this),200)
 	        }.bind(this.getDOMNode())()
-	        setTimeout(function() {
-	            this.getDOMNode().classList.remove('returning')
-	        }.bind(this),200)
 	        document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
 	    },
 	    handleRemoveClick : function() {
