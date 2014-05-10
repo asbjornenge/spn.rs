@@ -42,7 +42,7 @@ var SpnrListItem = React.createClass({
         return { details : false }
     },
     handleTouchStart : function(e) {
-        console.log('START', e.touches[0].pageY)
+        // console.log('START', e.touches[0].pageY)
         this.touch_start = {
             t : moment(),
             x : e.touches[0].pageX,
@@ -52,16 +52,19 @@ var SpnrListItem = React.createClass({
             x : e.touches[0].pageX,
             y : e.touches[0].pageY
         }
+        // this.scrolling = document.querySelectorAll('.spnrscroll')[0].classList
+        // console.log(this.scrolling)
     },
     handleTouchMove : function(e) {
         // console.log('MOVE',e.touches[0].pageY)
-        e.preventDefault()
         this.touch_end.x = e.touches[0].pageX
         this.touch_end.y = e.touches[0].pageY
         var x_dist = this.touch_end.x - this.touch_start.x
-        this.getDOMNode().style.transform = 'translateX('+x_dist+'px)'
-        // if (Math.abs(x_dist) > 10) {  }
-        // console.log(x_dist)
+        var y_dist    = this.touch_end.y - this.touch_start.y
+        if (Math.abs(y_dist) < 10 && Math.abs(x_dist) > 20 && Math.abs(x_dist) < 70) {
+            this.getDOMNode().style['-webkit-transform'] = 'translateX('+x_dist+'px)'
+            document.querySelectorAll('.spnrscroll')[0].style.overflow = 'hidden'
+        }
     },
     handleTouchEnd : function(e) {
         var time_diff = moment().diff(this.touch_start.t, 'milliseconds')
@@ -70,16 +73,18 @@ var SpnrListItem = React.createClass({
         if (time_diff < 120 && Math.abs(y_dist) < 5) {
             // TAP
             this.setState({ details : !this.state.details })
+        } else 
+        if (Math.abs(x_dist) > 55) {
+            // EDGE
+            if (x_dist > 0) console.log('favorite')
+            else console.log('details')
         }
+        this.getDOMNode().style['-webkit-transform'] = ''
+        document.querySelectorAll('.spnrscroll')[0].style.overflow = 'scroll'
     },
     handleRemoveClick : function() {
         // radio('ui.event.remove').broadcast(this.props.spnr)
-    },
-    // componentDidMount : function() {
-    //     this.getDOMNode().addEventListener('touchmove', function(e) {
-    //         console.log('moving')
-    //     })
-    // }
+    }
 });
 
 module.exports = SpnrListItem

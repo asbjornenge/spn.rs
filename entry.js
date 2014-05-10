@@ -7,14 +7,14 @@ require('./bower_components/firebase/firebase')
 require('./bower_components/firebase-simple-login/firebase-simple-login')
 
 var React    = require('react')
+var dom      = require('nanodom')
+var emitter  = require('nanoemitter')()
+var _        = require('lodash')
 var Login    = require('./modules/components/Login.jsx')
 var SpnrList = require('./modules/components/SpnrList.jsx')
-var emitter  = require('nanoemitter')()
 var firefeed = require('./modules/firefeed')
-var dom      = require('nanodom')
 var avatar   = require('./modules/avatar')
 var sync     = require('./modules/sync')
-var _        = require('lodash')
 
 React.initializeTouchEvents(true)
 
