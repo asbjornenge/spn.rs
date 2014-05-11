@@ -11,7 +11,8 @@ var state = {
     avatars : {}
 }
 var spnr  = {
-    user : { id : 1 }
+    spnr : 'Rene pumper',
+    user : 1
 }
 
 describe('SpnrListItem', function() {
@@ -27,6 +28,11 @@ describe('SpnrListItem', function() {
     it('Should render some markup', function() {
         var element = document.querySelectorAll('.SpnrListItem')
         assert(element.length === 1)
+    })
+
+    it('Should render the spnr.spnr', function() {
+        var element = document.querySelectorAll('.SpnrListItemSpnrBox')[0]
+        assert(element.innerHTML === 'Rene pumper')
     })
 
 })

@@ -15,8 +15,8 @@ var SpnrListItem = React.createClass({
             React.DOM.div({
                 className : 'SpnrListItem scrollable',
             },[
-                React.DOM.div({ className : 'SpnrListItemAvatarBox' }, [ Avatar({ state: this.props.state, emitter: this.props.emitter, user : this.props.spnr.user}) ]),
-                React.DOM.div({ className : 'SpnrListItemSpnrBox' }),
+                React.DOM.div({ className : 'SpnrListItemAvatarBox' }, [ Avatar({ state: this.props.state, emitter: this.props.emitter, user_id : this.props.spnr.user}) ]),
+                React.DOM.div({ className : 'SpnrListItemSpnrBox' }, this.props.spnr.spnr),
                 Details,
                 React.DOM.div({ style : { clear : 'both' } })
             ])

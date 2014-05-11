@@ -59,9 +59,9 @@
 	var _        = __webpack_require__(148)
 	var Login    = __webpack_require__(150)
 	var SpnrApp  = __webpack_require__(151)
-	var firefeed = __webpack_require__(160)
-	var avatar   = __webpack_require__(162)
-	var sync     = __webpack_require__(164)
+	var firefeed = __webpack_require__(158)
+	var avatar   = __webpack_require__(160)
+	var sync     = __webpack_require__(163)
 
 	React.initializeTouchEvents(true)
 
@@ -288,7 +288,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .avatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .avatarBox .avatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnr {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnrDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .spnrDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
+		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
 
 /***/ },
 /* 6 */
@@ -25969,44 +25969,28 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */
-
 	var React               = __webpack_require__(10)
-	var moment              = __webpack_require__(158)
-	var SpnrListItemDetails = __webpack_require__(159)
+	var moment              = __webpack_require__(162)
+	var Avatar              = __webpack_require__(164)
+	var SpnrListItemDetails = __webpack_require__(165)
 
-	var SpnrListItem = React.createClass({displayName: 'SpnrListItem',
+	var SpnrListItem = React.createClass({
 
 	    render : function() {
 
-	        var state = this.props.state;
-	        var spnr  = this.props.spnr;
-
-	        var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "/images/avatar.gif"
-	        this.props.emitter.trigger('check_avatar', spnr.user)
-
-	        var details = this.state.details ? (
-	             SpnrListItemDetails( {spnr:this.props.spnr} )
+	        var Details = this.state.details ? (
+	             SpnrListItemDetails({spnr : this.props.spnr})
 	        ) : undefined;
 
-	        var avatarStyle = {
-	            'background-image' : 'url('+avatar+')'
-	        }
-
 	        return (
-	            React.DOM.div( {className:"SpnrListItem scrollable"}, 
-	                React.DOM.div( {className:"avatarBox"}, 
-	                    React.DOM.div( {className:"avatar", style:avatarStyle})
-	                ),
-	                React.DOM.div( {className:    "spnr",
-	                    onTouchStart:  this.handleTouchStart,
-	                    onTouchMove:   this.handleTouchMove,
-	                    onTouchEnd:    this.handleTouchEnd}, 
-	                        this.props.spnr.spnr
-	                ),
-	                details,
-	                React.DOM.div( {style:{clear:'both'}})
-	            )
+	            React.DOM.div({
+	                className : 'SpnrListItem scrollable',
+	            },[
+	                React.DOM.div({ className : 'SpnrListItemAvatarBox' }, [ Avatar({ state: this.props.state, emitter: this.props.emitter, user_id : this.props.spnr.user}) ]),
+	                React.DOM.div({ className : 'SpnrListItemSpnrBox' }, this.props.spnr.spnr),
+	                Details,
+	                React.DOM.div({ style : { clear : 'both' } })
+	            ])
 	        )
 	    },
 	    getInitialState: function() {
@@ -26061,9 +26045,6 @@
 	            }.bind(this),200)
 	        }.bind(this.getDOMNode())()
 	        document.querySelectorAll('.SpnrList')[0].style.overflow = 'scroll'
-	    },
-	    handleRemoveClick : function() {
-	        // radio('ui.event.remove').broadcast(this.props.spnr)
 	    }
 	});
 
@@ -26072,6 +26053,216 @@
 
 /***/ },
 /* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var firecracker = __webpack_require__(159)
+
+	function firefeed(root, state) {
+	    this.root      = root
+	    this.state     = state
+	    this.cracker   = firecracker(root)
+	    this.listeners = {}
+	}
+	firefeed.prototype.feed = function(feed) {
+	    var path = feed
+	    if (feed == 'mine') path = 'users/'+this.state.user.uid+'/spnrs'
+	    this._feed = feed
+	    this.cracker
+	        .path(path)
+	        .from(this.state.latest[feed].loaded)
+	    return this
+	}
+	firefeed.prototype.on = function(event, fn) {
+	    this.cracker.on(event, eventWrapper(event, fn, this))
+	    return this
+	}
+	firefeed.prototype.pause = function() {
+	    this.cracker.root.off()
+	}
+	firefeed.prototype.listen = function() {
+	    this.cracker.listen()
+	    return this
+	}
+
+	function eventWrapper(event, fn, ff) {
+	    if (event == 'child_added') {
+	        return function(child) {
+	            var filtered = ff.state[ff._feed].filter(function(s) { return s.uuid == child.uuid })
+	            if (filtered.length > 0) return
+	            ff.state.latest[ff._feed].loaded = child.fid
+	            fn(child)
+	        }
+	    }
+	    return fn
+	}
+
+	module.exports = function(root, state) {
+	    return new firefeed(root, state)
+	}
+
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function getRootRef(fp) {
+	    var root = fp.root
+	    if (fp._path) root = root.child(fp._path)
+	    if (fp._take) root = root.limit(fp._take)
+	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
+	    return root
+	}
+
+	function transformSnapshot(snapshot) {
+	    var s = snapshot.val()
+	    s.fid = snapshot.name()
+	    return s
+	}
+
+	var firecracker = function(root) {
+	    this.root      = root
+	    this.listeners = {}
+	}
+	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
+	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
+	firecracker.prototype.path    = function(path)      { this._path = path; return this }
+	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
+	firecracker.prototype.off     = function(event, fn) {
+	    if (!this.listeners[event]) return this
+	    var index;
+	    for (var i in this.listeners[event]) {
+	        if (this.listeners[event][i] === fn) index = i;
+	    }
+	    if (index != undefined) { this.listeners[event].splice(index,1) }
+	    return this
+	}
+	firecracker.prototype.push    = function(data, cb)  {
+	    var ref  = getRootRef(this).push(data)
+	    if (typeof cb === 'function') cb(ref.name())
+	    return this
+	}
+	firecracker.prototype.remove  = function(id, callback) {
+	    getRootRef(this).remove(id, callback)
+	    return this
+	}
+	firecracker.prototype.once = function(callback) {
+	    getRootRef(this).once('value', function(snapshot) {
+	        var values = snapshot.val()
+	        var data   = Object.keys(values).map(function(id) {
+	            values[id].fid = id
+	            return values[id]
+	        }).reverse()
+	        if (typeof callback === 'function') callback(data)
+	    })
+	    return this
+	}
+	firecracker.prototype.listen = function() {
+	    var root = getRootRef(this)
+
+	    if (this.listeners.child_added) {
+	        root.on('child_added', function(child, prev) {
+	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_changed) {
+	        root.on('child_changed', function(child) {
+	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_removed) {
+	        root.on('child_removed', function(child) {
+	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_moved) {
+	        root.on('child_moved', function(child, prev) {
+	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.value) {
+	        root.on('value', function(data) {
+	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
+	        }.bind(this))
+	    }
+	}
+	module.exports = function(root) { return new firecracker(root) }
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// var tob64  = require('to-base64')
+	var utils  = __webpack_require__(161)
+	var moment = __webpack_require__(162)
+
+	var avatar = {
+	    check : function(user, state, days, callback) {
+	        if (state.avatars[user]) {
+	            var diff = moment().diff(moment(state.avatars[user].updated), 'days')
+	            if (diff < days) { callback(false); return }
+	        }
+	        var url;
+	        if (user.indexOf('github') === 0) {
+	            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
+	        }
+	        if (user.indexOf('facebook') === 0) {
+	            url = 'http://graph.facebook.com/'+user.split(':')[1]+'/picture?type=small'
+	        }
+	        if (!url) {callback(false); return }
+	        state.avatars[user] = { url : '', update : new Date().getTime() }
+	        utils.convertImgToBase64(url, function(result) {
+	            state.avatars[user] = { url : result, updated : new Date().getTime() }
+	            callback(true)
+	        })
+	    }
+	}
+
+	module.exports = avatar
+
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	               .toString(16)
+	               .substring(1);
+	}
+
+	var utils = {
+	    convertImgToBase64 : function(url, callback, outputFormat) {
+	        var canvas = document.createElement('canvas'),
+	            ctx = canvas.getContext('2d'),
+	            img = new Image;
+	        img.crossOrigin = 'Anonymous';
+	        img.onload = function(){
+	            canvas.height = img.height;
+	            canvas.width = img.width;
+	            ctx.drawImage(img,0,0);
+	            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+	            callback.call(this, dataURL);
+	            canvas = null;
+	        };
+	        img.src = url;
+	    },
+	    uid : function(len) {
+	        var uid = ""
+	        while(uid.length < len) { uid = uid+s4() }
+	        return uid.slice(0,len)
+	    }
+	}
+
+	module.exports = utils
+
+
+/***/ },
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -28478,241 +28669,10 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(149)(module)))
 
 /***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM */
-
-	var React = __webpack_require__(10)
-
-	var SpnrListItemDetails = React.createClass({displayName: 'SpnrListItemDetails',
-	    render : function() {
-	        return (
-	             React.DOM.div( {className:"spnrDetails"}, 
-	                React.DOM.ul(null
-	                )
-	            )
-	        )
-	    }
-	})
-
-	module.exports = SpnrListItemDetails
-
-/***/ },
-/* 160 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var firecracker = __webpack_require__(161)
-
-	function firefeed(root, state) {
-	    this.root      = root
-	    this.state     = state
-	    this.cracker   = firecracker(root)
-	    this.listeners = {}
-	}
-	firefeed.prototype.feed = function(feed) {
-	    var path = feed
-	    if (feed == 'mine') path = 'users/'+this.state.user.uid+'/spnrs'
-	    this._feed = feed
-	    this.cracker
-	        .path(path)
-	        .from(this.state.latest[feed].loaded)
-	    return this
-	}
-	firefeed.prototype.on = function(event, fn) {
-	    this.cracker.on(event, eventWrapper(event, fn, this))
-	    return this
-	}
-	firefeed.prototype.pause = function() {
-	    this.cracker.root.off()
-	}
-	firefeed.prototype.listen = function() {
-	    this.cracker.listen()
-	    return this
-	}
-
-	function eventWrapper(event, fn, ff) {
-	    if (event == 'child_added') {
-	        return function(child) {
-	            var filtered = ff.state[ff._feed].filter(function(s) { return s.uuid == child.uuid })
-	            if (filtered.length > 0) return
-	            ff.state.latest[ff._feed].loaded = child.fid
-	            fn(child)
-	        }
-	    }
-	    return fn
-	}
-
-	module.exports = function(root, state) {
-	    return new firefeed(root, state)
-	}
-
-
-/***/ },
-/* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function getRootRef(fp) {
-	    var root = fp.root
-	    if (fp._path) root = root.child(fp._path)
-	    if (fp._take) root = root.limit(fp._take)
-	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
-	    return root
-	}
-
-	function transformSnapshot(snapshot) {
-	    var s = snapshot.val()
-	    s.fid = snapshot.name()
-	    return s
-	}
-
-	var firecracker = function(root) {
-	    this.root      = root
-	    this.listeners = {}
-	}
-	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
-	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
-	firecracker.prototype.path    = function(path)      { this._path = path; return this }
-	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
-	firecracker.prototype.off     = function(event, fn) {
-	    if (!this.listeners[event]) return this
-	    var index;
-	    for (var i in this.listeners[event]) {
-	        if (this.listeners[event][i] === fn) index = i;
-	    }
-	    if (index != undefined) { this.listeners[event].splice(index,1) }
-	    return this
-	}
-	firecracker.prototype.push    = function(data, cb)  {
-	    var ref  = getRootRef(this).push(data)
-	    if (typeof cb === 'function') cb(ref.name())
-	    return this
-	}
-	firecracker.prototype.remove  = function(id, callback) {
-	    getRootRef(this).remove(id, callback)
-	    return this
-	}
-	firecracker.prototype.once = function(callback) {
-	    getRootRef(this).once('value', function(snapshot) {
-	        var values = snapshot.val()
-	        var data   = Object.keys(values).map(function(id) {
-	            values[id].fid = id
-	            return values[id]
-	        }).reverse()
-	        if (typeof callback === 'function') callback(data)
-	    })
-	    return this
-	}
-	firecracker.prototype.listen = function() {
-	    var root = getRootRef(this)
-
-	    if (this.listeners.child_added) {
-	        root.on('child_added', function(child, prev) {
-	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_changed) {
-	        root.on('child_changed', function(child) {
-	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_removed) {
-	        root.on('child_removed', function(child) {
-	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_moved) {
-	        root.on('child_moved', function(child, prev) {
-	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.value) {
-	        root.on('value', function(data) {
-	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
-	        }.bind(this))
-	    }
-	}
-	module.exports = function(root) { return new firecracker(root) }
-
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// var tob64  = require('to-base64')
-	var utils  = __webpack_require__(163)
-	var moment = __webpack_require__(158)
-
-	var avatar = {
-	    check : function(user, state, days, callback) {
-	        if (state.avatars[user]) {
-	            var diff = moment().diff(moment(state.avatars[user].updated), 'days')
-	            if (diff < days) { callback(false); return }
-	        }
-	        var url;
-	        if (user.indexOf('github') === 0) {
-	            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
-	        }
-	        if (user.indexOf('facebook') === 0) {
-	            url = 'http://graph.facebook.com/'+user.split(':')[1]+'/picture?type=small'
-	        }
-	        if (!url) {callback(false); return }
-	        state.avatars[user] = { url : '', update : new Date().getTime() }
-	        utils.convertImgToBase64(url, function(result) {
-	            state.avatars[user] = { url : result, updated : new Date().getTime() }
-	            callback(true)
-	        })
-	    }
-	}
-
-	module.exports = avatar
-
-
-/***/ },
 /* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
-	function s4() {
-	    return Math.floor((1 + Math.random()) * 0x10000)
-	               .toString(16)
-	               .substring(1);
-	}
-
-	var utils = {
-	    convertImgToBase64 : function(url, callback, outputFormat) {
-	        var canvas = document.createElement('canvas'),
-	            ctx = canvas.getContext('2d'),
-	            img = new Image;
-	        img.crossOrigin = 'Anonymous';
-	        img.onload = function(){
-	            canvas.height = img.height;
-	            canvas.width = img.width;
-	            ctx.drawImage(img,0,0);
-	            var dataURL = canvas.toDataURL(outputFormat || 'image/png');
-	            callback.call(this, dataURL);
-	            canvas = null;
-	        };
-	        img.src = url;
-	    },
-	    uid : function(len) {
-	        var uid = ""
-	        while(uid.length < len) { uid = uid+s4() }
-	        return uid.slice(0,len)
-	    }
-	}
-
-	module.exports = utils
-
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var utils = __webpack_require__(163)
+	var utils = __webpack_require__(161)
 	var _     = __webpack_require__(148)
 
 	var sync = {
@@ -28743,6 +28703,53 @@
 
 	module.exports = sync
 
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(10)
+
+	var SpnrAvatar = React.createClass({
+
+	    render : function() {
+
+	        var avatar = this.props.state.avatars[this.props.user_id] ? this.props.state.avatars[this.props.user_id].url : '/images/avatar.gif'
+	        this.props.emitter.trigger('check_avatar', this.props.user_id)
+
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrAvatar',
+	                style     : {
+	                    'background-image' : 'url('+avatar+')'
+	                }
+	            })
+	        )
+	    }
+	});
+
+	module.exports = SpnrAvatar
+
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(10)
+
+	var SpnrListItemDetails = React.createClass({
+	    render : function() {
+	        return (
+	            React.DOM.div({
+	                className : "SpnrListItemDetails"
+	            },[
+	                React.DOM.ul({})
+	            ])
+	        )
+	    }
+	})
+
+	module.exports = SpnrListItemDetails
 
 /***/ }
 /******/ ])
