@@ -1,6 +1,6 @@
 var React               = require('react')
 var moment              = require('moment')
-var Avatar              = require('./Avatar')
+var Avatar              = require('./SpnrAvatar')
 var SpnrListItemDetails = require('./SpnrListItemDetails')
 
 var SpnrListItem = React.createClass({
