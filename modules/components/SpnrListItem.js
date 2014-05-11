@@ -66,7 +66,10 @@ var SpnrListItem = React.createClass({
         if (Math.abs(x_dist) > 55) {
             // EDGE
             if (x_dist > 0) console.log('favorite')
-            else this.props.emitter.trigger('change_view','details')
+            else {
+                this.props.emitter.trigger('change_view','details')
+                this.props.emitter.trigger('set_current',this.props.spnr)
+            }
             returning = true
         }
         var reset = function() {

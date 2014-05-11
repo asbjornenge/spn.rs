@@ -16,7 +16,7 @@ var SpnrApp = React.createClass({
             React.DOM.div({
                 id : 'SpnrApp'
             }, [
-                Top({}),
+                Top({ state : this.props.state, emitter : this.props.emitter }),
                 MainView,
                 Bottom({ state : this.props.state, emitter : this.props.emitter })
             ])
