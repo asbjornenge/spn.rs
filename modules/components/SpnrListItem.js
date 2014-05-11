@@ -7,9 +7,6 @@ var SpnrListItem = React.createClass({
 
     render : function() {
 
-        var state = this.props.state;
-        var spnr  = this.props.spnr;
-
         var Details = this.state.details ? (
              SpnrListItemDetails({spnr : this.props.spnr})
         ) : undefined;
@@ -77,9 +74,6 @@ var SpnrListItem = React.createClass({
             }.bind(this),200)
         }.bind(this.getDOMNode())()
         document.querySelectorAll('.SpnrList')[0].style.overflow = 'scroll'
-    },
-    handleRemoveClick : function() {
-        // radio('ui.event.remove').broadcast(this.props.spnr)
     }
 });
 
