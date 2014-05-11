@@ -53,21 +53,21 @@
 	__webpack_require__(8)
 	__webpack_require__(9)
 
-	var React    = __webpack_require__(10)
-	var dom      = __webpack_require__(146)
-	var emitter  = __webpack_require__(147)()
-	var _        = __webpack_require__(148)
-	var Login    = __webpack_require__(150)
-	var SpnrApp  = __webpack_require__(151)
-	var firefeed = __webpack_require__(161)
-	var avatar   = __webpack_require__(163)
-	var sync     = __webpack_require__(165)
+	var React     = __webpack_require__(10)
+	var dom       = __webpack_require__(146)
+	var emitter   = __webpack_require__(147)()
+	var _         = __webpack_require__(148)
+	var SpnrLogin = __webpack_require__(150)
+	var SpnrApp   = __webpack_require__(151)
+	var firefeed  = __webpack_require__(161)
+	var avatar    = __webpack_require__(163)
+	var sync      = __webpack_require__(165)
 
 	React.initializeTouchEvents(true)
 
 	/** STATE **/
 
-	var localState   = localStorage.getItem('spn.rs');
+	// var localState   = localStorage.getItem('spn.rs');
 	var defaultState = {
 	    view      : 'global',
 	    global    : [],
@@ -85,136 +85,140 @@
 	        }
 	    }
 	}
-	state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
-	function snapshot() {
-	    localStorage.setItem('spn.rs', JSON.stringify(state))
-	}
+	// var state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
+	// function snapshot() {
+	//     localStorage.setItem('spn.rs', JSON.stringify(state))
+	// }
 
-	/** FEEDS **/
+	var SpnrState = React.createClass({
+	    render : function() {
+	        console.log('main render')
+	        var App = this.state.user == null ? SpnrLogin({state:this.state, emitter:emitter}) : SpnrApp({state:this.state, emitter:emitter})
+	        return (
+	            App
+	        )
+	    },
+	    getInitialState : function() {
+	        return _.clone(defaultState, true)
+	    },
+	    componentWillMount : function() {
+	        var localState = localStorage.getItem('spn.rs');
+	        if (localState) { this.setState(JSON.parse(localState)) }
+	        // var state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
+	    },
+	    componentDidMount : function() {
+	        this.firebase = {}
+	        this.firebase.root  = new Firebase('https://spnrs.firebaseio.com/')
+	        this.firebase.login = new FirebaseSimpleLogin(this.firebase.root, function(error, user) {
+	                emitter.trigger('logged_in', user)
+	        }.bind(this))
 
-	var root         = new Firebase('https://spnrs.firebaseio.com/')
-	var feeds        = {}
-	var syncListener = function() { emitter.trigger('sync') }
-	emitter.on('logged_in', function() {
-
-	    this.global = firefeed(root, state)
-	        .feed('global')
-	        .on('child_added', function(spnr) {
-	            state.global.unshift(spnr)
-	            emitter.trigger('render')
+	        this.initEmitter();
+	    },
+	    initEmitter : function(simplelogin) {
+	        emitter.on('change_view', function(new_view) {
+	            console.log('change_view', new_view)
+	            // state.view = new_view
+	            // snapshot()
+	            // emitter.trigger('render')
 	        })
-	        .on('child_removed', function(spnr) {
-	            console.log('removed')
-	        }).listen()
 
-	    this.mine = firefeed(root, state)
-	        .feed('mine')
-	        .on('child_added', function(spnr) {
-	            state.mine.unshift(spnr)
-	            emitter.trigger('render')
-	        })
-	        .on('child_changed', function(spnr) {
-	            state.mine.forEach(function(s) {
-	                if (s.uuid == spnr.uuid) {
-	                    _.merge(s, spnr)
-	                    // spanshot
-	                }
+	        emitter.on('logged_in', function(user) {
+	            console.log('logged_in', user)
+	            this.setState({user:user})
+	            this.initFeeds()
+	        }.bind(this))
+
+	        emitter.on('login', function(service) {
+	            var options = {}
+	            switch(service) {
+	                case 'github':
+	                    options = { rememberMe : true, scope : 'user'}
+	                    break;
+	                case 'facebook':
+	                    options = { rememberMe: true, scope: 'email' }
+	                    break;
+	            }
+	            this.firebase.login.login(service, options);
+	        }.bind(this))
+
+	        emitter.on('logout', function() {
+	            this.firebase.login.logout()
+	            this.firefeeds.global.pause()
+	            this.firefeeds.mine.pause()
+	            window.removeEventListener('online', this.syncWithServer)
+	            // TODO: Snapshot
+	            this.setState(_.clone(defaultState, true))
+	        }.bind(this))
+
+	        emitter.on('check_avatar', function(user_id) {
+	            avatar.check(user_id, this.state, 30, function(render) {
+	                console.log('updated avatar')
+	                // if (render) emitter.trigger('render')
 	            })
-	        })
-	        .on('child_removed', function(spnr) {
-	            console.log('removed')
-	        }).listen()
+	        }.bind(this))
 
-	    window.addEventListener('online', syncListener)
+	// emitter.on('add', function(spnr) {
+	//     state.mine.unshift({
+	//         spnr   : spnr,
+	//         user   : state.user.uid,
+	//         synced : false
+	//     })
+	//     emitter.trigger('render')
+	//     emitter.trigger('sync')
+	// })
 
-	}.bind(feeds))
-	emitter.on('logged_out', function() {
+	    },
+	    initFeeds : function() {
+	        if (this.state.user == null) return
+	        console.log('initFeeds')
+	        this.firefeeds = {}
+	        this.firefeeds.global = firefeed(this.firebase.root, this.state)
+	            .feed('global')
+	            .on('child_added', function(spnr) {
+	                console.log('global added')
+	                // state.global.unshift(spnr)
+	                // emitter.trigger('render')
+	            })
+	            .on('child_removed', function(spnr) {
+	                console.log('removed')
+	            }).listen()
 
-	    state = _.clone(defaultState, true)
-	    snapshot()
-	    this.global.pause()
-	    this.mine.pause()
-	    window.removeEventListener('online', syncListener)
-
-	}.bind(feeds))
-
-	/** SYNC **/
-
-	emitter.on('sync', function() {
-	    if (!navigator.onLine) return
-	    if (!state.user) return
-	    sync.mine(state.mine, root.child('users/'+state.user.uid+'/spnrs'), function(synced) {
-	        // Dersom vi plutselig har flere som har blitt synced, render...
-	        // TODO: Kanskje ikke her? tenke paa dette
-	        if (synced.length > 1) emitter.trigger('render')
-	    })
-	})
-
-	/** RENDER **/
-
-	emitter.on('change_view', function(new_view) {
-	    state.view = new_view
-	    snapshot()
-	    emitter.trigger('render')
-	})
-
-	// Render a "loading" view - or have it set by css default.
-	emitter.on('render', function() {
-	    console.log('rendering')
-	    var mountnode = dom('#container')[0];
-	    if (!state.user) {
-	        React.renderComponent(Login({state:state, emitter:emitter}), mountnode)
-	    } else {
-	        React.renderComponent(SpnrApp({state:state, emitter:emitter}), mountnode)
+	        this.firefeeds.mine = firefeed(this.firebase.root, this.state)
+	            .feed('mine')
+	            .on('child_added', function(spnr) {
+	                console.log('mine added')
+	                // state.mine.unshift(spnr)
+	                // emitter.trigger('render')
+	            })
+	            .on('child_changed', function(spnr) {
+	                console.log('mine changed')
+	                // state.mine.forEach(function(s) {
+	                //     if (s.uuid == spnr.uuid) {
+	                //         _.merge(s, spnr)
+	                //         // spanshot
+	                //     }
+	                // })
+	            })
+	            .on('child_removed', function(spnr) {
+	                console.log('removed')
+	            }).listen()
+	        window.addEventListener('online', this.syncWithServer)
+	    },
+	    syncWithServer : function() {
+	        if (!navigator.onLine) return
+	        if (!state.user) return
+	        sync.mine(this.state.mine, this.state.firebaseroot.child('users/'+this.state.user.uid+'/spnrs'), function(synced) {
+	            // Dersom vi plutselig har flere som har blitt synced, render...
+	            // TODO: Kanskje ikke her? tenke paa dette
+	            if (synced.length > 1) this.setState({ mine : this.state.mine })
+	        }.bind(this))
 	    }
-	})
-
-	/** LOGIN / LOGOUT **/
-
-	emitter.on('login', function(service) {
-	    var options = {}
-	    switch(service) {
-	        case 'github':
-	            options = { rememberMe : true, scope : 'user'}
-	            break;
-	        case 'facebook':
-	            options = { rememberMe: true, scope: 'email' }
-	            break;
-	    }
-	    simplelogin.login(service, options);
-	})
-	emitter.on('logout', function() {
-	    simplelogin.logout()
-	    emitter.trigger('logged_out')
-	})
-
-	/** AVATARS **/
-
-	emitter.on('check_avatar', function(user_id) {
-	    avatar.check(user_id, state, 30, function(render) {
-	        if (render) emitter.trigger('render')
-	    })
-	})
-
-	/** ADD **/
-
-	emitter.on('add', function(spnr) {
-	    state.mine.unshift({
-	        spnr   : spnr,
-	        user   : state.user.uid,
-	        synced : false
-	    })
-	    emitter.trigger('render')
-	    emitter.trigger('sync')
 	})
 
 	/** INITIALIZE **/
 
-	var simplelogin = new FirebaseSimpleLogin(root, function(error, user) {
-	    state.user = user
-	    if (user) emitter.trigger('logged_in')
-	    emitter.trigger('render')
-	})
+	React.renderComponent(SpnrState({}), dom('#SpnrAppContainer')[0])
 
 	/** MONKEYBUSINESS **/
 
@@ -268,7 +272,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"body {\n  margin: 0;\n  paddig: 0;\n}\nul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n}\n#container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n";
+		"body {\n  margin: 0;\n  paddig: 0;\n}\nul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n}\n#SpnrAppContainer {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n";
 
 /***/ },
 /* 4 */
@@ -308,7 +312,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#loginWrapper {\n  position: relative;\n  width: 320px;\n  margin: auto;\n  height: 100%;\n}\n#loginWrapper .logo {\n  width: 320px;\n}\n#loginWrapper p {\n  margin: 0;\n  padding: 0px 10px 40px 10px;\n  text-align: center;\n}\n#loginWrapper .loginbutton {\n  height: 70px;\n  width: 250px;\n  margin: auto;\n  border-bottom: 1px solid #ccc;\n}\n#loginWrapper .loginbutton.github {\n  border: 1px solid #ccc;\n  border-radius: 10px 10px 0px 0px;\n  background-image: url(/images/GitHub_Logo.png);\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#loginWrapper .loginbutton.facebook {\n  border: 1px solid #ccc;\n  border-top: 0px;\n  border-radius: 0px 0px 10px 10px;\n  background-color: #3b579d;\n  background-image: url(/images/FB-f-Logo__blue_50.png);\n  background-repeat: no-repeat;\n  background-position: center;\n}\n";
+		"#SpnrLogin {\n  position: relative;\n  width: 320px;\n  margin: auto;\n  height: 100%;\n}\n#SpnrLogin .logo {\n  width: 320px;\n}\n#SpnrLogin p {\n  margin: 0;\n  padding: 0px 10px 40px 10px;\n  text-align: center;\n}\n#SpnrLogin .loginbutton {\n  height: 70px;\n  width: 250px;\n  margin: auto;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrLogin .loginbutton.github {\n  border: 1px solid #ccc;\n  border-radius: 10px 10px 0px 0px;\n  background-image: url(/images/GitHub_Logo.png);\n  background-repeat: no-repeat;\n  background-position: center;\n}\n#SpnrLogin .loginbutton.facebook {\n  border: 1px solid #ccc;\n  border-top: 0px;\n  border-radius: 0px 0px 10px 10px;\n  background-color: #3b579d;\n  background-image: url(/images/FB-f-Logo__blue_50.png);\n  background-repeat: no-repeat;\n  background-position: center;\n}\n";
 
 /***/ },
 /* 8 */
@@ -25764,7 +25768,7 @@
 	    render : function() {
 	        return (
 	            React.DOM.div({
-	                className : 'SpnrLogin'
+	                id : 'SpnrLogin'
 	            },[
 	                React.DOM.img({ className : 'logo', src : '/images/logo.png' }),
 	                React.DOM.p({}, 'Select login service'),
@@ -25806,7 +25810,7 @@
 	            React.DOM.div({
 	                id : 'SpnrApp'
 	            }, [
-	                Top({}),
+	                Top({ state : this.props.state, emitter : this.props.emitter }),
 	                MainView,
 	                Bottom({ state : this.props.state, emitter : this.props.emitter })
 	            ])

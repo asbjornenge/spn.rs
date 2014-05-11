@@ -4,7 +4,7 @@ var SpnrLogin = React.createClass({
     render : function() {
         return (
             React.DOM.div({
-                className : 'SpnrLogin'
+                id : 'SpnrLogin'
             },[
                 React.DOM.img({ className : 'logo', src : '/images/logo.png' }),
                 React.DOM.p({}, 'Select login service'),

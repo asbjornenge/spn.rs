@@ -18,7 +18,7 @@ describe('SpnrListItem', function() {
     })
 
     it('Should render some markup', function() {
-        var element = document.querySelectorAll('.SpnrLogin')
+        var element = document.querySelectorAll('#SpnrLogin')
         assert(element.length === 1)
     })
 
