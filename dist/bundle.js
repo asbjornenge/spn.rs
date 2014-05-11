@@ -72,6 +72,7 @@
 	    global    : [],
 	    mine      : [],
 	    favorites : [],
+	    current   : null,
 	    user      : null,
 	    avatars   : {},
 	    latest    : {
@@ -114,6 +115,10 @@
 
 	        emitter.on('change_view', function(new_view) {
 	            this.setState({ view : new_view })
+	        }.bind(this))
+
+	        emitter.on('set_current', function(spnr) {
+	            this.setState({ current : spnr })
 	        }.bind(this))
 
 	        emitter.on('logged_in', function(user) {
@@ -282,7 +287,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
+		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
 
 /***/ },
 /* 6 */
@@ -25885,7 +25890,7 @@
 	            React.DOM.div({
 	                className : 'SpnrDetails'
 	            },[
-
+	                React.DOM.h1({}, this.props.state.current.spnr)
 	            ])
 	        )
 	    }
@@ -26031,7 +26036,10 @@
 	        if (Math.abs(x_dist) > 55) {
 	            // EDGE
 	            if (x_dist > 0) console.log('favorite')
-	            else this.props.emitter.trigger('change_view','details')
+	            else {
+	                this.props.emitter.trigger('change_view','details')
+	                this.props.emitter.trigger('set_current',this.props.spnr)
+	            }
 	            returning = true
 	        }
 	        var reset = function() {

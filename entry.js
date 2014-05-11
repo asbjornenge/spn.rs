@@ -25,6 +25,7 @@ var defaultState = {
     global    : [],
     mine      : [],
     favorites : [],
+    current   : null,
     user      : null,
     avatars   : {},
     latest    : {
@@ -67,6 +68,10 @@ var SpnrState = React.createClass({
 
         emitter.on('change_view', function(new_view) {
             this.setState({ view : new_view })
+        }.bind(this))
+
+        emitter.on('set_current', function(spnr) {
+            this.setState({ current : spnr })
         }.bind(this))
 
         emitter.on('logged_in', function(user) {

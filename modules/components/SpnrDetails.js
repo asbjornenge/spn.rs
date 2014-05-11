@@ -6,7 +6,7 @@ var SpnrDetails = React.createClass({
             React.DOM.div({
                 className : 'SpnrDetails'
             },[
-
+                React.DOM.h1({}, this.props.state.current.spnr)
             ])
         )
     }
