@@ -287,7 +287,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
+		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrList {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n#SpnrApp .SpnrList input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrList .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrList .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n}\n#SpnrApp .SpnrDetails .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
 
 /***/ },
 /* 6 */
@@ -25792,7 +25792,7 @@
 	var Top               = __webpack_require__(152)
 	var Bottom            = __webpack_require__(153)
 	var SpnrDetails       = __webpack_require__(154)
-	var SpnrListContainer = __webpack_require__(155)
+	var SpnrListContainer = __webpack_require__(156)
 
 	var SpnrApp = React.createClass({
 	    render : function() {
@@ -25882,7 +25882,8 @@
 /* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(10)
+	var React      = __webpack_require__(10)
+	var SpnrAvatar = __webpack_require__(155)
 
 	var SpnrDetails = React.createClass({
 	    render : function() {
@@ -25890,6 +25891,7 @@
 	            React.DOM.div({
 	                className : 'SpnrDetails'
 	            },[
+	                SpnrAvatar({ state : this.props.state, emitter : this.props.emitter, user_id : this.props.state.current.user }),
 	                React.DOM.h1({}, this.props.state.current.spnr)
 	            ])
 	        )
@@ -25902,8 +25904,35 @@
 /* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React = __webpack_require__(10)
+
+	var SpnrAvatar = React.createClass({
+
+	    render : function() {
+
+	        var avatar = this.props.state.avatars[this.props.user_id] ? this.props.state.avatars[this.props.user_id].url : '/images/avatar.gif'
+	        this.props.emitter.trigger('check_avatar', this.props.user_id)
+
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrAvatar',
+	                style     : {
+	                    'background-image' : 'url('+avatar+')'
+	                }
+	            })
+	        )
+	    }
+	});
+
+	module.exports = SpnrAvatar
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React    = __webpack_require__(10)
-	var SpnrList = __webpack_require__(156)
+	var SpnrList = __webpack_require__(157)
 
 	var SpnrListContainer = React.createClass({
 	    render : function() {
@@ -25940,11 +25969,11 @@
 
 
 /***/ },
-/* 156 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React        = __webpack_require__(10)
-	var SpnrListItem = __webpack_require__(157)
+	var SpnrListItem = __webpack_require__(158)
 
 	var SpnrList = React.createClass({
 	    render : function() {
@@ -25965,12 +25994,12 @@
 
 
 /***/ },
-/* 157 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React               = __webpack_require__(10)
-	var moment              = __webpack_require__(158)
-	var Avatar              = __webpack_require__(159)
+	var moment              = __webpack_require__(159)
+	var Avatar              = __webpack_require__(155)
 	var SpnrListItemDetails = __webpack_require__(160)
 
 	var SpnrListItem = React.createClass({
@@ -26057,7 +26086,7 @@
 
 
 /***/ },
-/* 158 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -28464,33 +28493,6 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(149)(module)))
 
 /***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(10)
-
-	var SpnrAvatar = React.createClass({
-
-	    render : function() {
-
-	        var avatar = this.props.state.avatars[this.props.user_id] ? this.props.state.avatars[this.props.user_id].url : '/images/avatar.gif'
-	        this.props.emitter.trigger('check_avatar', this.props.user_id)
-
-	        return (
-	            React.DOM.div({
-	                className : 'SpnrAvatar',
-	                style     : {
-	                    'background-image' : 'url('+avatar+')'
-	                }
-	            })
-	        )
-	    }
-	});
-
-	module.exports = SpnrAvatar
-
-
-/***/ },
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -28657,7 +28659,7 @@
 
 	// var tob64  = require('to-base64')
 	var utils  = __webpack_require__(164)
-	var moment = __webpack_require__(158)
+	var moment = __webpack_require__(159)
 
 	var avatar = {
 	    check : function(user, state, days, callback) {
