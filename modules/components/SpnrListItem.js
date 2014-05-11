@@ -13,7 +13,10 @@ var SpnrListItem = React.createClass({
 
         return (
             React.DOM.div({
-                className : 'SpnrListItem scrollable',
+                className    : 'SpnrListItem scrollable',
+                onTouchStart : this.handleTouchStart,
+                onTouchMove  : this.handleTouchMove,
+                onTouchEnd   : this.handleTouchEnd
             },[
                 React.DOM.div({ className : 'SpnrListItemAvatarBox' }, [ Avatar({ state: this.props.state, emitter: this.props.emitter, user_id : this.props.spnr.user}) ]),
                 React.DOM.div({ className : 'SpnrListItemSpnrBox' }, this.props.spnr.spnr),
