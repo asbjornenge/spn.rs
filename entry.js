@@ -20,7 +20,6 @@ React.initializeTouchEvents(true)
 
 /** STATE **/
 
-// var localState   = localStorage.getItem('spn.rs');
 var defaultState = {
     view      : 'global',
     global    : [],
@@ -38,14 +37,11 @@ var defaultState = {
         }
     }
 }
-// var state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
-// function snapshot() {
-//     localStorage.setItem('spn.rs', JSON.stringify(state))
-// }
 
 var SpnrState = React.createClass({
     render : function() {
         console.log('main render')
+        this.snapshot()
         var App = this.state.user == null ? SpnrLogin({state:this.state, emitter:emitter}) : SpnrApp({state:this.state, emitter:emitter})
         return (
             App
@@ -57,7 +53,6 @@ var SpnrState = React.createClass({
     componentWillMount : function() {
         var localState = localStorage.getItem('spn.rs');
         if (localState) { this.setState(JSON.parse(localState)) }
-        // var state = localState ? JSON.parse(localState) : _.clone(defaultState, true);
     },
     componentDidMount : function() {
         this.firebase = {}
@@ -69,15 +64,12 @@ var SpnrState = React.createClass({
         this.initEmitter();
     },
     initEmitter : function(simplelogin) {
+
         emitter.on('change_view', function(new_view) {
-            console.log('change_view', new_view)
-            // state.view = new_view
-            // snapshot()
-            // emitter.trigger('render')
-        })
+            this.setState({ view : new_view })
+        }.bind(this))
 
         emitter.on('logged_in', function(user) {
-            console.log('logged_in', user)
             this.setState({user:user})
             this.initFeeds()
         }.bind(this))
@@ -100,14 +92,12 @@ var SpnrState = React.createClass({
             this.firefeeds.global.pause()
             this.firefeeds.mine.pause()
             window.removeEventListener('online', this.syncWithServer)
-            // TODO: Snapshot
             this.setState(_.clone(defaultState, true))
         }.bind(this))
 
         emitter.on('check_avatar', function(user_id) {
             avatar.check(user_id, this.state, 30, function(render) {
-                console.log('updated avatar')
-                // if (render) emitter.trigger('render')
+                //
             })
         }.bind(this))
 
@@ -124,15 +114,12 @@ var SpnrState = React.createClass({
     },
     initFeeds : function() {
         if (this.state.user == null) return
-        console.log('initFeeds')
         this.firefeeds = {}
         this.firefeeds.global = firefeed(this.firebase.root, this.state)
             .feed('global')
             .on('child_added', function(spnr) {
-                console.log('global added')
-                // state.global.unshift(spnr)
-                // emitter.trigger('render')
-            })
+                this.setState({ global : this.state.global.concat([spnr])})
+            }.bind(this))
             .on('child_removed', function(spnr) {
                 console.log('removed')
             }).listen()
@@ -140,19 +127,19 @@ var SpnrState = React.createClass({
         this.firefeeds.mine = firefeed(this.firebase.root, this.state)
             .feed('mine')
             .on('child_added', function(spnr) {
-                console.log('mine added')
-                // state.mine.unshift(spnr)
-                // emitter.trigger('render')
-            })
+                this.setState({ mine : this.state.mine.concat([spnr])})
+            }.bind(this))
             .on('child_changed', function(spnr) {
                 console.log('mine changed')
-                // state.mine.forEach(function(s) {
-                //     if (s.uuid == spnr.uuid) {
-                //         _.merge(s, spnr)
-                //         // spanshot
-                //     }
-                // })
-            })
+                var changed = false
+                this.state.mine.forEach(function(s) {
+                    if (s.uuid == spnr.uuid) {
+                        _.merge(s, spnr)
+                        changed = true
+                    }
+                })
+                if (changed) this.setState({ mine : this.state.mine })
+            }.bind(this))
             .on('child_removed', function(spnr) {
                 console.log('removed')
             }).listen()
@@ -166,6 +153,9 @@ var SpnrState = React.createClass({
             // TODO: Kanskje ikke her? tenke paa dette
             if (synced.length > 1) this.setState({ mine : this.state.mine })
         }.bind(this))
+    },
+    snapshot : function() {
+        localStorage.setItem('spn.rs', JSON.stringify(this.state))
     }
 })
 
