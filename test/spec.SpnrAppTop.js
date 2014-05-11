@@ -1,3 +1,4 @@
+require('./dom')()
 var assert     = require('assert')
 var React      = require('react')
 var ReactUtils = require('react/addons')
@@ -28,5 +29,11 @@ describe('SpnrAppTop', function() {
         ReactTestUtils.Simulate.touchEnd(_logout)
     })
 
+    it('Should emit a add_click event on .add click', function(done) {
+        var handler = function() { assert(true); emitter.off('add_click', this); done() }
+        emitter.on('add_click', handler)
+        var _add = ReactTestUtils.findRenderedDOMComponentWithClass(_top, 'add')
+        ReactTestUtils.Simulate.touchEnd(_add)
+    })
 
 })
