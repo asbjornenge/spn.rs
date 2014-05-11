@@ -1,8 +1,7 @@
-/** @jsx React.DOM */
-
 var React               = require('react')
 var moment              = require('moment')
-var SpnrListItemDetails = require('./SpnrListItemDetails.jsx')
+var Avatar              = require('./Avatar')
+var SpnrListItemDetails = require('./SpnrListItemDetails')
 
 var SpnrListItem = React.createClass({
 
@@ -11,31 +10,19 @@ var SpnrListItem = React.createClass({
         var state = this.props.state;
         var spnr  = this.props.spnr;
 
-        var avatar = state.avatars[spnr.user] ? state.avatars[spnr.user].url : "/images/avatar.gif"
-        this.props.emitter.trigger('check_avatar', spnr.user)
-
-        var details = this.state.details ? (
-             <SpnrListItemDetails spnr={this.props.spnr} />
+        var Details = this.state.details ? (
+             SpnrListItemDetails({spnr : this.props.spnr})
         ) : undefined;
 
-        var avatarStyle = {
-            'background-image' : 'url('+avatar+')'
-        }
-
         return (
-            <div className="SpnrListItem scrollable">
-                <div className="avatarBox">
-                    <div className="avatar" style={avatarStyle}></div>
-                </div>
-                <div className   = "spnr"
-                    onTouchStart = {this.handleTouchStart}
-                    onTouchMove  = {this.handleTouchMove}
-                    onTouchEnd   = {this.handleTouchEnd}>
-                        {this.props.spnr.spnr}
-                </div>
-                {details}
-                <div style={{clear:'both'}}></div>
-            </div>
+            React.DOM.div({
+                className : 'SpnrListItem scrollable',
+            },[
+                React.DOM.div({ className : 'SpnrListItemAvatarBox' }, [ Avatar({ state: this.props.state, emitter: this.props.emitter, user : this.props.spnr.user}) ]),
+                React.DOM.div({ className : 'SpnrListItemSpnrBox' }),
+                Details,
+                React.DOM.div({ style : { clear : 'both' } })
+            ])
         )
     },
     getInitialState: function() {

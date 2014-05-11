@@ -1,14 +1,13 @@
-/** @jsx React.DOM */
-
 var React = require('react')
 
 var SpnrListItemDetails = React.createClass({
     render : function() {
         return (
-             <div className="spnrDetails">
-                <ul>
-                </ul>
-            </div>
+            React.DOM.div({
+                className : "SpnrListItemDetails"
+            },[
+                React.DOM.ul({})
+            ])
         )
     }
 })

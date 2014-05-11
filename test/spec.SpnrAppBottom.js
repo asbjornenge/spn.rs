@@ -3,7 +3,7 @@ var assert     = require('assert')
 var React      = require('react')
 var ReactUtils = require('react/addons')
 var emitter    = require('nanoemitter')()
-var Top        = require('../modules/components/SpnrAppBottom')
+var Bottom     = require('../modules/components/SpnrAppBottom')
 
 ReactTestUtils = React.addons.TestUtils
 
@@ -12,7 +12,7 @@ describe('SpnrAppBottom', function() {
     var _bottom;
 
     before(function(done) {
-        _bottom = React.renderComponent(Top({state:{}, emitter:emitter}), document.body, function() {
+        _bottom = React.renderComponent(Bottom({state:{}, emitter:emitter}), document.body, function() {
             done()
         })
     })

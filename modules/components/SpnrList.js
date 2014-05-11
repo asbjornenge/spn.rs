@@ -1,5 +1,5 @@
 var React        = require('react')
-var SpnrListItem = require('./SpnrListItem.jsx')
+var SpnrListItem = require('./SpnrListItem')
 
 var SpnrList = React.createClass({
     render : function() {
