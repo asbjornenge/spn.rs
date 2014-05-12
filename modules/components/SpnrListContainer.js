@@ -28,6 +28,15 @@ var SpnrListContainer = React.createClass({
             if (node.value.length > 0) this.props.emitter.trigger('add', node.value);
             node.value = "";
         }
+    },
+    componentDidMount : function() {
+        this.props.emitter.on('add_click', this.swapAddState)
+    },
+    componentWillUnmount : function() {
+        this.props.emitter.off('add_click', this.swapAddState)
+    },
+    swapAddState : function() {
+        this.setState({ adding : !this.state.adding })        
     }
 });
 

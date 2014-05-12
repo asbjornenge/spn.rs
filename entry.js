@@ -63,6 +63,7 @@ var SpnrState = React.createClass({
         }.bind(this))
 
         this.initEmitter();
+        this.syncWithServer();
     },
     initEmitter : function(simplelogin) {
 
@@ -106,15 +107,20 @@ var SpnrState = React.createClass({
             })
         }.bind(this))
 
-// emitter.on('add', function(spnr) {
-//     state.mine.unshift({
-//         spnr   : spnr,
-//         user   : state.user.uid,
-//         synced : false
-//     })
-//     emitter.trigger('render')
-//     emitter.trigger('sync')
-// })
+        emitter.on('add', function(spnr) {
+            console.log(spnr)
+            var new_spnr = {
+                spnr   : spnr,
+                user   : this.state.user.uid,
+                synced : false                
+            }
+            this.setState({ mine : [new_spnr].concat(this.state.mine) })
+            this.syncWithServer()
+            // state.mine.unshift({
+            // })
+            // emitter.trigger('render')
+            // emitter.trigger('sync')
+        }.bind(this))
 
     },
     initFeeds : function() {
@@ -122,8 +128,8 @@ var SpnrState = React.createClass({
         this.firefeeds = {}
         this.firefeeds.global = firefeed(this.firebase.root, this.state)
             .feed('global')
-            .on('child_added', function(spnr) {
-                this.setState({ global : this.state.global.concat([spnr])})
+            .on('child_added', function(added_global_spnr) {
+                this.setState({ global : [added_global_spnr].concat(this.state.global)})
             }.bind(this))
             .on('child_removed', function(spnr) {
                 console.log('removed')
@@ -131,8 +137,8 @@ var SpnrState = React.createClass({
 
         this.firefeeds.mine = firefeed(this.firebase.root, this.state)
             .feed('mine')
-            .on('child_added', function(spnr) {
-                this.setState({ mine : this.state.mine.concat([spnr])})
+            .on('child_added', function(added_mine_spnr) {
+                this.setState({ mine : [added_mine_spnr].concat(this.state.mine)})
             }.bind(this))
             .on('child_changed', function(spnr) {
                 console.log('mine changed')
@@ -152,8 +158,8 @@ var SpnrState = React.createClass({
     },
     syncWithServer : function() {
         if (!navigator.onLine) return
-        if (!state.user) return
-        sync.mine(this.state.mine, this.state.firebaseroot.child('users/'+this.state.user.uid+'/spnrs'), function(synced) {
+        if (!this.state.user) return
+        sync.mine(this.state.mine, this.firebase.root.child('users/'+this.state.user.uid+'/spnrs'), function(synced) {
             // Dersom vi plutselig har flere som har blitt synced, render...
             // TODO: Kanskje ikke her? tenke paa dette
             if (synced.length > 1) this.setState({ mine : this.state.mine })
