@@ -1,7 +1,7 @@
 var React      = require('react')
 var SpnrAvatar = require('./SpnrAvatar')
 
-var SpnrDetails = React.createClass({
+var SpnrDetailsTop = React.createClass({
     render : function() {
         return (
             React.DOM.div({
@@ -14,4 +14,4 @@ var SpnrDetails = React.createClass({
     }
 })
 
-module.exports = SpnrDetails
+module.exports = SpnrDetailsTop

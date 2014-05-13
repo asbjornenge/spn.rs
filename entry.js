@@ -12,6 +12,7 @@ var emitter   = require('nanoemitter')()
 var _         = require('lodash')
 var SpnrLogin = require('./modules/components/SpnrLogin')
 var SpnrApp   = require('./modules/components/SpnrApp')
+var settings  = require('./modules/settings')
 var firefeed  = require('./modules/firefeed')
 var avatar    = require('./modules/avatar')
 var sync      = require('./modules/sync')
@@ -57,7 +58,7 @@ var SpnrState = React.createClass({
     },
     componentDidMount : function() {
         this.firebase = {}
-        this.firebase.root  = new Firebase('https://spnrs.firebaseio.com/')
+        this.firebase.root  = new Firebase(settings.firebase.root)
         this.firebase.login = new FirebaseSimpleLogin(this.firebase.root, function(error, user) {
                 emitter.trigger('logged_in', user)
         }.bind(this))
@@ -115,7 +116,7 @@ var SpnrState = React.createClass({
                 synced : false                
             }
             this.setState({ mine : [new_spnr].concat(this.state.mine) })
-            this.syncWithServer()
+            setTimeout(function() { this.syncWithServer() }.bind(this), 100)
             // state.mine.unshift({
             // })
             // emitter.trigger('render')
@@ -138,6 +139,7 @@ var SpnrState = React.createClass({
         this.firefeeds.mine = firefeed(this.firebase.root, this.state)
             .feed('mine')
             .on('child_added', function(added_mine_spnr) {
+                if (added_mine_spnr.spnr == undefined) return
                 this.setState({ mine : [added_mine_spnr].concat(this.state.mine)})
             }.bind(this))
             .on('child_changed', function(spnr) {
@@ -159,10 +161,11 @@ var SpnrState = React.createClass({
     syncWithServer : function() {
         if (!navigator.onLine) return
         if (!this.state.user) return
+        console.log('syncing')
         sync.mine(this.state.mine, this.firebase.root.child('users/'+this.state.user.uid+'/spnrs'), function(synced) {
             // Dersom vi plutselig har flere som har blitt synced, render...
             // TODO: Kanskje ikke her? tenke paa dette
-            if (synced.length > 1) this.setState({ mine : this.state.mine })
+            // if (synced.length > 1) this.setState({ mine : this.state.mine })
         }.bind(this))
     },
     snapshot : function() {

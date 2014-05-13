@@ -59,9 +59,10 @@
 	var _         = __webpack_require__(148)
 	var SpnrLogin = __webpack_require__(150)
 	var SpnrApp   = __webpack_require__(151)
-	var firefeed  = __webpack_require__(162)
-	var avatar    = __webpack_require__(164)
-	var sync      = __webpack_require__(166)
+	var settings  = __webpack_require__(158)
+	var firefeed  = __webpack_require__(165)
+	var avatar    = __webpack_require__(166)
+	var sync      = __webpack_require__(168)
 
 	React.initializeTouchEvents(true)
 
@@ -104,7 +105,7 @@
 	    },
 	    componentDidMount : function() {
 	        this.firebase = {}
-	        this.firebase.root  = new Firebase('https://spnrs.firebaseio.com/')
+	        this.firebase.root  = new Firebase(settings.firebase.root)
 	        this.firebase.login = new FirebaseSimpleLogin(this.firebase.root, function(error, user) {
 	                emitter.trigger('logged_in', user)
 	        }.bind(this))
@@ -162,7 +163,7 @@
 	                synced : false                
 	            }
 	            this.setState({ mine : [new_spnr].concat(this.state.mine) })
-	            this.syncWithServer()
+	            setTimeout(function() { this.syncWithServer() }.bind(this), 100)
 	            // state.mine.unshift({
 	            // })
 	            // emitter.trigger('render')
@@ -185,6 +186,7 @@
 	        this.firefeeds.mine = firefeed(this.firebase.root, this.state)
 	            .feed('mine')
 	            .on('child_added', function(added_mine_spnr) {
+	                if (added_mine_spnr.spnr == undefined) return
 	                this.setState({ mine : [added_mine_spnr].concat(this.state.mine)})
 	            }.bind(this))
 	            .on('child_changed', function(spnr) {
@@ -206,10 +208,11 @@
 	    syncWithServer : function() {
 	        if (!navigator.onLine) return
 	        if (!this.state.user) return
+	        console.log('syncing')
 	        sync.mine(this.state.mine, this.firebase.root.child('users/'+this.state.user.uid+'/spnrs'), function(synced) {
 	            // Dersom vi plutselig har flere som har blitt synced, render...
 	            // TODO: Kanskje ikke her? tenke paa dette
-	            if (synced.length > 1) this.setState({ mine : this.state.mine })
+	            // if (synced.length > 1) this.setState({ mine : this.state.mine })
 	        }.bind(this))
 	    },
 	    snapshot : function() {
@@ -293,7 +296,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports =
-		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrListContainer {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  background-color: #ccc;\n  -webkit-overflow-scrolling: touch;\n  -webkit-transform-style: preserve-3d;\n  -webkit-transform: translate3d(0, 0, 0);\n}\n#SpnrApp .SpnrListContainer input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem {\n  background-color: #fff;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop div {\n  float: left;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop h1 {\n  font-size: 180%;\n  line-height: 68px;\n  padding-left: 60px;\n  padding-right: 10px;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop:after {\n  clear: both;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
+		"#SpnrApp {\n  position: relative;\n  margin: auto;\n  height: 100%;\n}\n#SpnrApp .SpnrAppTop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 50px;\n  line-height: 50px;\n}\n#SpnrApp .SpnrAppTop li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppTop li.logo {\n  width: 220px;\n}\n#SpnrApp .SpnrListContainer {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n  overflow: scroll;\n  background-color: #ccc;\n  -webkit-overflow-scrolling: touch;\n  -webkit-transform-style: preserve-3d;\n  -webkit-transform: translate3d(0, 0, 0);\n}\n#SpnrApp .SpnrListContainer input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem {\n  background-color: #fff;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem.returning {\n  -webkit-transition: -webkit-transform 0.2s;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemAvatarBox {\n  float: left;\n  width: 15%;\n  height: 70px;\n  border-bottom: 1px solid #ccc;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemAvatarBox .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemSpnrBox {\n  float: left;\n  width: 85%;\n  height: 70px;\n  overflow: hidden;\n  line-height: 70px;\n  font-size: 20px;\n  text-indent: 10px;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemDetails {\n  float: left;\n  width: 100%;\n  height: 35px;\n  background-color: #ccc;\n  border-bottom: 1px solid #ccc;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrListContainer .SpnrListItem .SpnrListItemDetails ul li {\n  float: left;\n}\n#SpnrApp:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails {\n  position: absolute;\n  top: 50px;\n  left: 0;\n  right: 0;\n  bottom: 50px;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop div {\n  float: left;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop h1 {\n  font-size: 180%;\n  line-height: 68px;\n  padding-left: 60px;\n  padding-right: 10px;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop .SpnrAvatar {\n  width: 40px;\n  height: 40px;\n  margin-top: 13px;\n  margin-left: 5px;\n  border-radius: 20px;\n  background-position: center;\n  background-size: cover;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsTop:after {\n  clear: both;\n}\n#SpnrApp .SpnrDetails .SpnrDetailsComments input {\n  width: 100%;\n  margin: 0;\n  padding: 0;\n  height: 40px;\n  border: 0;\n  border-bottom: 1px solid #ccc;\n  font-size: 20px;\n  text-indent: 10px;\n  -webkit-appearance: none;\n}\n#SpnrApp .SpnrAppBottom {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  height: 50px;\n  line-height: 50px;\n  border-top: 1px solid #f00;\n}\n#SpnrApp .SpnrAppBottom li {\n  float: left;\n  height: 50px;\n  width: 50px;\n  text-align: center;\n  margin-left: 50px;\n  -webkit-tap-highlight-color: transparent;\n}\n#SpnrApp .SpnrAppBottom li.selected {\n  color: #f00;\n}\n";
 
 /***/ },
 /* 6 */
@@ -25798,7 +25801,7 @@
 	var Top               = __webpack_require__(152)
 	var Bottom            = __webpack_require__(153)
 	var SpnrDetails       = __webpack_require__(154)
-	var SpnrListContainer = __webpack_require__(157)
+	var SpnrListContainer = __webpack_require__(160)
 
 	var SpnrApp = React.createClass({
 	    render : function() {
@@ -25888,8 +25891,9 @@
 /* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React          = __webpack_require__(10)
-	var SpnrDetailsTop = __webpack_require__(155)
+	var React               = __webpack_require__(10)
+	var SpnrDetailsTop      = __webpack_require__(155)
+	var SpnrDetailsComments = __webpack_require__(157)
 
 	var SpnrDetails = React.createClass({
 	    render : function() {
@@ -25898,6 +25902,7 @@
 	                className : 'SpnrDetails'
 	            },[
 	                SpnrDetailsTop({ state : this.props.state, emitter : this.props.emitter, spnr : this.props.spnr }),
+	                SpnrDetailsComments({ state : this.props.state, emitter : this.props.emitter, spnr : this.props.spnr })
 	            ])
 	        )
 	    }
@@ -25912,7 +25917,7 @@
 	var React      = __webpack_require__(10)
 	var SpnrAvatar = __webpack_require__(156)
 
-	var SpnrDetails = React.createClass({
+	var SpnrDetailsTop = React.createClass({
 	    render : function() {
 	        return (
 	            React.DOM.div({
@@ -25925,7 +25930,7 @@
 	    }
 	})
 
-	module.exports = SpnrDetails
+	module.exports = SpnrDetailsTop
 
 /***/ },
 /* 156 */
@@ -25958,8 +25963,160 @@
 /* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var React       = __webpack_require__(10)
+	var settings    = __webpack_require__(158)
+	var firecracker = __webpack_require__(159)
+
+	var SpnrDetailsComments = React.createClass({
+	    render : function() {
+	        var Comments = this.state.comments.map(function(comment) {
+	            console.log(comment)
+	            return React.DOM.div({}, comment.comment)
+	        })
+	        return (
+	            React.DOM.div({
+	                className : 'SpnrDetailsComments'
+	            },[
+	                React.DOM.input({ type : 'text', placeholder : 'Comment?', ref : 'commentInput', onKeyPress  : this.handleCommentInput }),
+	                Comments
+	            ])
+	        )
+	    },
+	    getInitialState : function() {
+	        return {
+	            comments : []
+	        }
+	    },
+	    componentWillMount : function() {
+	        if (typeof Firebase === 'undefined') return
+	        var spnr         = this.props.spnr
+	        var comments_url = settings.firebase.root+'users/'+spnr.user+'/spnrs/'+spnr.uuid+'/comments'
+	        this.comments_firebase = new Firebase(comments_url)
+	        firecracker(this.comments_firebase)
+	            .take(30)
+	            .on('child_added', function(child) {
+	                this.setState({ comments : [child].concat(this.state.comments)})
+	            }.bind(this))
+	            .listen()
+	    },
+	    handleCommentInput : function(e) {
+	        if (e.which == 13) {
+	            var node = this.refs.commentInput.getDOMNode();
+	            this.comments_firebase.push({ user : this.props.state.user.uid, comment : node.value })
+	            node.value = "";
+	        }
+	    },
+	})
+
+	module.exports = SpnrDetailsComments
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	    firebase : {
+	        root : 'https://spnrs.firebaseio.com/'
+	    }
+	}
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function getRootRef(fp) {
+	    var root = fp.root
+	    if (fp._path) root = root.child(fp._path)
+	    if (fp._take) root = root.limit(fp._take)
+	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
+	    return root
+	}
+
+	function transformSnapshot(snapshot) {
+	    var s = snapshot.val()
+	    s.fid = snapshot.name()
+	    return s
+	}
+
+	var firecracker = function(root) {
+	    this.root      = root
+	    this.listeners = {}
+	}
+	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
+	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
+	firecracker.prototype.path    = function(path)      { this._path = path; return this }
+	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
+	firecracker.prototype.off     = function(event, fn) {
+	    if (!this.listeners[event]) return this
+	    var index;
+	    for (var i in this.listeners[event]) {
+	        if (this.listeners[event][i] === fn) index = i;
+	    }
+	    if (index != undefined) { this.listeners[event].splice(index,1) }
+	    return this
+	}
+	firecracker.prototype.push    = function(data, cb)  {
+	    var ref  = getRootRef(this).push(data)
+	    if (typeof cb === 'function') cb(ref.name())
+	    return this
+	}
+	firecracker.prototype.remove  = function(id, callback) {
+	    getRootRef(this).remove(id, callback)
+	    return this
+	}
+	firecracker.prototype.once = function(callback) {
+	    getRootRef(this).once('value', function(snapshot) {
+	        var values = snapshot.val()
+	        var data   = Object.keys(values).map(function(id) {
+	            values[id].fid = id
+	            return values[id]
+	        }).reverse()
+	        if (typeof callback === 'function') callback(data)
+	    })
+	    return this
+	}
+	firecracker.prototype.listen = function() {
+	    var root = getRootRef(this)
+
+	    if (this.listeners.child_added) {
+	        root.on('child_added', function(child, prev) {
+	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_changed) {
+	        root.on('child_changed', function(child) {
+	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_removed) {
+	        root.on('child_removed', function(child) {
+	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.child_moved) {
+	        root.on('child_moved', function(child, prev) {
+	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
+	        }.bind(this))
+	    }
+
+	    if (this.listeners.value) {
+	        root.on('value', function(data) {
+	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
+	        }.bind(this))
+	    }
+	}
+	module.exports = function(root) { return new firecracker(root) }
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React    = __webpack_require__(10)
-	var SpnrList = __webpack_require__(158)
+	var SpnrList = __webpack_require__(161)
 
 	var SpnrListContainer = React.createClass({
 	    render : function() {
@@ -26005,11 +26162,11 @@
 
 
 /***/ },
-/* 158 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React        = __webpack_require__(10)
-	var SpnrListItem = __webpack_require__(159)
+	var SpnrListItem = __webpack_require__(162)
 
 	var SpnrList = React.createClass({
 	    render : function() {
@@ -26030,13 +26187,13 @@
 
 
 /***/ },
-/* 159 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React               = __webpack_require__(10)
-	var moment              = __webpack_require__(160)
+	var moment              = __webpack_require__(163)
 	var Avatar              = __webpack_require__(156)
-	var SpnrListItemDetails = __webpack_require__(161)
+	var SpnrListItemDetails = __webpack_require__(164)
 
 	var SpnrListItem = React.createClass({
 
@@ -26122,7 +26279,7 @@
 
 
 /***/ },
-/* 160 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -28529,7 +28686,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(149)(module)))
 
 /***/ },
-/* 161 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(10)
@@ -28549,10 +28706,10 @@
 	module.exports = SpnrListItemDetails
 
 /***/ },
-/* 162 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var firecracker = __webpack_require__(163)
+	var firecracker = __webpack_require__(159)
 
 	function firefeed(root, state) {
 	    this.root      = root
@@ -28599,103 +28756,12 @@
 
 
 /***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function getRootRef(fp) {
-	    var root = fp.root
-	    if (fp._path) root = root.child(fp._path)
-	    if (fp._take) root = root.limit(fp._take)
-	    if (fp._from) root = (typeof fp._from == 'number') ? root.startAt(fp._from) : root.startAt(null, fp._from)
-	    return root
-	}
-
-	function transformSnapshot(snapshot) {
-	    var s = snapshot.val()
-	    s.fid = snapshot.name()
-	    return s
-	}
-
-	var firecracker = function(root) {
-	    this.root      = root
-	    this.listeners = {}
-	}
-	firecracker.prototype.from    = function(last_seen) { this._from = last_seen; return this }
-	firecracker.prototype.take    = function(limit)     { this._take = limit; return this }
-	firecracker.prototype.path    = function(path)      { this._path = path; return this }
-	firecracker.prototype.on      = function(event, fn) { !this.listeners[event] ? this.listeners[event] = [fn] : this.listeners[event].push(fn); return this }
-	firecracker.prototype.off     = function(event, fn) {
-	    if (!this.listeners[event]) return this
-	    var index;
-	    for (var i in this.listeners[event]) {
-	        if (this.listeners[event][i] === fn) index = i;
-	    }
-	    if (index != undefined) { this.listeners[event].splice(index,1) }
-	    return this
-	}
-	firecracker.prototype.push    = function(data, cb)  {
-	    var ref  = getRootRef(this).push(data)
-	    if (typeof cb === 'function') cb(ref.name())
-	    return this
-	}
-	firecracker.prototype.remove  = function(id, callback) {
-	    getRootRef(this).remove(id, callback)
-	    return this
-	}
-	firecracker.prototype.once = function(callback) {
-	    getRootRef(this).once('value', function(snapshot) {
-	        var values = snapshot.val()
-	        var data   = Object.keys(values).map(function(id) {
-	            values[id].fid = id
-	            return values[id]
-	        }).reverse()
-	        if (typeof callback === 'function') callback(data)
-	    })
-	    return this
-	}
-	firecracker.prototype.listen = function() {
-	    var root = getRootRef(this)
-
-	    if (this.listeners.child_added) {
-	        root.on('child_added', function(child, prev) {
-	            this.listeners.child_added.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_changed) {
-	        root.on('child_changed', function(child) {
-	            this.listeners.child_changed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_removed) {
-	        root.on('child_removed', function(child) {
-	            this.listeners.child_removed.forEach(function(fn) { fn(transformSnapshot(child)) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.child_moved) {
-	        root.on('child_moved', function(child, prev) {
-	            this.listeners.child_moved.forEach(function(fn) { fn(transformSnapshot(child), prev) })
-	        }.bind(this))
-	    }
-
-	    if (this.listeners.value) {
-	        root.on('value', function(data) {
-	            this.listeners.value.forEach(function(fn) { fn(transformSnapshot(data)) })
-	        }.bind(this))
-	    }
-	}
-	module.exports = function(root) { return new firecracker(root) }
-
-
-/***/ },
-/* 164 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// var tob64  = require('to-base64')
-	var utils  = __webpack_require__(165)
-	var moment = __webpack_require__(160)
+	var utils  = __webpack_require__(167)
+	var moment = __webpack_require__(163)
 
 	// TO TEST: https://github.com/mathiasbynens/base64
 
@@ -28706,6 +28772,8 @@
 	            if (diff < days) { callback(false); return }
 	        }
 	        var url;
+	        console.log(user)
+	        if (!user) { callback(false); return }
 	        if (user.indexOf('github') === 0) {
 	            url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
 	        }
@@ -28725,7 +28793,7 @@
 
 
 /***/ },
-/* 165 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	function s4() {
@@ -28761,10 +28829,10 @@
 
 
 /***/ },
-/* 166 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(165)
+	var utils = __webpack_require__(167)
 	var _     = __webpack_require__(148)
 
 	var sync = {

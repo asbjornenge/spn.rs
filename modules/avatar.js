@@ -11,6 +11,8 @@ var avatar = {
             if (diff < days) { callback(false); return }
         }
         var url;
+        console.log(user)
+        if (!user) { callback(false); return }
         if (user.indexOf('github') === 0) {
             url = 'https://avatars.githubusercontent.com/u/'+user.split(':')[1]+'?s=32'
         }

@@ -7,7 +7,8 @@ module.exports = {
         },
         {
             spnr : 'aldhldhsa  lkdhaslkjdh aslkdjhasl kjdhklasjdhklahdkljah  kasjdhlakjdh asd lkajd aslkdjha lkjahd lkasjhd lakjhd lkajshd akljhd aklsd ',
-            user : 666
+            user : 666,
+            uuid : 'asdo9ua976asd8768a76f'
         }
     ],
     mine      : [
