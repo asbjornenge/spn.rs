@@ -9,7 +9,7 @@ var SpnrApp = React.createClass({
     render : function() {
         var MainView, view = this.props.state.view;
 
-        if (view === 'details') MainView = SpnrDetails({ state : this.props.state, emitter : this.props.emitter })
+        if (view === 'details') MainView = SpnrDetails({ state : this.props.state, emitter : this.props.emitter, spnr : this.props.state.current })
         else                    MainView = SpnrListContainer({ state : this.props.state, emitter : this.props.emitter })
 
         return (

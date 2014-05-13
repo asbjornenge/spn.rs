@@ -7,7 +7,7 @@ var SpnrDetails = React.createClass({
             React.DOM.div({
                 className : 'SpnrDetails'
             },[
-                SpnrAvatar({ state : this.props.state, emitter : this.props.emitter, user_id : this.props.state.current.user }),
+                SpnrAvatar({ state : this.props.state, emitter : this.props.emitter, user_id : this.props.spnr.user }),
                 React.DOM.h1({}, this.props.state.current.spnr)
             ])
         )

@@ -4,8 +4,7 @@
   "author": "Asbjorn Enge <asbjorn@hanafjedle.net>",
   "license": "BSD",
   "scripts": {
-    "test": "mocha --ui bdd",
-    "localtest": "mocha -R nyan --check-leaks -w test/local"
+    "test": "mocha -R nyan --check-leaks -w"
   },
   "devDependencies": {
     "body-parser": "^1.0.2",
