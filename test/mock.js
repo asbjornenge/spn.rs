@@ -4,6 +4,10 @@ module.exports = {
         {
             spnr : 'Rene pumper',
             user : 1
+        },
+        {
+            spnr : 'aldhldhsa  lkdhaslkjdh aslkdjhasl kjdhklasjdhklahdkljah  kasjdhlakjdh asd lkajd aslkdjha lkjahd lkasjhd lakjhd lkajshd akljhd aklsd ',
+            user : 666
         }
     ],
     mine      : [

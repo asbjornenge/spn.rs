@@ -1,5 +1,5 @@
-var React      = require('react')
-var SpnrAvatar = require('./SpnrAvatar')
+var React          = require('react')
+var SpnrDetailsTop = require('./SpnrDetailsTop')
 
 var SpnrDetails = React.createClass({
     render : function() {
@@ -7,8 +7,7 @@ var SpnrDetails = React.createClass({
             React.DOM.div({
                 className : 'SpnrDetails'
             },[
-                SpnrAvatar({ state : this.props.state, emitter : this.props.emitter, user_id : this.props.spnr.user }),
-                React.DOM.h1({}, this.props.state.current.spnr)
+                SpnrDetailsTop({ state : this.props.state, emitter : this.props.emitter, spnr : this.props.spnr }),
             ])
         )
     }

@@ -2,6 +2,8 @@
 var utils  = require('./utils')
 var moment = require('moment')
 
+// TO TEST: https://github.com/mathiasbynens/base64
+
 var avatar = {
     check : function(user, state, days, callback) {
         if (state.avatars[user]) {
